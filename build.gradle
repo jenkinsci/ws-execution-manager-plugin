@@ -1,0 +1,78 @@
+/*
+ * Copyright © 2018 Worksoft, Inc.
+ */
+
+buildscript {
+    // These are the list of remote repositories where Gradle Plugins can be found
+    repositories {
+        maven {
+            url 'https://plugins.gradle.org/m2/'
+        }
+    }
+    // These are Gradle Plugins this build uses.  See also the plugins block below
+    dependencies {
+//        classpath 'gradle.plugin.de.fuerstenau:BuildConfigPlugin:1.1.8'
+//        classpath 'net.saliman:gradle-properties-plugin:1.4.5'
+    }
+}
+
+plugins {
+    id 'org.jenkins-ci.jpi' version '0.27.0'
+}
+
+apply plugin: 'idea'
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'idea'
+
+// Where to resolve external dependencies.
+repositories {
+    jcenter()
+    maven {
+        url('https://repo.jenkins-ci.org/public/')
+    }
+}
+
+group = 'com.worksoft.plugins'
+description = 'Worksoft Execution Manager Plugin'
+
+jenkinsPlugin {
+    coreVersion = jenkinsVersion
+    displayName = "Worksoft Execution Manager Plugin"
+    shortName = "ws-execution-manager"
+
+    developers {
+        developer {
+            id "rrinehart"
+            name "Raleigh Rinehart"
+            email "rrinehart@worksoft.com"
+        }
+        developer {
+            id "dtheobald"
+            name "Doug Theobald"
+            email "dtheobald@worksoft.com"
+        }
+        developer {
+            id "oullah"
+            name "Obaid Ullah"
+            email "oullah@worksoft.com"
+        }
+    }
+}
+
+dependencies {
+    jenkinsPlugins 'org.jenkins-ci.plugins:credentials:2.1.10'
+}
+
+
+idea{
+    module{
+        inheritOutputDirs = false
+        outputDir = compileJava.destinationDir
+        testOutputDir = compileTestJava.destinationDir
+    }
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+

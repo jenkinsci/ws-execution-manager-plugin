@@ -1,0 +1,6 @@
+<component name="CopyrightManager">
+  <copyright>
+    <option name="notice" value="Copyright (c) &amp;#36;today.year Worksoft, Inc.&#10;  &#10;&amp;#36;file.className&#10;&#10;@author &amp;#36;username on &amp;#36;today.format(&quot;EEE, d MMM yyyy&quot;)" />
+    <option name="myName" value="Worksoft" />
+  </copyright>
+</component>

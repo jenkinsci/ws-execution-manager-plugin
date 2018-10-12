@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?jelly escape-by-default='true'?>
+<!--
+  ~ Copyright (c) 2018 Worksoft, Inc.
+  ~
+  ~ config.jelly
+  ~
+  ~ @author rrinehart on Wed, 19 Sep 2018
+  -->
+
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form" xmlns:c="/lib/credentials">
+    <f:entry field="request" title="Request">
+        <f:combobox/>
+    </f:entry>
+    <f:entry title="Or">
+    </f:entry>
+    <f:entry field="bookmark" title="Bookmark">
+        <f:combobox/>
+    </f:entry>
+
+</j:jelly>
