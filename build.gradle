@@ -17,13 +17,13 @@ buildscript {
 }
 
 plugins {
+    id 'groovy'
     id 'org.jenkins-ci.jpi' version '0.27.0'
+    id 'com.github.onslip.gradle-one-jar' version '1.0.5'
 }
 
 apply plugin: 'idea'
-apply plugin: 'java'
-apply plugin: 'groovy'
-apply plugin: 'idea'
+//apply plugin: 'gradle-one-jar'
 
 // Where to resolve external dependencies.
 repositories {
@@ -62,6 +62,8 @@ jenkinsPlugin {
 
 dependencies {
     jenkinsPlugins 'org.jenkins-ci.plugins:credentials:2.1.10'
+    compile 'org.jodd:jodd-http:5.0.1'
+    compile "org.codehaus.groovy:groovy-all:${groovyVersion}"
 }
 
 
@@ -73,6 +75,27 @@ idea{
     }
 }
 
+task listSrc(group: 'debugging', description: 'list project source') {
+    doLast { task ->
+        println "Project $task.project.name Source Sets:"
+
+        task.project.sourceSets.each { srcSet ->
+            println " - SourceSet: $srcSet.name"
+            srcSet.allSource.each { file ->
+                println "    - ${file}"
+            }
+        }
+    }
+}
+
+
+task listCompile(group: 'debugging', description: 'show compile configuration') {
+    doLast {
+        configurations.each { conf ->
+            println "Configuration $conf"
+            println "              $conf.allDependencies"
+        }
+    }
+}
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-
