@@ -9,6 +9,7 @@
 package com.worksoft.jenkinsci.plugins.em.config;
 
 import com.cloudbees.plugins.credentials.CredentialsMatchers;
+import com.cloudbees.plugins.credentials.CredentialsProvider;
 import com.cloudbees.plugins.credentials.CredentialsScope;
 import com.cloudbees.plugins.credentials.common.StandardUsernameListBoxModel;
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
@@ -25,11 +26,16 @@ import hudson.util.FormValidation;
 import hudson.util.ListBoxModel;
 import jenkins.model.GlobalConfiguration;
 import jenkins.model.Jenkins;
+import jodd.net.URLCoder;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 @Extension
@@ -110,7 +116,51 @@ public class ExecutionManagerConfig extends GlobalConfiguration {
     return true;
   }
 
+  
+  /**
+   * Looks up the provided credentialId (Jenkins GUID)
+   *
+   * @param url          - Execution manager's URL
+   * @param credentialId - GUID identifying Jenkins credential
+   * @return - null, if GUID not found
+   */
+  private StandardUsernamePasswordCredentials lookupCredentials(String url, String credentialId) {
+    return StringUtils.isBlank(credentialId) ? null : CredentialsMatchers.firstOrNull(
+            CredentialsProvider.lookupCredentials(
+                    StandardUsernamePasswordCredentials.class,
+                    Jenkins.getInstanceOrNull(),
+                    ACL.SYSTEM,
+                    URIRequirementBuilder.fromUri(url).build()
+            ),
+            CredentialsMatchers.allOf(
+                    CredentialsMatchers.withScope(CredentialsScope.GLOBAL),
+                    CredentialsMatchers.withId(credentialId)
+            ));
+  }
   public FormValidation doTestConnection(@QueryParameter final String url, @QueryParameter final String credentials) {
+    if (StringUtils.isBlank(credentials)) {
+      return FormValidation.error("Credentials must be selected!");
+    }
+
+
+    try {
+      URL foo = new URL(url);
+    } catch (MalformedURLException e) {
+      return FormValidation.error("URL is invalid " + e.getMessage());
+    }
+
+    StandardUsernamePasswordCredentials creds = lookupCredentials(url, credentials);
+    if (creds == null)
+      return FormValidation.error("Credentials lookup error!");
+
+    try {
+      ExecutionManagerServer ems = new ExecutionManagerServer(url, "", creds);
+      if (!ems.login()) {
+        return FormValidation.error("Authorization Failed!");
+      }
+    } catch (Exception e) {
+      return FormValidation.error(e.getMessage());
+    }
 
     return FormValidation.ok("Success");
   }
