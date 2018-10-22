@@ -26,47 +26,73 @@ import org.kohsuke.stapler.DataBoundConstructor;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
+import java.util.List;
 
 public class ExecuteRequest extends Builder implements SimpleBuildStep {
 
-  public final String bookmark;
-  public final String request;
+    public final String bookmark;
+    public final String request;
+    public final String postAction = null;
+    public final String postActionParams = null;
+    public final String pollInterval = null;
 
-  private ExecutionManagerConfig config;
+    private ExecutionManagerConfig config;
+    private String altConfigURL;
 
-  @DataBoundConstructor
-  public ExecuteRequest (String request, String bookmark) {
-    this.bookmark = bookmark;
-    this.request = request;
-    config = GlobalConfiguration.all().get(ExecutionManagerConfig.class);
-  }
+    public final ExecuteRequestParameters execParams;
+    public List<ExecuteRequestParameter> execParamList; // Not used. We get these out of 'execParams' instead
 
-  @Override
-  public void perform (@Nonnull Run<?, ?> run, @Nonnull FilePath workspace, @Nonnull Launcher launcher, @Nonnull TaskListener listener) throws InterruptedException, IOException {
-    ExecutionManagerServer server = config.getEmServer();
-  }
+    @DataBoundConstructor
+    public ExecuteRequest(String request, String bookmark, ExecuteRequestParameters execParams, List<ExecuteRequestParameter> _execParams) {//}, String postAction, String postActionParams, String pollInterval, String maxRunTime, List<ExecuteRequestParameter> execParams, String altConfigURL) {
+        this.bookmark = bookmark;
+        this.request = request;
+        /*this.execParams = execParams;
+        this.postAction = postAction;
+        this.postActionParams = postActionParams;
+        this.pollInterval = pollInterval;
+        this.maxRunTime = maxRunTime;
+        this.altConfigURL = altConfigURL;*/
+        this.execParams = execParams;
+        config = GlobalConfiguration.all().get(ExecutionManagerConfig.class);
+    }
 
-  @Extension
-  public static final class ExecutionManagerBuilderDescriptor extends BuildStepDescriptor<Builder> {
+    /** Stapler methods for handling Execute Request Parameters */
+    public boolean getExecParamsEnabled() {
+        return getExecParams() != null;
+    }
 
-    @Override
-    public boolean isApplicable (Class<? extends AbstractProject> jobType) {
-      return true;
+    public ExecuteRequestParameters getExecParams() {
+        return execParams;
+    }
+
+    public List<ExecuteRequestParameter> getExecParamList() {
+        return execParams != null ? execParams.execParamList : null;
     }
 
     @Override
-    public String getDisplayName () {
-      return "Run Execution Manager Request";
+    public void perform(@Nonnull Run<?, ?> run, @Nonnull FilePath workspace, @Nonnull Launcher launcher, @Nonnull TaskListener listener) throws InterruptedException, IOException {
+        ExecutionManagerServer server = config.getEmServer();
     }
 
-    public ComboBoxModel doFillRequestItems () {
-      return new ComboBoxModel("Apple", "Banana", "Oreo");
+    @Extension
+    public static final class ExecutionManagerBuilderDescriptor extends BuildStepDescriptor<Builder> {
+
+        @Override
+        public boolean isApplicable(Class<? extends AbstractProject> jobType) {
+            return true;
+        }
+
+        @Override
+        public String getDisplayName() {
+            return "Run Execution Manager Request";
+        }
+
+        public ComboBoxModel doFillRequestItems() {
+            return new ComboBoxModel("Apple", "Banana", "Oreo");
+        }
+
+        public ComboBoxModel doFillBookmarkItems() {
+            return new ComboBoxModel("One", "Two", "Three");
+        }
     }
-
-    public ComboBoxModel doFillBookmarkItems () {
-      return new ComboBoxModel("One", "Two", "Three");
-    }
-
-
-  }
 }
