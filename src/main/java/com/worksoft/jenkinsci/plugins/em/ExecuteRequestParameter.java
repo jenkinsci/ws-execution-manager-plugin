@@ -11,13 +11,18 @@ package com.worksoft.jenkinsci.plugins.em;
 import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
+import hudson.util.FormValidation;
+import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.export.Exported;
 
 public final class ExecuteRequestParameter extends AbstractDescribableImpl<ExecuteRequestParameter> {
 
-    @Exported public String key;
-    @Exported public String value;
+    @Exported
+    public String key;
+    @Exported
+    public String value;
 
     @DataBoundConstructor
     public ExecuteRequestParameter(String key, String value) {
@@ -26,7 +31,7 @@ public final class ExecuteRequestParameter extends AbstractDescribableImpl<Execu
     }
 
     public static ExecuteRequestParameter[] getSomeDefaults() {
-        return new ExecuteRequestParameter[] { new ExecuteRequestParameter("valueA", "valueB") };
+        return new ExecuteRequestParameter[]{new ExecuteRequestParameter("valueA", "valueB")};
     }
 
     public String getKey() {
@@ -41,6 +46,20 @@ public final class ExecuteRequestParameter extends AbstractDescribableImpl<Execu
     public static class DescriptorImpl extends Descriptor<ExecuteRequestParameter> {
         public String getDisplayName() {
             return "ExecuteRequestParameter";
+        }
+
+        public FormValidation doCheckKey(@QueryParameter String key) {
+            FormValidation ret = FormValidation.ok();
+            if (StringUtils.isEmpty(key))
+                ret = FormValidation.error("Key cannot be empty!");
+            return ret;
+        }
+
+        public FormValidation doCheckValue(@QueryParameter String value) {
+            FormValidation ret = FormValidation.ok();
+            if (StringUtils.isEmpty(value))
+                ret = FormValidation.error("Value cannot be empty!");
+            return ret;
         }
     }
 }

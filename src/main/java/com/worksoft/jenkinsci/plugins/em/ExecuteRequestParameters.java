@@ -11,7 +11,9 @@ package com.worksoft.jenkinsci.plugins.em;
 import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
+import hudson.util.FormValidation;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.export.Exported;
 
 import java.util.List;
@@ -26,12 +28,5 @@ public final class ExecuteRequestParameters extends AbstractDescribableImpl<Exec
 
     public List<ExecuteRequestParameter> getExecParamList() {
         return execParamList;
-    }
-
-    @Extension
-    public static class DescriptorImpl extends Descriptor<ExecuteRequestParameters> {
-        public String getDisplayName() {
-            return "ExecuteRequestParameters";
-        }
     }
 }
