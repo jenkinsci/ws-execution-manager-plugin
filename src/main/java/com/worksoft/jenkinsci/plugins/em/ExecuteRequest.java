@@ -37,25 +37,24 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
     public final String request;
     public final String postAction = null;
     public final String postActionParams = null;
-    public final String pollInterval = null;
 
     private ExecutionManagerConfig config;
     private String altConfigURL;
 
+    public final ExecuteRequestWaitConfig waitConfig;
     public final ExecuteRequestParameters execParams;
     public List<ExecuteRequestParameter> execParamList; // Not used. We get these out of 'execParams' instead
 
     @DataBoundConstructor
-    public ExecuteRequest(String request, String bookmark, ExecuteRequestParameters execParams, List<ExecuteRequestParameter> _execParams) {//}, String postAction, String postActionParams, String pollInterval, String maxRunTime, List<ExecuteRequestParameter> execParams, String altConfigURL) {
+    public ExecuteRequest(String request, String bookmark, ExecuteRequestParameters execParams, List<ExecuteRequestParameter> execParamList, ExecuteRequestWaitConfig waitConfig) {
         this.bookmark = bookmark;
         this.request = request;
         /*this.execParams = execParams;
         this.postAction = postAction;
-        this.postActionParams = postActionParams;
-        this.pollInterval = pollInterval;
-        this.maxRunTime = maxRunTime;
-        this.altConfigURL = altConfigURL;*/
+        this.postActionParams = postActionParams;*/
+        /*this.altConfigURL = altConfigURL;*/
         this.execParams = execParams;
+        this.waitConfig = waitConfig;
         config = GlobalConfiguration.all().get(ExecutionManagerConfig.class);
     }
 
@@ -69,7 +68,16 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
     }
 
     public List<ExecuteRequestParameter> getExecParamList() {
-        return execParams != null ? execParams.execParamList : null;
+        return execParams != null ? execParams.getExecParamList() : null;
+    }
+
+    /** Stapler methods for handling Execute Request Wait Configuration */
+    public boolean getWaitConfigEnabled() {
+        return getWaitConfig() != null;
+    }
+
+    public ExecuteRequestWaitConfig getWaitConfig() {
+        return waitConfig;
     }
 
     @Override

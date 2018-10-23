@@ -51,14 +51,14 @@ public final class ExecuteRequestParameter extends AbstractDescribableImpl<Execu
         public FormValidation doCheckKey(@QueryParameter String key) {
             FormValidation ret = FormValidation.ok();
             if (StringUtils.isEmpty(key))
-                ret = FormValidation.error("Key cannot be empty!");
+                ret = FormValidation.error("A key must be specified!");
             return ret;
         }
 
         public FormValidation doCheckValue(@QueryParameter String value) {
             FormValidation ret = FormValidation.ok();
             if (StringUtils.isEmpty(value))
-                ret = FormValidation.error("Value cannot be empty!");
+                ret = FormValidation.error("A value must be specified!");
             return ret;
         }
     }

@@ -8,7 +8,7 @@
   ~ @author rrinehart on Wed, 19 Sep 2018
   -->
 
-<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form" xmlns:st="jelly:stapler">
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
     <f:entry field="request" title="Request">
         <f:combobox/>
     </f:entry>
@@ -18,41 +18,45 @@
         <f:combobox/>
     </f:entry>
 
-    <f:optionalBlock field="execParams" title="Parameters" checked="${instance.execParamsEnabled}">
-        <f:entry>
-            <f:repeatableProperty field="execParamList" header="."/>
-            <div>See list of
-                <a href="http://where-is-this-document">available environment variables</a>
-            </div>
-        </f:entry>
-    </f:optionalBlock>
+    <f:block>
+        <div style="margin-left: 1em;">
+            <table width="100%">
+                <div>
+                    <h5>Advanced options:</h5>
+                </div>
 
-    <!--
-    <f:optionalBlock name="AlternativeConfig" title="Alternative Credentials &amp; Configuration" inline="true">
-        <f:entry name="AltConfigURL" field="altConfigURL" title="URL">
-            <f:textbox/>
-        </f:entry>
-    </f:optionalBlock>
+                <f:optionalBlock field="execParams" title="Parameters" checked="${instance.execParamsEnabled}">
+                    <f:entry>
+                        <f:repeatableProperty field="execParamList" header=""/>
+                        <div><br/>See list of
+                            <a href="${rootURL}/env-vars.html" target="_blank">available Jenkins environment variables</a>
+                        </div>
+                    </f:entry>
+                </f:optionalBlock>
 
-    <f:optionalBlock name="PostExecuteAction" title="Post Execute Action">
-        <f:entry name="PostAction" field="postAction" title="Action">
-            <select name="postAction">
-                <option value="BPP Report">BPP Report</option>
-            </select>
-        </f:entry>
-        <f:entry name="PostActionParams" title="Parameters" field="postActionParams">
-            <f:textbox/>
-        </f:entry>
-    </f:optionalBlock>
+                <!--
+                <f:optionalBlock name="AlternativeConfig" title="Alternative Credentials &amp; Configuration" inline="true">
+                    <f:entry name="AltConfigURL" field="altConfigURL" title="URL">
+                        <f:textbox/>
+                    </f:entry>
+                </f:optionalBlock>
 
-    <f:optionalBlock name="WaitConfig" title="Wait Configuration">
-        <f:entry name="PollInterval" field="pollInterval" title="Polling Interval">
-            <f:textbox/>
-        </f:entry>
-        <f:entry name="MaxRunTime" field="maxRunTime" title="Maximum Run Time">
-            <f:textbox/>
-        </f:entry>
-    </f:optionalBlock>
+                <f:optionalBlock name="PostExecuteAction" title="Post Execute Action">
+                    <f:entry name="PostAction" field="postAction" title="Action">
+                        <select name="postAction">
+                            <option value="BPP Report">BPP Report</option>
+                        </select>
+                    </f:entry>
+                    <f:entry name="PostActionParams" title="Parameters" field="postActionParams">
+                        <f:textbox/>
+                    </f:entry>
+                </f:optionalBlock>
 
-    -->
+                -->
+
+                <f:optionalProperty field="waitConfig" title="Wait Configuration"></f:optionalProperty>
+
+            </table>
+        </div>
+    </f:block>
 </j:jelly>
