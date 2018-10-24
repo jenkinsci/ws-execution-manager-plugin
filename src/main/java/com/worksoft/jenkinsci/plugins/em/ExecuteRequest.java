@@ -23,6 +23,7 @@ import hudson.util.ComboBoxModel;
 import jenkins.model.GlobalConfiguration;
 import jenkins.tasks.SimpleBuildStep;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.export.Exported;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -36,12 +37,11 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
   private ExecutionManagerConfig globalConfig;
   private ExecuteRequestEMConfig altEMConfig;
 
-  public final ExecuteRequestWaitConfig waitConfig;
-  public final ExecuteRequestParameters execParams;
-  public List<ExecuteRequestParameter> execParamList; // Not used. We get these out of 'execParams' instead
+  private ExecuteRequestWaitConfig waitConfig;
+  private ExecuteRequestParameters execParams;
 
   @DataBoundConstructor
-  public ExecuteRequest (String request, String bookmark, ExecuteRequestParameters execParams, List<ExecuteRequestParameter> execParamList, ExecuteRequestWaitConfig waitConfig, ExecuteRequestEMConfig altEMConfig) {
+  public ExecuteRequest (String request, String bookmark, ExecuteRequestParameters execParams, ExecuteRequestWaitConfig waitConfig, ExecuteRequestEMConfig altEMConfig) {
     this.bookmark = bookmark;
     this.request = request;
     this.execParams = execParams;
@@ -59,10 +59,6 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
 
   public ExecuteRequestParameters getExecParams () {
     return execParams;
-  }
-
-  public List<ExecuteRequestParameter> getExecParamList () {
-    return execParams != null ? execParams.getExecParamList() : null;
   }
 
   /**

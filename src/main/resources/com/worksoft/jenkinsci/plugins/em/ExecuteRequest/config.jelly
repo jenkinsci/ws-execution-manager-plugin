@@ -19,7 +19,7 @@
     </f:entry>
 
     <f:advanced title="Alternative Execution Manager">
-        <f:property field="altEMConfig"></f:property>
+        <f:property field="altEMConfig"/>
     </f:advanced>
 
     <f:block>
@@ -32,17 +32,18 @@
 
                 <!--f:optionalProperty field="altEMConfig" title="Alternative Execution Manager"></f:optionalProperty-->
 
-                <f:optionalBlock field="execParams" title="Parameters" checked="${instance.execParamsEnabled}">
+                <f:optionalProperty field="execParams" title="Parameters"/>
+                <!--f:optionalBlock title="Parameters" checked="${instance.execParamsEnabled}" inline="true">
                     <f:entry>
-                        <f:repeatableProperty field="execParamList" header=""/>
+                        <f:repeatableProperty field="execParams" header=""/>
                         <div><br/>See list of
                             <a href="${rootURL}/env-vars.html" target="_blank">available Jenkins environment variables
                             </a>
                         </div>
                     </f:entry>
-                </f:optionalBlock>
+                </f:optionalBlock-->
 
-                <f:optionalProperty field="waitConfig" title="Wait Configuration"></f:optionalProperty>
+                <f:optionalProperty field="waitConfig" title="Wait Configuration"/>
 
             </table>
         </div>
