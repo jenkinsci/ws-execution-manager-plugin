@@ -8,7 +8,7 @@
 
 package com.worksoft.jenkinsci.plugins.em.config;
 
-import com.worksoft.jenkinsci.plugins.em.ExecuteRequestAltConfig;
+import com.worksoft.jenkinsci.plugins.em.ExecuteRequestEMConfig;
 import com.worksoft.jenkinsci.plugins.em.model.ExecutionManagerServer;
 import hudson.Extension;
 import hudson.util.FormValidation;
@@ -20,24 +20,24 @@ import org.kohsuke.stapler.StaplerRequest;
 @Extension
 public class ExecutionManagerConfig extends GlobalConfiguration {
 
-  public ExecuteRequestAltConfig altConfig;
+  public ExecuteRequestEMConfig emConfig;
 
   public ExecutionManagerConfig () {
     load();
   }
 
-  public ExecuteRequestAltConfig getAltConfig () {
-    return altConfig;
+  public ExecuteRequestEMConfig getEmConfig () {
+    return emConfig;
   }
 
-  public void setAltConfig (ExecuteRequestAltConfig altConfig) {
-    this.altConfig = altConfig;
+  public void setEmConfig (ExecuteRequestEMConfig emConfig) {
+    this.emConfig = emConfig;
   }
 
   /**
    * Checks if the provided values are valid.
    */
-  public FormValidation doValidate (@QueryParameter ExecuteRequestAltConfig altConfig) {
+  public FormValidation doValidate (@QueryParameter ExecuteRequestEMConfig altConfig) {
     return FormValidation.ok("Success");
 
   }
@@ -47,9 +47,5 @@ public class ExecutionManagerConfig extends GlobalConfiguration {
     req.bindJSON(this, json.getJSONObject("execution manager"));
     save();
     return true;
-  }
-
-  public ExecutionManagerServer getEmServer () {
-    return null;
   }
 }

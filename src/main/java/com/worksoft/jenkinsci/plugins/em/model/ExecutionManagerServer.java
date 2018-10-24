@@ -26,13 +26,12 @@ public class ExecutionManagerServer {
 
     private final String url;
     private final UsernamePasswordCredentials credentials;
-    private final String name;
     private final List<String> runningRequests = new ArrayList<>();
 
     private EmAuth auth;
 
 
-    public ExecutionManagerServer(String url, String name, UsernamePasswordCredentials credentials) {
+    public ExecutionManagerServer(String url, UsernamePasswordCredentials credentials) {
         if (!url.endsWith("/")) {
             this.url = url + "/";
         } else {
@@ -40,7 +39,6 @@ public class ExecutionManagerServer {
         }
 
         this.credentials = credentials;
-        this.name = name;
     }
 
     public boolean login() throws UnsupportedEncodingException {

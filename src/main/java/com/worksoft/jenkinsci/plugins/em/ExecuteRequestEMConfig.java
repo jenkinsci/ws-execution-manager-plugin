@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2018 Worksoft, Inc.
  *
- * ExecuteRequestAltConfig
+ * ExecuteRequestEMConfig
  *
  * @author dtheobald on Tue, 23 Oct 2018
  */
@@ -11,18 +11,12 @@ package com.worksoft.jenkinsci.plugins.em;
 import com.cloudbees.plugins.credentials.CredentialsMatchers;
 import com.cloudbees.plugins.credentials.CredentialsProvider;
 import com.cloudbees.plugins.credentials.CredentialsScope;
-import com.cloudbees.plugins.credentials.common.StandardUsernameCredentials;
 import com.cloudbees.plugins.credentials.common.StandardUsernameListBoxModel;
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
-import com.cloudbees.plugins.credentials.common.UsernamePasswordCredentials;
-import com.cloudbees.plugins.credentials.domains.DomainRequirement;
 import com.cloudbees.plugins.credentials.domains.URIRequirementBuilder;
-import com.google.common.primitives.Ints;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.worksoft.jenkinsci.plugins.em.model.ExecutionManagerServer;
 import hudson.Extension;
@@ -37,12 +31,9 @@ import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
-import org.kohsuke.stapler.Stapler;
 import org.kohsuke.stapler.export.Exported;
 
-import java.util.Collections;
-
-public final class ExecuteRequestAltConfig extends AbstractDescribableImpl<ExecuteRequestAltConfig> {
+public final class ExecuteRequestEMConfig extends AbstractDescribableImpl<ExecuteRequestEMConfig> {
 
     @Exported
     public String url;
@@ -50,7 +41,7 @@ public final class ExecuteRequestAltConfig extends AbstractDescribableImpl<Execu
     public String credentials;
 
     @DataBoundConstructor
-    public ExecuteRequestAltConfig(String url, String credentials) {
+    public ExecuteRequestEMConfig (String url, String credentials) {
         this.url = url;
         this.credentials = credentials;
     }
@@ -61,6 +52,10 @@ public final class ExecuteRequestAltConfig extends AbstractDescribableImpl<Execu
 
     public String getCredentials() {
         return credentials;
+    }
+
+    public StandardUsernamePasswordCredentials lookupCredentials() {
+        return lookupCredentials(url, credentials);
     }
 
     private static StandardUsernamePasswordCredentials lookupCredentials(String url, String credentialId) {
@@ -78,9 +73,9 @@ public final class ExecuteRequestAltConfig extends AbstractDescribableImpl<Execu
     }
 
     @Extension
-    public static class DescriptorImpl extends Descriptor<ExecuteRequestAltConfig> {
+    public static class DescriptorImpl extends Descriptor<ExecuteRequestEMConfig> {
         public String getDisplayName() {
-            return "ExecuteRequestAltConfig";
+            return "ExecuteRequestEMConfig";
         }
 
         public FormValidation doCheckUrl(@QueryParameter String url) {
@@ -141,7 +136,7 @@ public final class ExecuteRequestAltConfig extends AbstractDescribableImpl<Execu
                 return FormValidation.error("Credentials lookup error!");
 
             try {
-                ExecutionManagerServer ems = new ExecutionManagerServer(url, "", creds);
+                ExecutionManagerServer ems = new ExecutionManagerServer(url, creds);
                 if (!ems.login()) {
                     return FormValidation.error("Authorization Failed!");
                 }

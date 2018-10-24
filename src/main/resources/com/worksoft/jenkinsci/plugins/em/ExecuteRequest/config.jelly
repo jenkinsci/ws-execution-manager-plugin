@@ -18,9 +18,9 @@
         <f:combobox/>
     </f:entry>
 
-    <!--f:advanced title="Alternative Execution Manager">
-        <f:property field="altConfig"></f:property>
-    </f:advanced-->
+    <f:advanced title="Alternative Execution Manager">
+        <f:property field="altEMConfig"></f:property>
+    </f:advanced>
 
     <f:block>
         <div style="margin-left: 1em;">
@@ -30,7 +30,7 @@
                     <h5>Additional options:</h5>
                 </div>
 
-                <f:optionalProperty field="altConfig" title="Alternative Execution Manager"></f:optionalProperty>
+                <!--f:optionalProperty field="altEMConfig" title="Alternative Execution Manager"></f:optionalProperty-->
 
                 <f:optionalBlock field="execParams" title="Parameters" checked="${instance.execParamsEnabled}">
                     <f:entry>

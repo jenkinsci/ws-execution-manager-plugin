@@ -11,7 +11,7 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
          xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:c="/lib/credentials">
     <f:section title="Global Worksoft Execution Manager Settings" name="execution manager">
-        <f:property field="altConfig"></f:property>
+        <f:property field="emConfig"></f:property>
     </f:section>
 </j:jelly>
 
