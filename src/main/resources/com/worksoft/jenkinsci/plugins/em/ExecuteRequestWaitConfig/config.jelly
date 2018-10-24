@@ -17,11 +17,6 @@
             <f:entry title="Maximum Run Time (secs):" field="maxRunTime">
                 <f:textbox/>
             </f:entry>
-            <f:entry title="">
-                <div align="right">
-                    <f:repeatableDeleteButton/>
-                </div>
-            </f:entry>
         </table>
     </f:block>
 </j:jelly>

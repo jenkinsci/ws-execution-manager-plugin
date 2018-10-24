@@ -35,26 +35,21 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
 
     public final String bookmark;
     public final String request;
-    public final String postAction = null;
-    public final String postActionParams = null;
 
     private ExecutionManagerConfig config;
-    private String altConfigURL;
+    private ExecuteRequestAltConfig altConfig;
 
     public final ExecuteRequestWaitConfig waitConfig;
     public final ExecuteRequestParameters execParams;
     public List<ExecuteRequestParameter> execParamList; // Not used. We get these out of 'execParams' instead
 
     @DataBoundConstructor
-    public ExecuteRequest(String request, String bookmark, ExecuteRequestParameters execParams, List<ExecuteRequestParameter> execParamList, ExecuteRequestWaitConfig waitConfig) {
+    public ExecuteRequest(String request, String bookmark, ExecuteRequestParameters execParams, List<ExecuteRequestParameter> execParamList, ExecuteRequestWaitConfig waitConfig, ExecuteRequestAltConfig altConfig) {
         this.bookmark = bookmark;
         this.request = request;
-        /*this.execParams = execParams;
-        this.postAction = postAction;
-        this.postActionParams = postActionParams;*/
-        /*this.altConfigURL = altConfigURL;*/
         this.execParams = execParams;
         this.waitConfig = waitConfig;
+        this.altConfig = altConfig;
         config = GlobalConfiguration.all().get(ExecutionManagerConfig.class);
     }
 
@@ -78,6 +73,15 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
 
     public ExecuteRequestWaitConfig getWaitConfig() {
         return waitConfig;
+    }
+
+    /** Stapler methods for handling Execute Request Alt Configuration */
+    public boolean getAltConfigEnabled() {
+        return getAltConfig() != null;
+    }
+
+    public ExecuteRequestAltConfig getAltConfig() {
+        return altConfig;
     }
 
     @Override
