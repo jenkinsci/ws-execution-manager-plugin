@@ -36,7 +36,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
     public final String bookmark;
     public final String request;
 
-    private ExecutionManagerConfig config;
+    private ExecutionManagerConfig globalConfig;
     private ExecuteRequestAltConfig altConfig;
 
     public final ExecuteRequestWaitConfig waitConfig;
@@ -50,7 +50,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
         this.execParams = execParams;
         this.waitConfig = waitConfig;
         this.altConfig = altConfig;
-        config = GlobalConfiguration.all().get(ExecutionManagerConfig.class);
+        globalConfig = GlobalConfiguration.all().get(ExecutionManagerConfig.class);
     }
 
     /** Stapler methods for handling Execute Request Parameters */
@@ -86,7 +86,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
 
     @Override
     public void perform(@Nonnull Run<?, ?> run, @Nonnull FilePath workspace, @Nonnull Launcher launcher, @Nonnull TaskListener listener) throws InterruptedException, IOException {
-        ExecutionManagerServer server = config.getEmServer();
+        ExecutionManagerServer server = globalConfig.getEmServer();
     }
 
     @Extension
