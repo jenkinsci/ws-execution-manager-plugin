@@ -9,8 +9,25 @@
   -->
 
 <j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
+
+    <j:set var="doSideBySideKeysAndValues" value="false"/>
+
+    <style>
+        span.header {
+        font-weight:bold;
+        margin-right:5px;
+        width: calc(50% - 5px);
+        float: left;
+        }
+    </style>
     <f:block>
         <table width="100%">
+            <j:if test="${doSideBySideKeysAndValues}">
+                <f:entry>
+                    <span class="header">Key</span>
+                    <span class="header">Value</span>
+                </f:entry>
+            </j:if>
             <f:entry>
                 <f:repeatableProperty field="execParamList" header=""/>
                 <div><br/>See list of
