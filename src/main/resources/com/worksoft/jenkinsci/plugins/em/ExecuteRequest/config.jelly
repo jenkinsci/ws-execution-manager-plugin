@@ -8,33 +8,31 @@
   ~ @author rrinehart on Wed, 19 Sep 2018
   -->
 
-<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form" xmlns:l="/lib/layout" xmlns:st="jelly:stapler">
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
+    <j:set var="doAltEMAsAdvancedButton" value="true"/>
 
     <f:block>
-        <!--<div class="section-header">-->
-        <!--<h4>${%Request}</h4>-->
-        <!--</div>-->
 
         <f:block>
             <h4>${%Request}</h4>
             <h5>Select the Execution Manager Request, Bookmark or Certify Processes to run.</h5>
             <!--<f:entry title="Select the Execution Manager Request, Bookmark or Certify Processes to run.">-->
-                <f:radioBlock name="EmRequest" checked="true" title="EM Request" value="reqId"
-                              help="${descriptor.getHelpFile('request')}">
-                    <f:entry title="Request" field="request">
-                        <f:combobox/>
-                    </f:entry>
-                </f:radioBlock>
-                <f:radioBlock name="EmRequest" checked="false" title="EM Bookmark" value="bookmark">
-                    <f:entry title="Bookmark" field="bookmark">
-                        <f:combobox/>
-                    </f:entry>
-                </f:radioBlock>
-                <f:radioBlock name="EmRequest" checked="false" title="Certify Process" value="processList">
-                    <f:entry>
-                        <f:property field="processList"/>
-                    </f:entry>
-                </f:radioBlock>
+            <f:radioBlock name="EmRequest" checked="true" title="EM Request" value="reqId"
+                          help="${descriptor.getHelpFile('request')}">
+                <f:entry title="Request" field="request">
+                    <f:combobox/>
+                </f:entry>
+            </f:radioBlock>
+            <f:radioBlock name="EmRequest" checked="false" title="EM Bookmark" value="bookmark">
+                <f:entry title="Bookmark" field="bookmark">
+                    <f:combobox/>
+                </f:entry>
+            </f:radioBlock>
+            <f:radioBlock name="EmRequest" checked="false" title="Certify Process" value="processList">
+                <f:entry>
+                    <f:property field="processList"/>
+                </f:entry>
+            </f:radioBlock>
         </f:block>
     </f:block>
 
@@ -42,25 +40,20 @@
         <h4>${%Additional Options}</h4>
         <div style="margin-left: 1em;">
             <table width="100%">
-                <!--f:optionalProperty field="altEMConfig" title="Alternative Execution Manager"></f:optionalProperty-->
+                <j:if test="${!doAltEMAsAdvancedButton}">
+                    <f:optionalProperty field="altEMConfig" title="Alternative Execution Manager"/>
+                </j:if>
 
                 <f:optionalProperty field="execParams" title="Parameters"/>
-                <!--f:optionalBlock title="Parameters" checked="${instance.execParamsEnabled}" inline="true">
-                    <f:entry>
-                        <f:repeatableProperty field="execParams" header=""/>
-                        <div><br/>See list of
-                            <a href="${rootURL}/env-vars.html" target="_blank">available Jenkins environment variables
-                            </a>
-                        </div>
-                    </f:entry>
-                </f:optionalBlock-->
 
                 <f:optionalProperty field="waitConfig" title="Wait Configuration"/>
 
             </table>
         </div>
     </f:block>
-    <f:advanced title="Alternative Execution Manager">
-        <f:property field="altEMConfig"/>
-    </f:advanced>
+    <j:if test="${doAltEMAsAdvancedButton}">
+        <f:advanced title="Alternative Execution Manager">
+            <f:property field="altEMConfig"/>
+        </f:advanced>
+    </j:if>
 </j:jelly>
