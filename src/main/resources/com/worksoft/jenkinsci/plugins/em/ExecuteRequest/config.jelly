@@ -8,28 +8,40 @@
   ~ @author rrinehart on Wed, 19 Sep 2018
   -->
 
-<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
-    <f:entry field="request" title="Request">
-        <f:combobox/>
-    </f:entry>
-    <f:entry title="Or">
-    </f:entry>
-    <f:entry field="bookmark" title="Bookmark">
-        <f:combobox/>
-    </f:entry>
-
-    <f:advanced title="Alternative Execution Manager">
-        <f:property field="altEMConfig"/>
-    </f:advanced>
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form" xmlns:l="/lib/layout" xmlns:st="jelly:stapler">
 
     <f:block>
+        <!--<div class="section-header">-->
+        <!--<h4>${%Request}</h4>-->
+        <!--</div>-->
+
+        <f:block>
+            <h4>${%Request}</h4>
+            <h5>Select the Execution Manager Request, Bookmark or Certify Processes to run.</h5>
+            <!--<f:entry title="Select the Execution Manager Request, Bookmark or Certify Processes to run.">-->
+                <f:radioBlock name="EmRequest" checked="true" title="EM Request" value="reqId"
+                              help="${descriptor.getHelpFile('request')}">
+                    <f:entry title="Request" field="request">
+                        <f:combobox/>
+                    </f:entry>
+                </f:radioBlock>
+                <f:radioBlock name="EmRequest" checked="false" title="EM Bookmark" value="bookmark">
+                    <f:entry title="Bookmark" field="bookmark">
+                        <f:combobox/>
+                    </f:entry>
+                </f:radioBlock>
+                <f:radioBlock name="EmRequest" checked="false" title="Certify Process" value="processList">
+                    <f:entry>
+                        <f:property field="processList"/>
+                    </f:entry>
+                </f:radioBlock>
+        </f:block>
+    </f:block>
+
+    <f:block>
+        <h4>${%Additional Options}</h4>
         <div style="margin-left: 1em;">
             <table width="100%">
-
-                <div>
-                    <h5>Additional options:</h5>
-                </div>
-
                 <!--f:optionalProperty field="altEMConfig" title="Alternative Execution Manager"></f:optionalProperty-->
 
                 <f:optionalProperty field="execParams" title="Parameters"/>
@@ -48,4 +60,7 @@
             </table>
         </div>
     </f:block>
+    <f:advanced title="Alternative Execution Manager">
+        <f:property field="altEMConfig"/>
+    </f:advanced>
 </j:jelly>
