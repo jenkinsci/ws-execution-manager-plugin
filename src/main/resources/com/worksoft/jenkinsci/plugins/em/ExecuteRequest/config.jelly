@@ -48,12 +48,12 @@
 
                 <f:optionalProperty field="waitConfig" title="Wait Configuration"/>
 
+                <j:if test="${doAltEMAsAdvancedButton}">
+                    <f:advanced title="Alternative Execution Manager">
+                        <f:property field="altEMConfig"/>
+                    </f:advanced>
+                </j:if>
             </table>
         </div>
     </f:block>
-    <j:if test="${doAltEMAsAdvancedButton}">
-        <f:advanced title="Alternative Execution Manager">
-            <f:property field="altEMConfig"/>
-        </f:advanced>
-    </j:if>
 </j:jelly>
