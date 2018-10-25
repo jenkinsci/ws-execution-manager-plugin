@@ -24,11 +24,12 @@
                 </f:entry>
             </f:radioBlock>
             <f:radioBlock name="EmRequest" checked="false" title="EM Bookmark" value="bookmark">
-                <f:entry title="Bookmark" field="bookmark">
+                <f:entry title="Bookmark" field="bookmark" help="${descriptor.getHelpFile('request')}">
                     <f:combobox/>
                 </f:entry>
             </f:radioBlock>
-            <f:radioBlock name="EmRequest" checked="false" title="Certify Process" value="processList">
+            <f:radioBlock name="EmRequest" checked="false" title="Certify Process" value="processList"
+                          help="${descriptor.getHelpFile('request')}">
                 <f:entry>
                     <f:property field="processList"/>
                 </f:entry>
