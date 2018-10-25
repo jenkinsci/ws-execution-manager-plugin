@@ -27,12 +27,13 @@ import org.kohsuke.stapler.export.Exported;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import java.util.List;
 
 public class ExecuteRequest extends Builder implements SimpleBuildStep {
 
-  public final String bookmark;
-  public final String request;
+  private final String bookmark;
+  private final String request;
+  private final ExecuteRequestCertifyProcessList processList;
+
 
   private ExecutionManagerConfig globalConfig;
   private ExecuteRequestEMConfig altEMConfig;
@@ -41,12 +42,13 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
   private ExecuteRequestParameters execParams;
 
   @DataBoundConstructor
-  public ExecuteRequest (String request, String bookmark, ExecuteRequestParameters execParams, ExecuteRequestWaitConfig waitConfig, ExecuteRequestEMConfig altEMConfig) {
+  public ExecuteRequest (String request, String bookmark, ExecuteRequestCertifyProcessList processList, ExecuteRequestParameters execParams, ExecuteRequestWaitConfig waitConfig, ExecuteRequestEMConfig altEMConfig) {
     this.bookmark = bookmark;
     this.request = request;
     this.execParams = execParams;
     this.waitConfig = waitConfig;
     this.altEMConfig = altEMConfig;
+    this.processList = processList;
     globalConfig = GlobalConfiguration.all().get(ExecutionManagerConfig.class);
   }
 
@@ -81,6 +83,18 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
 
   public ExecuteRequestEMConfig getAltEMConfig () {
     return altEMConfig;
+  }
+
+  public String getBookmark () {
+    return bookmark;
+  }
+
+  public String getRequest () {
+    return request;
+  }
+
+  public ExecuteRequestCertifyProcessList getProcessList () {
+    return processList;
   }
 
   @Override

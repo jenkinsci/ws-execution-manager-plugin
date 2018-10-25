@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?jelly escape-by-default='true'?>
+
+<!--
+  ~ Copyright (c) 2018 Worksoft, Inc.
+  ~
+  ~ config.jelly
+  ~
+  ~ @author rrinehart on Wed, 24 Oct 2018
+  -->
+
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
+    <f:block>
+        <f:entry title="Database name" field="database">
+            <f:textbox/>
+        </f:entry>
+        <f:entry title="Project Name" field="project">
+            <f:textbox clazz="specialz"/>
+            <f:textbox clazz="specialz"/>
+        </f:entry>
+        <f:block>
+            <f:repeatableProperty field="processList" header="Certify Process List" minimum="1" default=" "
+                                  add="${%Add Certify Process}"/>
+            <!--<f:validateButton-->
+            <!--title="${%Validate Settings}" progress="${%Validating}..."-->
+            <!--method="validate" with="database,project,processList" />-->
+        </f:block>
+    </f:block>
+</j:jelly>

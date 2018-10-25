@@ -1,3 +1,5 @@
+# Git Tips and Tricks
+
 #### Create a new branch and push it to remote repository
 
     git branch <branch name>

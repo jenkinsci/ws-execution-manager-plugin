@@ -1,4 +1,15 @@
 <?jelly escape-by-default='true'?>
-<div>
-    Worksoft Execution Manager Plugin
-</div>
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout">
+    <l:header>
+        <style>
+            input.alignprops {
+            margin-right:5px;
+            width: calc(50% - 5px);
+            float: left;
+            }
+        </style>
+    </l:header>
+    <div>
+        Worksoft Execution Manager Plugin
+    </div>
+</j:jelly>
