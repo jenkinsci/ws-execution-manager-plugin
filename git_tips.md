@@ -68,4 +68,8 @@ Alternativly specify the files
 
 #### Pull request and Code Reviews
 
-TBD???
+-login to crucible at http://crucible.worksoft.com:8060/
+-click create pull request
+-select your commit
+
+TBD??
