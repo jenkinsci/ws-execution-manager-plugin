@@ -20,6 +20,7 @@
         float: left;
         }
     </style>
+
     <f:block>
         <table width="100%">
             <j:if test="${doSideBySideKeysAndValues}">

@@ -23,10 +23,13 @@ public class ExecuteRequestCertifyProcess extends AbstractDescribableImpl<Execut
   @Exported
   String processPath;
 
-
   @DataBoundConstructor
-  public ExecuteRequestCertifyProcess (String  processPath) {
+  public ExecuteRequestCertifyProcess (String processPath) {
     this.processPath = processPath;
+  }
+
+  public String getProcessPath () {
+    return processPath;
   }
 
   @Extension
@@ -36,10 +39,11 @@ public class ExecuteRequestCertifyProcess extends AbstractDescribableImpl<Execut
     }
 
 
-    public FormValidation doCheckProcessPath(@QueryParameter String processPath) {
+    public FormValidation doCheckProcessPath (@QueryParameter String processPath) {
       FormValidation ret = FormValidation.ok();
-      if (StringUtils.isEmpty(processPath))
+      if (StringUtils.isEmpty(processPath)) {
         ret = FormValidation.error("A process Path must be specified!");
+      }
       return ret;
     }
   }

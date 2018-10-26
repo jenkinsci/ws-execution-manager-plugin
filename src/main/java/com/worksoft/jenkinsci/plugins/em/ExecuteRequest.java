@@ -23,12 +23,13 @@ import hudson.util.ComboBoxModel;
 import jenkins.model.GlobalConfiguration;
 import jenkins.tasks.SimpleBuildStep;
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.export.Exported;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
 
 public class ExecuteRequest extends Builder implements SimpleBuildStep {
+
+  private String emRequestType;
 
   private final String bookmark;
   private final String request;
@@ -42,7 +43,8 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
   private ExecuteRequestParameters execParams;
 
   @DataBoundConstructor
-  public ExecuteRequest (String request, String bookmark, ExecuteRequestCertifyProcessList processList, ExecuteRequestParameters execParams, ExecuteRequestWaitConfig waitConfig, ExecuteRequestEMConfig altEMConfig) {
+  public ExecuteRequest (String emRequestType, String request, String bookmark, ExecuteRequestCertifyProcessList processList, ExecuteRequestParameters execParams, ExecuteRequestWaitConfig waitConfig, ExecuteRequestEMConfig altEMConfig) {
+    this.emRequestType = emRequestType;
     this.bookmark = bookmark;
     this.request = request;
     this.execParams = execParams;
@@ -85,12 +87,21 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
     return altEMConfig;
   }
 
+  public String getEmRequestType () {
+    return emRequestType;
+  }
+
   public String getBookmark () {
     return bookmark;
   }
 
   public String getRequest () {
     return request;
+  }
+
+  public String emRequestTypeEquals (String given) {
+    String ret = String.valueOf((emRequestType != null) && (emRequestType.equals(given)));
+    return ret;
   }
 
   public ExecuteRequestCertifyProcessList getProcessList () {

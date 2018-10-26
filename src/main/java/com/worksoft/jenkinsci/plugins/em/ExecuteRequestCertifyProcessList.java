@@ -27,7 +27,7 @@ public class ExecuteRequestCertifyProcessList extends AbstractDescribableImpl<Ex
   String database;
   @Exported
   String project;
-//  @Exported
+  @Exported
   List<ExecuteRequestCertifyProcess> processList;
 
   @DataBoundConstructor
@@ -40,33 +40,39 @@ public class ExecuteRequestCertifyProcessList extends AbstractDescribableImpl<Ex
   public List<ExecuteRequestCertifyProcess> getProcessList () {
     return processList;
   }
-//
-//  public void setProcessList (List<ExecuteRequestCertifyProcess> processList) {
-//    this.processList = processList;
-//  }
+
+  public String getDatabase () {
+    return database;
+  }
+
+  public String getProject () {
+    return project;
+  }
 
   @Extension
   public static class DescriptorImpl extends Descriptor<ExecuteRequestCertifyProcessList> {
-    public String getDisplayName() {
+    public String getDisplayName () {
       return "Certify Process Config";
     }
 
 
-    public FormValidation doCheckDatabase(@QueryParameter String database) {
+    public FormValidation doCheckDatabase (@QueryParameter String database) {
       FormValidation ret = FormValidation.ok();
-      if (StringUtils.isEmpty(database))
+      if (StringUtils.isEmpty(database)) {
         ret = FormValidation.error("A database must be specified!");
+      }
       return ret;
     }
 
-    public FormValidation doCheckProject(@QueryParameter String project) {
+    public FormValidation doCheckProject (@QueryParameter String project) {
       FormValidation ret = FormValidation.ok();
-      if (StringUtils.isEmpty(project))
+      if (StringUtils.isEmpty(project)) {
         ret = FormValidation.error("A project must be specified!");
+      }
       return ret;
     }
 
-    
+
 //    public FormValidation doValidate(@QueryParameter final String database, @QueryParameter final String project, @QueryParameter List<ExecuteRequestCertifyProcess> processList) {
 //      return FormValidation.ok("Valid");
 //    }

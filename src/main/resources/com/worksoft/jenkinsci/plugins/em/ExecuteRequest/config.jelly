@@ -16,24 +16,32 @@
         <f:block>
             <h4>${%Request}</h4>
             <h5>Select the Execution Manager Request, Bookmark or Certify Processes to run.</h5>
-            <!--<f:entry title="Select the Execution Manager Request, Bookmark or Certify Processes to run.">-->
-            <f:radioBlock name="EmRequest" checked="true" title="EM Request" value="reqId"
-                          help="${descriptor.getHelpFile('request')}">
-                <f:entry title="Request" field="request">
-                    <f:combobox/>
-                </f:entry>
-            </f:radioBlock>
-            <f:radioBlock name="EmRequest" checked="false" title="EM Bookmark" value="bookmark">
-                <f:entry title="Bookmark" field="bookmark" help="${descriptor.getHelpFile('request')}">
-                    <f:combobox/>
-                </f:entry>
-            </f:radioBlock>
-            <f:radioBlock name="EmRequest" checked="false" title="Certify Process" value="processList"
-                          help="${descriptor.getHelpFile('request')}">
-                <f:entry>
-                    <f:property field="processList"/>
-                </f:entry>
-            </f:radioBlock>
+            <div style="margin-left: 1em;">
+                <table width="100%">
+                    <!--<f:entry title="Select the Execution Manager Request, Bookmark or Certify Processes to run.">-->
+                    <f:radioBlock name="emRequestType" title="EM Request" value="request"
+                                  help="${descriptor.getHelpFile('request')}" inline="true"
+                                  checked="${instance.emRequestTypeEquals('request')}">
+                        <f:entry title="Request" field="request">
+                            <f:combobox/>
+                        </f:entry>
+                    </f:radioBlock>
+                    <f:radioBlock name="emRequestType" title="EM Bookmark" value="bookmark"
+                                  help="${descriptor.getHelpFile('request')}" inline="true"
+                                  checked="${instance.emRequestTypeEquals('bookmark')}">
+                        <f:entry title="Bookmark" field="bookmark" help="${descriptor.getHelpFile('bookmark')}">
+                            <f:combobox/>
+                        </f:entry>
+                    </f:radioBlock>
+                    <f:radioBlock name="emRequestType" title="Certify Processes" value="processList"
+                                  help="${descriptor.getHelpFile('request')}" inline="true"
+                                  checked="${instance.emRequestTypeEquals('processList')}">
+                        <f:entry>
+                            <f:property field="processList"/>
+                        </f:entry>
+                    </f:radioBlock>
+                </table>
+            </div>
         </f:block>
     </f:block>
 
