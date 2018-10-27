@@ -10,13 +10,11 @@
 
 <j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
     <f:block>
-        <table width="100%">
-            <f:entry field="processPath">
-                <f:textbox/>
-                <div align="right">
-                    <f:repeatableDeleteButton/>
-                </div>
-            </f:entry>
-        </table>
+        <f:entry field="processPath">
+            <f:textbox/>
+            <div align="right">
+                <f:repeatableDeleteButton/>
+            </div>
+        </f:entry>
     </f:block>
 </j:jelly>
