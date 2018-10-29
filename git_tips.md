@@ -62,12 +62,40 @@ Alternativly specify the files
 
 #### View history
 
+long view
     git log
+
+short view
+    git log --oneline
 
 #### Pull request and Code Reviews
 
 -login to crucible at http://crucible.worksoft.com:8060/
 -click create pull request
 -select your commit
+-add reviewers
+-add add comments/etc
 
-TBD??
+#### rename / move a branch
+
+1. Switch to branch which needs to be renamed and rename:
+
+    git checkout your/local/branch/name
+    git branch -m new-name
+
+
+2. Delete the old-name remote branch and push the new-name local branch:
+
+    git push origin :old-name new-name
+
+
+3. Reset the upstream branch for the new-name local branch:
+
+    git push origin -u new-name
+
+
+4. Verify everything is correct:
+
+    git branch -vv
+    git status
+
