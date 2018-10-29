@@ -27,6 +27,7 @@ import hudson.security.AccessControlled;
 import hudson.util.FormValidation;
 import hudson.util.ListBoxModel;
 import jenkins.model.Jenkins;
+import jodd.util.StringUtil;
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -52,6 +53,10 @@ public final class ExecuteRequestEMConfig extends AbstractDescribableImpl<Execut
 
     public String getCredentials() {
         return credentials;
+    }
+
+    public boolean isValid() {
+        return !StringUtil.isNotEmpty(url) && StringUtils.isNotEmpty(credentials);
     }
 
     public StandardUsernamePasswordCredentials lookupCredentials() {

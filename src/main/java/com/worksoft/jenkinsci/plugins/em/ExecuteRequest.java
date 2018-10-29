@@ -9,6 +9,7 @@
 
 package com.worksoft.jenkinsci.plugins.em;
 
+import com.google.common.primitives.Ints;
 import com.worksoft.jenkinsci.plugins.em.config.ExecutionManagerConfig;
 import com.worksoft.jenkinsci.plugins.em.model.ExecutionManagerServer;
 import hudson.Extension;
@@ -22,12 +23,17 @@ import hudson.tasks.Builder;
 import hudson.util.ComboBoxModel;
 import jenkins.model.GlobalConfiguration;
 import jenkins.tasks.SimpleBuildStep;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 public class ExecuteRequest extends Builder implements SimpleBuildStep {
+  private static final Logger log = Logger.getLogger("jenkins.ExecuteRequest");
 
   private String emRequestType;
 
@@ -108,18 +114,6 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
     return processList;
   }
 
-  @Override
-  public void perform (@Nonnull Run<?, ?> run, @Nonnull FilePath workspace, @Nonnull Launcher launcher, @Nonnull TaskListener listener) throws InterruptedException, IOException {
-    ExecuteRequestEMConfig emConfig = this.globalConfig != null ? this.globalConfig.getEmConfig() : null;
-    if (getAltEMConfig() != null) {
-      emConfig = getAltEMConfig();
-    }
-
-    if (emConfig != null) {
-      ExecutionManagerServer server = new ExecutionManagerServer(emConfig.getUrl(), emConfig.lookupCredentials());
-    }
-  }
-
   @Extension
   public static final class ExecutionManagerBuilderDescriptor extends BuildStepDescriptor<Builder> {
 
@@ -139,6 +133,55 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
 
     public ComboBoxModel doFillBookmarkItems () {
       return new ComboBoxModel("One", "Two", "Three");
+    }
+  }
+
+  @Override
+  public void perform (@Nonnull Run<?, ?> run, @Nonnull FilePath workspace, @Nonnull Launcher launcher, @Nonnull TaskListener listener) throws InterruptedException, IOException {
+    ExecuteRequestEMConfig emConfig = this.globalConfig != null ? this.globalConfig.getEmConfig() : null;
+    if (altEMConfig != null && altEMConfig.isValid()) {
+      emConfig = getAltEMConfig();
+    }
+
+    if (emConfig != null) {
+      ExecutionManagerServer server = new ExecutionManagerServer(emConfig.getUrl(), emConfig.lookupCredentials());
+      if (server.login()) {
+        if (emRequestType.equals("request")) {
+          String reqID = null;
+
+          // If the 'request' is a positive integer, assume it's an ID and don't look it up
+          Integer val;
+          if (!StringUtils.isEmpty(request)) {
+            if ((val = Ints.tryParse(request)) != null) {
+              if (val > 0) {
+                reqID = request;
+              }
+            }
+          }
+          if (reqID == null) {
+            JSONArray reqs = server.requests().getJSONArray("requests");
+            for (int i = 0; i < reqs.size(); i++) {
+              JSONObject req;
+              if ((req = reqs.getJSONObject(i)).getString("Name").equals(request)) {
+                reqID = req.getString("RequestID");
+                break;
+              }
+            }
+          }
+          if (reqID == null) {
+            log.warning("");
+            reqID = request;
+          }
+          server.executeRequest(reqID);
+        } else if (emRequestType.equals("bookmark")) {
+          //server.executeBookmark(request);
+        } else if (emRequestType.equals("processList")) {
+          //server.executeBookmark(request);
+        }
+      } else {
+        System.out.println("Bad credentials!");
+        throw new RuntimeException("Bad credentials!");
+      }
     }
   }
 }
