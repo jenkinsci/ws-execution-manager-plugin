@@ -71,12 +71,6 @@ public class ExecuteRequestCertifyProcessList extends AbstractDescribableImpl<Ex
       }
       return ret;
     }
-
-
-//    public FormValidation doValidate(@QueryParameter final String database, @QueryParameter final String project, @QueryParameter List<ExecuteRequestCertifyProcess> processList) {
-//      return FormValidation.ok("Valid");
-//    }
-
   }
 
 }

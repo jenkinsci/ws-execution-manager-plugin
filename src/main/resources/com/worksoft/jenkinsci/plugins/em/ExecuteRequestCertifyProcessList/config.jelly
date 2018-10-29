@@ -21,9 +21,6 @@
             <f:entry title="Certify Process List">
                 <f:repeatableProperty field="processList" header="Path" minimum="1" default=" "
                                       add="${%Add Certify Process}"/>
-                <!--<f:validateButton-->
-                <!--title="${%Validate Settings}" progress="${%Validating}..."-->
-                <!--method="validate" with="database,project,processList" />-->
             </f:entry>
         </table>
     </f:block>
