@@ -55,7 +55,9 @@
 
                 <f:optionalProperty field="execParams" title="Parameters"/>
 
+                <f:optionalProperty field="postExecute" title="Post Execute"></f:optionalProperty>
                 <f:optionalProperty field="waitConfig" title="Wait Configuration"/>
+
 
                 <j:if test="${doAltEMAsAdvancedButton}">
                     <f:advanced title="Alternative Execution Manager">

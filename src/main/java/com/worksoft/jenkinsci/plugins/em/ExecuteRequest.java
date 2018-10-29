@@ -41,7 +41,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
   private final String request;
   private final ExecuteRequestCertifyProcessList processList;
 
-
+  public final ExecuteRequestPostExecute postExecute;
   private ExecutionManagerConfig globalConfig;
   private ExecuteRequestEMConfig altEMConfig;
 
@@ -49,11 +49,12 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
   private ExecuteRequestParameters execParams;
 
   @DataBoundConstructor
-  public ExecuteRequest (String emRequestType, String request, String bookmark, ExecuteRequestCertifyProcessList processList, ExecuteRequestParameters execParams, ExecuteRequestWaitConfig waitConfig, ExecuteRequestEMConfig altEMConfig) {
+  public ExecuteRequest (String emRequestType, String request, String bookmark, ExecuteRequestCertifyProcessList processList, ExecuteRequestParameters execParams, ExecuteRequestWaitConfig waitConfig, ExecuteRequestEMConfig altEMConfig, ExecuteRequestPostExecute postExecute) {
     this.emRequestType = emRequestType;
     this.bookmark = bookmark;
     this.request = request;
     this.execParams = execParams;
+    this.postExecute = postExecute;
     this.waitConfig = waitConfig;
     this.altEMConfig = altEMConfig;
     this.processList = processList;
@@ -73,7 +74,18 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
 
   /**
    * Stapler methods for handling Execute Request Wait Configuration
+   * }
+   * /** Stapler methods for handling Execute Request Post Execute Action
    */
+
+  public boolean getPostExecuteEnabled () {
+    return getPostExecute() != null;
+  }
+
+  public ExecuteRequestPostExecute getPostExecute () {
+    return postExecute;
+  }
+
   public boolean getWaitConfigEnabled () {
     return getWaitConfig() != null;
   }
