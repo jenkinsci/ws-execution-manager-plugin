@@ -11,18 +11,20 @@
 
 <j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
     <f:block>
+        <table width="100%">
             <f:entry title="Database name" field="database">
                 <f:textbox/>
             </f:entry>
             <f:entry title="Project Name" field="project">
                 <f:textbox/>
             </f:entry>
-            <f:entry title="Certify Process List" field="database">
+            <f:entry title="Certify Process List">
                 <f:repeatableProperty field="processList" header="Path" minimum="1" default=" "
                                       add="${%Add Certify Process}"/>
                 <!--<f:validateButton-->
                 <!--title="${%Validate Settings}" progress="${%Validating}..."-->
                 <!--method="validate" with="database,project,processList" />-->
             </f:entry>
+        </table>
     </f:block>
 </j:jelly>
