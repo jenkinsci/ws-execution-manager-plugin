@@ -35,18 +35,17 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
 
     public final String bookmark;
     public final String request;
-    public final String postAction = null;
-    public final String postActionParams = null;
 
     private ExecutionManagerConfig config;
     private String altConfigURL;
 
+    public final ExecuteRequestPostExecute postExecute;
     public final ExecuteRequestWaitConfig waitConfig;
     public final ExecuteRequestParameters execParams;
     public List<ExecuteRequestParameter> execParamList; // Not used. We get these out of 'execParams' instead
 
     @DataBoundConstructor
-    public ExecuteRequest(String request, String bookmark, ExecuteRequestParameters execParams, List<ExecuteRequestParameter> execParamList, ExecuteRequestWaitConfig waitConfig) {
+    public ExecuteRequest(String request, String bookmark, ExecuteRequestParameters execParams, List<ExecuteRequestParameter> execParamList, ExecuteRequestPostExecute postExecute, ExecuteRequestWaitConfig waitConfig) {
         this.bookmark = bookmark;
         this.request = request;
         /*this.execParams = execParams;
@@ -54,6 +53,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
         this.postActionParams = postActionParams;*/
         /*this.altConfigURL = altConfigURL;*/
         this.execParams = execParams;
+        this.postExecute = postExecute;
         this.waitConfig = waitConfig;
         config = GlobalConfiguration.all().get(ExecutionManagerConfig.class);
     }
@@ -69,6 +69,15 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
 
     public List<ExecuteRequestParameter> getExecParamList() {
         return execParams != null ? execParams.getExecParamList() : null;
+    }
+    /** Stapler methods for handling Execute Request Post Execute Action */
+
+    public boolean getPostExecuteEnabled() {
+        return getPostExecute() != null;
+    }
+
+    public ExecuteRequestPostExecute getPostExecute() {
+        return postExecute;
     }
 
     /** Stapler methods for handling Execute Request Wait Configuration */

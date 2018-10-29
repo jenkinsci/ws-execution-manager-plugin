@@ -54,6 +54,8 @@
 
                 -->
 
+                <f:optionalProperty field="postExecute" title="Post Execute"></f:optionalProperty>
+
                 <f:optionalProperty field="waitConfig" title="Wait Configuration"></f:optionalProperty>
 
             </table>
