@@ -1,3 +1,5 @@
+# Git Tips and Tricks
+
 #### Create a new branch and push it to remote repository
 
     git branch <branch name>
@@ -48,16 +50,18 @@ Check the status of the files
 
     git status
 
-Then add the file(s) if they are new
+Then add the file(s) to the "stage" to be committed
 
-    git add <filenames>
-Then commit
+`git add <filenames>`  or `git add -i` for interactive mode, see the git add --help for usage of interactive staging
+    
+Then commit:
 
-    git commit -m
+    git commit -m "INT-123: commit message text"
+Omit the -m flag if you wish to use a text editor to enter the commit message
 
 Alternativly specify the files
 
-    git commit <filename> -m
+    git commit <filename> -m "INT-123: commit message text"
 
 
 #### View history
@@ -65,5 +69,35 @@ Alternativly specify the files
     git log
 
 #### Pull request and Code Reviews
+- push your code changes to your named branch
+- login to crucible at http://crucible.worksoft.com:8060/
+- click "Create review"
+- click Edit Details button
+  - enter a title
+  - add reviewers
+  - add a description of changes
+  - add any other information you wish/need
+- click "Add Content" button
+  - click Choose branches
+  - select your branch
+  - changed "Branched from" to the destination branch
 
-TBD???
+what else TBD??
+
+#### Set diff and merge tools to an external tool
+
+- **Beyond Compare**
+  - merge tool
+    - `git config --global merge.tool bc`
+    - `git config --global mergetool.bc.path "c:/Program Files (x86)/Beyond Compare 4/bcomp.exe"`
+  - diff tool
+     - `git config --global diff.tool bc`
+     - `git config --global difftool.bc.path "c:/Program Files (x86)/Beyond Compare 4/bcomp.exe"`
+- **Ediff**
+  - `git config --global diff.tool ediff`
+
+**Usage:**
+Use the `git difftool` command
+For example: `git difftool INT-609 origin/INT-609 --dir-diff`
+
+

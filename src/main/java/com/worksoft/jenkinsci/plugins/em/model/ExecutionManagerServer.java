@@ -14,6 +14,7 @@ import jodd.http.HttpRequest;
 import jodd.http.HttpResponse;
 import org.codehaus.groovy.runtime.StackTraceUtils;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -24,30 +25,28 @@ public class ExecutionManagerServer {
 
   private final String url;
   private final UsernamePasswordCredentials credentials;
-  private final String name;
   private final List<String> runningRequests = new ArrayList<>();
 
   private EmAuth auth;
 
 
-  public ExecutionManagerServer (String url, String name, UsernamePasswordCredentials credentials) {
+  public ExecutionManagerServer (String url, UsernamePasswordCredentials credentials) {
     if (!url.endsWith("/")) {
-     this.url = url + "/";
+      this.url = url + "/";
     } else {
       this.url = url;
     }
 
     this.credentials = credentials;
-    this.name = name;
   }
 
-  public boolean login () {
-    HttpRequest httpRequest = HttpRequest.post(url + "Token")
+  public boolean login () throws UnsupportedEncodingException {
+    HttpRequest httpRequest = HttpRequest.post(url + "api/Token")
             .contentType("application/x-www-form-urlencoded")
             .header("Authorization", "OAuth2")
             .form("grant_type", "password",
-                    "password", credentials.getPassword().getPlainText(),
-                    "username", credentials.getUsername());
+                    "username", credentials.getUsername(),
+                    "password", credentials.getPassword().getPlainText());
 
     EmResult result = sendRequest(httpRequest);
 
@@ -136,7 +135,7 @@ public class ExecutionManagerServer {
         throw new Exception("Unauthorized");
 //      payload = Unauthorized;
       } else {
-        
+
         log.warning("ExecutionManager request failed " + response.toString(true));
 //      status = false;
 //      if (payload != null) {

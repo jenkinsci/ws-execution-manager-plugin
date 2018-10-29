@@ -15,104 +15,143 @@ import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.AbstractProject;
-import hudson.model.Descriptor;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
 import hudson.util.ComboBoxModel;
-import hudson.util.FormValidation;
 import jenkins.model.GlobalConfiguration;
 import jenkins.tasks.SimpleBuildStep;
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.QueryParameter;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import java.util.List;
 
 public class ExecuteRequest extends Builder implements SimpleBuildStep {
 
-    public final String bookmark;
-    public final String request;
+  private String emRequestType;
 
-    private ExecutionManagerConfig config;
-    private String altConfigURL;
+  private final String bookmark;
+  private final String request;
+  private final ExecuteRequestCertifyProcessList processList;
 
-    public final ExecuteRequestPostExecute postExecute;
-    public final ExecuteRequestWaitConfig waitConfig;
-    public final ExecuteRequestParameters execParams;
-    public List<ExecuteRequestParameter> execParamList; // Not used. We get these out of 'execParams' instead
+  public final ExecuteRequestPostExecute postExecute;
+  private ExecutionManagerConfig globalConfig;
+  private ExecuteRequestEMConfig altEMConfig;
 
-    @DataBoundConstructor
-    public ExecuteRequest(String request, String bookmark, ExecuteRequestParameters execParams, List<ExecuteRequestParameter> execParamList, ExecuteRequestPostExecute postExecute, ExecuteRequestWaitConfig waitConfig) {
-        this.bookmark = bookmark;
-        this.request = request;
-        /*this.execParams = execParams;
-        this.postAction = postAction;
-        this.postActionParams = postActionParams;*/
-        /*this.altConfigURL = altConfigURL;*/
-        this.execParams = execParams;
-        this.postExecute = postExecute;
-        this.waitConfig = waitConfig;
-        config = GlobalConfiguration.all().get(ExecutionManagerConfig.class);
+  private ExecuteRequestWaitConfig waitConfig;
+  private ExecuteRequestParameters execParams;
+
+  @DataBoundConstructor
+  public ExecuteRequest (String emRequestType, String request, String bookmark, ExecuteRequestCertifyProcessList processList, ExecuteRequestParameters execParams, ExecuteRequestWaitConfig waitConfig, ExecuteRequestEMConfig altEMConfig, ExecuteRequestPostExecute postExecute) {
+    this.emRequestType = emRequestType;
+    this.bookmark = bookmark;
+    this.request = request;
+    this.execParams = execParams;
+    this.postExecute = postExecute;
+    this.waitConfig = waitConfig;
+    this.altEMConfig = altEMConfig;
+    this.processList = processList;
+    globalConfig = GlobalConfiguration.all().get(ExecutionManagerConfig.class);
+  }
+
+  /**
+   * Stapler methods for handling Execute Request Parameters
+   */
+  public boolean getExecParamsEnabled () {
+    return getExecParams() != null;
+  }
+
+  public ExecuteRequestParameters getExecParams () {
+    return execParams;
+  }
+
+  /**
+   * Stapler methods for handling Execute Request Wait Configuration
+   * }
+   * /** Stapler methods for handling Execute Request Post Execute Action
+   */
+
+  public boolean getPostExecuteEnabled () {
+    return getPostExecute() != null;
+  }
+
+  public ExecuteRequestPostExecute getPostExecute () {
+    return postExecute;
+  }
+
+  public boolean getWaitConfigEnabled () {
+    return getWaitConfig() != null;
+  }
+
+  public ExecuteRequestWaitConfig getWaitConfig () {
+    return waitConfig;
+  }
+
+  /**
+   * Stapler methods for handling Execute Request Alt Configuration
+   */
+  public boolean getAltEMConfigEnabled () {
+    return getAltEMConfig() != null;
+  }
+
+  public ExecuteRequestEMConfig getAltEMConfig () {
+    return altEMConfig;
+  }
+
+  public String getEmRequestType () {
+    return emRequestType;
+  }
+
+  public String getBookmark () {
+    return bookmark;
+  }
+
+  public String getRequest () {
+    return request;
+  }
+
+  public String emRequestTypeEquals (String given) {
+    String ret = String.valueOf((emRequestType != null) && (emRequestType.equals(given)));
+    return ret;
+  }
+
+  public ExecuteRequestCertifyProcessList getProcessList () {
+    return processList;
+  }
+
+  @Override
+  public void perform (@Nonnull Run<?, ?> run, @Nonnull FilePath workspace, @Nonnull Launcher
+          launcher, @Nonnull TaskListener listener) throws InterruptedException, IOException {
+    ExecuteRequestEMConfig emConfig = this.globalConfig != null ? this.globalConfig.getEmConfig() : null;
+    if (getAltEMConfig() != null) {
+      emConfig = getAltEMConfig();
     }
 
-    /** Stapler methods for handling Execute Request Parameters */
-    public boolean getExecParamsEnabled() {
-        return getExecParams() != null;
+    if (emConfig != null) {
+      ExecutionManagerServer server = new ExecutionManagerServer(emConfig.getUrl(), emConfig.lookupCredentials());
     }
+  }
 
-    public ExecuteRequestParameters getExecParams() {
-        return execParams;
-    }
+  @Extension
+  public static final class ExecutionManagerBuilderDescriptor extends BuildStepDescriptor<Builder> {
 
-    public List<ExecuteRequestParameter> getExecParamList() {
-        return execParams != null ? execParams.getExecParamList() : null;
-    }
-    /** Stapler methods for handling Execute Request Post Execute Action */
-
-    public boolean getPostExecuteEnabled() {
-        return getPostExecute() != null;
-    }
-
-    public ExecuteRequestPostExecute getPostExecute() {
-        return postExecute;
-    }
-
-    /** Stapler methods for handling Execute Request Wait Configuration */
-    public boolean getWaitConfigEnabled() {
-        return getWaitConfig() != null;
-    }
-
-    public ExecuteRequestWaitConfig getWaitConfig() {
-        return waitConfig;
+    @Override
+    public boolean isApplicable (Class<? extends AbstractProject> jobType) {
+      return true;
     }
 
     @Override
-    public void perform(@Nonnull Run<?, ?> run, @Nonnull FilePath workspace, @Nonnull Launcher launcher, @Nonnull TaskListener listener) throws InterruptedException, IOException {
-        ExecutionManagerServer server = config.getEmServer();
+    public String getDisplayName () {
+      return "Run Execution Manager Request";
     }
 
-    @Extension
-    public static final class ExecutionManagerBuilderDescriptor extends BuildStepDescriptor<Builder> {
-
-        @Override
-        public boolean isApplicable(Class<? extends AbstractProject> jobType) {
-            return true;
-        }
-
-        @Override
-        public String getDisplayName() {
-            return "Run Execution Manager Request";
-        }
-
-        public ComboBoxModel doFillRequestItems() {
-            return new ComboBoxModel("Apple", "Banana", "Oreo");
-        }
-
-        public ComboBoxModel doFillBookmarkItems() {
-            return new ComboBoxModel("One", "Two", "Three");
-        }
+    public ComboBoxModel doFillRequestItems () {
+      return new ComboBoxModel("Apple", "Banana", "Oreo");
     }
+
+    public ComboBoxModel doFillBookmarkItems () {
+      return new ComboBoxModel("One", "Two", "Three");
+    }
+  }
 }

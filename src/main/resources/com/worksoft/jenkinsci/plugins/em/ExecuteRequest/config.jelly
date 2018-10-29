@@ -9,55 +9,61 @@
   -->
 
 <j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
-    <f:entry field="request" title="Request">
-        <f:combobox/>
-    </f:entry>
-    <f:entry title="Or">
-    </f:entry>
-    <f:entry field="bookmark" title="Bookmark">
-        <f:combobox/>
-    </f:entry>
+    <j:set var="doAltEMAsAdvancedButton" value="true"/>
 
     <f:block>
+
+        <f:block>
+            <h4>${%Request}</h4>
+            <h5>Select the Execution Manager Request, Bookmark or Certify Processes to run.</h5>
+            <div style="margin-left: 1em;">
+                <table width="100%">
+                    <!--<f:entry title="Select the Execution Manager Request, Bookmark or Certify Processes to run.">-->
+                    <f:radioBlock name="emRequestType" title="EM Request" value="request"
+                                  help="${descriptor.getHelpFile('request')}" inline="true"
+                                  checked="${instance.emRequestTypeEquals('request')}">
+                        <f:entry title="Request" field="request">
+                            <f:combobox/>
+                        </f:entry>
+                    </f:radioBlock>
+                    <f:radioBlock name="emRequestType" title="EM Bookmark" value="bookmark"
+                                  help="${descriptor.getHelpFile('request')}" inline="true"
+                                  checked="${instance.emRequestTypeEquals('bookmark')}">
+                        <f:entry title="Bookmark" field="bookmark" help="${descriptor.getHelpFile('bookmark')}">
+                            <f:combobox/>
+                        </f:entry>
+                    </f:radioBlock>
+                    <f:radioBlock name="emRequestType" title="Certify Processes" value="processList"
+                                  help="${descriptor.getHelpFile('request')}" inline="true"
+                                  checked="${instance.emRequestTypeEquals('processList')}">
+                        <f:entry>
+                            <f:property field="processList"/>
+                        </f:entry>
+                    </f:radioBlock>
+                </table>
+            </div>
+        </f:block>
+    </f:block>
+
+    <f:block>
+        <h4>${%Additional Options}</h4>
         <div style="margin-left: 1em;">
             <table width="100%">
-                <div>
-                    <h5>Advanced options:</h5>
-                </div>
+                <j:if test="${!doAltEMAsAdvancedButton}">
+                    <f:optionalProperty field="altEMConfig" title="Alternative Execution Manager"/>
+                </j:if>
 
-                <f:optionalBlock field="execParams" title="Parameters" checked="${instance.execParamsEnabled}">
-                    <f:entry>
-                        <f:repeatableProperty field="execParamList" header=""/>
-                        <div><br/>See list of
-                            <a href="${rootURL}/env-vars.html" target="_blank">available Jenkins environment variables</a>
-                        </div>
-                    </f:entry>
-                </f:optionalBlock>
-
-                <!--
-                <f:optionalBlock name="AlternativeConfig" title="Alternative Credentials &amp; Configuration" inline="true">
-                    <f:entry name="AltConfigURL" field="altConfigURL" title="URL">
-                        <f:textbox/>
-                    </f:entry>
-                </f:optionalBlock>
-
-                <f:optionalBlock name="PostExecuteAction" title="Post Execute Action">
-                    <f:entry name="PostAction" field="postAction" title="Action">
-                        <select name="postAction">
-                            <option value="BPP Report">BPP Report</option>
-                        </select>
-                    </f:entry>
-                    <f:entry name="PostActionParams" title="Parameters" field="postActionParams">
-                        <f:textbox/>
-                    </f:entry>
-                </f:optionalBlock>
-
-                -->
+                <f:optionalProperty field="execParams" title="Parameters"/>
 
                 <f:optionalProperty field="postExecute" title="Post Execute"></f:optionalProperty>
+                <f:optionalProperty field="waitConfig" title="Wait Configuration"/>
 
-                <f:optionalProperty field="waitConfig" title="Wait Configuration"></f:optionalProperty>
 
+                <j:if test="${doAltEMAsAdvancedButton}">
+                    <f:advanced title="Alternative Execution Manager">
+                        <f:property field="altEMConfig"/>
+                    </f:advanced>
+                </j:if>
             </table>
         </div>
     </f:block>
