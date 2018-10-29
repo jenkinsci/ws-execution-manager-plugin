@@ -9,7 +9,6 @@
 package com.worksoft.jenkinsci.plugins.em.config;
 
 import com.worksoft.jenkinsci.plugins.em.ExecuteRequestEMConfig;
-import com.worksoft.jenkinsci.plugins.em.model.ExecutionManagerServer;
 import hudson.Extension;
 import hudson.util.FormValidation;
 import jenkins.model.GlobalConfiguration;
@@ -39,7 +38,6 @@ public class ExecutionManagerConfig extends GlobalConfiguration {
    */
   public FormValidation doValidate (@QueryParameter ExecuteRequestEMConfig altConfig) {
     return FormValidation.ok("Success");
-
   }
 
   @Override
