@@ -101,3 +101,23 @@ Use the `git difftool` command
 For example: `git difftool INT-609 origin/INT-609 --dir-diff`
 
 
+#### Archiving Old Branches 
+
+First, ensure any commits that are to be kept have been pushed to the parent branch.  Then push any outstanding local commits to the origin. 
+
+1. Tag the branch using the `archive/` folder
+    `git tag archive/<branchname> <branchname>`
+2. Delete branch from local Git working copy
+    `git branch -d <branchname>`
+3. Delete the branch from the remote Git origin
+    `git push origin :branchname`
+4. Push the new tags to origin
+    `git push --tags`
+    
+    
+#### Restore from an archived branch tag
+
+    `git checkout -b branchname archive/branchname`
+    
+The -b flag tells Git to create a new branch and check it out in the same step. 
+The first branch name is the name of the new branch, and the second is the name of the tag to use as the source for the new branch.
