@@ -11,6 +11,7 @@ package com.worksoft.jenkinsci.plugins.em;
 import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
+import hudson.util.ComboBoxModel;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.export.Exported;
 
@@ -38,6 +39,10 @@ public final class ExecuteRequestPostExecute extends AbstractDescribableImpl<Exe
   public static class DescriptorImpl extends Descriptor<ExecuteRequestPostExecute> {
     public String getDisplayName () {
       return "ExecuteRequestPostExecute";
+    }
+
+    public ComboBoxModel doFillPostExecuteActionNameItems () {
+      return new ComboBoxModel("BPP Report");
     }
   }
 }
