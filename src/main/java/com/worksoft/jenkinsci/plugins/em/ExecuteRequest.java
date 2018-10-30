@@ -16,6 +16,7 @@ import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.AbstractProject;
+import hudson.model.Result;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.tasks.BuildStepDescriptor;
@@ -30,6 +31,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ExecuteRequest extends Builder implements SimpleBuildStep {
@@ -191,8 +193,11 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
           //server.executeBookmark(request);
         }
       } else {
-        System.out.println("Bad credentials!");
-        throw new RuntimeException("Bad credentials!");
+        listener.error("Bad credentials!"); // ends up in the Console output
+        listener.error("Can't log in to %s.", emConfig.getUrl());
+        log.log(Level.SEVERE, "Bad credentials!"); // Ends up in the log
+        run.setResult(Result.FAILURE); // Fail this build step.
+        //throw new RuntimeException("Bad credentials!"); // In console output end build status to fail
       }
     }
   }
