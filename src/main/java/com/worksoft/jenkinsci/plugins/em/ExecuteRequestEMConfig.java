@@ -56,7 +56,7 @@ public final class ExecuteRequestEMConfig extends AbstractDescribableImpl<Execut
     }
 
     public boolean isValid() {
-        return !StringUtil.isNotEmpty(url) && StringUtils.isNotEmpty(credentials);
+        return StringUtil.isNotEmpty(url) && StringUtils.isNotEmpty(credentials);
     }
 
     public StandardUsernamePasswordCredentials lookupCredentials() {
