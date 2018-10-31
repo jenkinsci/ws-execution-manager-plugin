@@ -23,6 +23,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -107,10 +108,13 @@ public class ExecutionManagerServer {
     return null;
   }
 
-  public boolean executeRequest (String request) {
+  private String formatParameters(HashMap<String, String> parameters) {
+    return "";
+  }
+  public boolean executeRequest (String request, HashMap<String, String> parameters) {
     HttpRequest httpRequest = HttpRequest.put(url + "api/ExecuteRequest")
             .header("id", request)
-            .header("parameters", "")
+            .header("parameters", formatParameters(parameters))
             .header("jsonOrXml", "json");
     httpRequest.body("");
     String guid;
@@ -131,9 +135,10 @@ public class ExecutionManagerServer {
     return result.is200();
   }
 
-  public boolean executeBookmark (String bookmark) {
+  public boolean executeBookmark (String bookmark, String folder, HashMap<String, String> parameters) {
     HttpRequest httpRequest = HttpRequest.put(url + "api/Bookmarks/" + bookmark + "/Execute")
-            .header("parameters", "")
+            .header("folder", "")
+            .header("parameters", formatParameters(parameters))
             .header("jsonOrXml", "json");
     httpRequest.body("");
     String guid;

@@ -12,10 +12,16 @@
 <j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
     <f:block>
         <table width="100%">
-            <f:entry title="Database name" field="database">
+            <f:entry title="Database name:" field="database">
                 <f:textbox/>
             </f:entry>
-            <f:entry title="Project Name" field="project">
+            <f:entry title="Project name:" field="project">
+                <f:textbox/>
+            </f:entry>
+            <f:entry title="Results folder:" field="folder">
+                <f:textbox/>
+            </f:entry>
+            <f:entry title="Request name:" field="requestName">
                 <f:textbox/>
             </f:entry>
             <f:entry title="Certify Process List">

@@ -28,13 +28,19 @@ public class ExecuteRequestCertifyProcessList extends AbstractDescribableImpl<Ex
   @Exported
   String project;
   @Exported
+  String folder;
+  @Exported
+  String requestName;
+  @Exported
   List<ExecuteRequestCertifyProcess> processList;
 
   @DataBoundConstructor
-  public ExecuteRequestCertifyProcessList (String database, String project, List<ExecuteRequestCertifyProcess> processList) {
+  public ExecuteRequestCertifyProcessList (String database, String project, List<ExecuteRequestCertifyProcess> processList, String folder, String requestName) {
     this.database = database;
     this.project = project;
     this.processList = processList;
+    this.folder = folder;
+    this.requestName = requestName;
   }
 
   public List<ExecuteRequestCertifyProcess> getProcessList () {
@@ -47,6 +53,14 @@ public class ExecuteRequestCertifyProcessList extends AbstractDescribableImpl<Ex
 
   public String getProject () {
     return project;
+  }
+
+  public String getFolder () {
+    return folder;
+  }
+
+  public String getRequestName () {
+    return requestName;
   }
 
   @Extension

@@ -12,6 +12,7 @@ package com.worksoft.jenkinsci.plugins.em;
 import com.worksoft.jenkinsci.plugins.em.config.ExecutionManagerConfig;
 import com.worksoft.jenkinsci.plugins.em.model.EmResult;
 import com.worksoft.jenkinsci.plugins.em.model.ExecutionManagerServer;
+import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
@@ -34,6 +35,7 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -155,6 +157,23 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
     }
   }
 
+  // Process the user provided parameters by substituting Jenkins environment
+  // variables referenced in a parameter's value.
+  HashMap<String, String> processParameters () throws InterruptedException, IOException {
+    HashMap<String, String> ret = new HashMap<String, String>();
+    EnvVars envVars = run.getEnvironment(listener);
+    if (execParams != null) {
+      for (ExecuteRequestParameter param : execParams.getExecParamList()) {
+        String value=param.getValue();
+
+        // dereference ALL Jenkins vars within the value string
+
+        ret.put(param.getKey(), value);
+      }
+    }
+    return ret;
+  }
+
   @Override
   public void perform (@Nonnull Run<?, ?> run, @Nonnull FilePath workspace, @Nonnull Launcher launcher, @Nonnull TaskListener listener) throws InterruptedException, IOException {
     // Save perform parameters in instance variables for future reference.
@@ -245,7 +264,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
         listener.fatalError("No such request '%s'!", theReq);
         run.setResult(Result.FAILURE); // Fail this build step.
       } else {
-        //server.executeRequest(reqID);
+        //server.executeRequest(reqID, processParameters());
       }
     }
   }
@@ -284,7 +303,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
         listener.fatalError("No such bookmark '%s'!", theBmark);
         run.setResult(Result.FAILURE); // Fail this build step.
       } else {
-        //server.executeBookmark(bmarkID, bmark.getFolder());
+        //server.executeBookmark(bmarkID, processParameters(), bmark.getFolder());
       }
     }
   }
