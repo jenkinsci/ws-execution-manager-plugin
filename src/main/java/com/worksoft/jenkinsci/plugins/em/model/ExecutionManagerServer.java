@@ -11,6 +11,7 @@ package com.worksoft.jenkinsci.plugins.em.model;
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
 import com.cloudbees.plugins.credentials.common.UsernamePasswordCredentials;
 import hudson.util.FormValidation;
+import jdk.nashorn.internal.objects.annotations.Getter;
 import jodd.http.HttpException;
 import jodd.http.HttpRequest;
 import jodd.http.HttpResponse;
@@ -35,6 +36,11 @@ public class ExecutionManagerServer {
 
   private EmAuth auth;
 
+  private EmResult lastEMResult;
+
+  public EmResult getLastEMResult() {
+    return lastEMResult;
+  }
 
   public ExecutionManagerServer (String url, UsernamePasswordCredentials credentials) {
     if (credentials == null) {
@@ -71,6 +77,20 @@ public class ExecutionManagerServer {
       auth.save(result.getJsonData());
     }
     return result.is200();
+  }
+
+  public JSONObject bookmarks () {
+    HttpRequest httpRequest = HttpRequest.get(url + "api/Bookmarks")
+            .header("jsonOrXml", "json");
+    httpRequest.body("");
+
+    EmResult result = sendRequest(httpRequest);
+
+    if (result.is200()) {
+      return result.getJsonData();
+    }
+
+    return null;
   }
 
   public JSONObject requests () {
@@ -111,6 +131,28 @@ public class ExecutionManagerServer {
     return result.is200();
   }
 
+  public boolean executeBookmark (String bookmark) {
+    HttpRequest httpRequest = HttpRequest.put(url + "api/Bookmarks/" + bookmark + "/Execute")
+            .header("parameters", "")
+            .header("jsonOrXml", "json");
+    httpRequest.body("");
+    String guid;
+
+    EmResult result = sendRequest(httpRequest);
+
+    if (result.is200()) {
+      String response = result.getResponseData();
+      if (response.length() >= 2 && response.charAt(0) == '"' && response.charAt(response.length() - 1) == '"') {
+        guid = response.substring(1, response.length() - 1);
+      } else {
+        guid = response;
+      }
+
+      runningRequests.add(guid);
+    }
+
+    return result.is200();
+  }
 
   public EmStatus waitForCompletion (String guid) {
 
@@ -156,7 +198,7 @@ public class ExecutionManagerServer {
       }
 
       HttpResponse response = request.send();
-      result = new EmResult(response);
+      result = lastEMResult = new EmResult(response);
       if (result.is200()) {
 //      status = true;
 

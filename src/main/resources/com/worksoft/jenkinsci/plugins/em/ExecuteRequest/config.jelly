@@ -29,8 +29,8 @@
                     <f:radioBlock name="emRequestType" title="EM Bookmark" value="bookmark"
                                   help="${descriptor.getHelpFile('request')}" inline="true"
                                   checked="${instance.emRequestTypeEquals('bookmark')}">
-                        <f:entry title="Bookmark" field="bookmark" help="${descriptor.getHelpFile('bookmark')}">
-                            <f:combobox/>
+                        <f:entry>
+                            <f:property field="bookmark"/>
                         </f:entry>
                     </f:radioBlock>
                     <f:radioBlock name="emRequestType" title="Certify Processes" value="processList"

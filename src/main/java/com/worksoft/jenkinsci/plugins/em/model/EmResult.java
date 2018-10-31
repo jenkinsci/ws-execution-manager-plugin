@@ -35,7 +35,7 @@ public class EmResult {
       if (isJson(response.bodyText())) {
         String jsonText=response.bodyText();
         if (jsonText.startsWith("[")) {
-          jsonText = OPEN_CURLY + "\"requests\": " + jsonText + CLOSE_CURLY;
+          jsonText = OPEN_CURLY + "\"objects\": " + jsonText + CLOSE_CURLY;
         }
         jsonData = (JSONObject) JSONSerializer.toJSON(jsonText);
       }
