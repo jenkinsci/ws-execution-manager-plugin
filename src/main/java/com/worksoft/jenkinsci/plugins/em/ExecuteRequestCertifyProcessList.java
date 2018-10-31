@@ -85,6 +85,14 @@ public class ExecuteRequestCertifyProcessList extends AbstractDescribableImpl<Ex
       }
       return ret;
     }
+
+    public FormValidation doCheckRequestName (@QueryParameter String requestName) {
+      FormValidation ret = FormValidation.ok();
+      if (StringUtils.isEmpty(requestName)) {
+        ret = FormValidation.error("A request name must be specified!");
+      }
+      return ret;
+    }
   }
 
 }
