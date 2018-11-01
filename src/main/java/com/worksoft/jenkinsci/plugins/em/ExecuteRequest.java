@@ -33,6 +33,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -60,6 +61,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
   private FilePath workspace;
   private Launcher launcher;
   private TaskListener listener;
+  private PrintStream consoleOut; // Console output stream
 
   @DataBoundConstructor
   public ExecuteRequest (String emRequestType, String request, ExecuteRequestCertifyProcessList processList, ExecuteRequestParameters execParams, ExecuteRequestWaitConfig waitConfig, ExecuteRequestEMConfig altEMConfig, ExecuteRequestPostExecute postExecute, ExecuteRequestBookmark bookmark) {
@@ -164,7 +166,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
     EnvVars envVars = run.getEnvironment(listener);
     if (execParams != null) {
       for (ExecuteRequestParameter param : execParams.getExecParamList()) {
-        String value=param.getValue();
+        String value = param.getValue();
 
         // dereference ALL Jenkins vars within the value string
 
@@ -181,6 +183,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
     this.workspace = workspace;
     this.launcher = launcher;
     this.listener = listener;
+    this.consoleOut = listener.getLogger();
 
     // Pick the right EM configuration
     emConfig = this.globalConfig != null ? this.globalConfig.getEmConfig() : null;
@@ -226,6 +229,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
 
     if (run.getResult() != Result.FAILURE) {
       // wait for completion
+      consoleOut.println("Console output test - Hello world");
     }
   }
 
