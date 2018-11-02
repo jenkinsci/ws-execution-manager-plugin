@@ -8,7 +8,7 @@
   ~ @author rrinehart on Wed, 19 Sep 2018
   -->
 
-<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form" xmlns:c="/lib/credentials">
     <j:set var="doAltEMAsAdvancedButton" value="true"/>
 
     <f:block>
@@ -23,7 +23,7 @@
                                   help="${descriptor.getHelpFile('request')}" inline="true"
                                   checked="${instance.emRequestTypeEquals('request')}">
                         <f:entry title="Request" field="request">
-                            <f:combobox/>
+                            <f:select/>
                         </f:entry>
                     </f:radioBlock>
                     <f:radioBlock name="emRequestType" title="EM Bookmark" value="bookmark"
@@ -40,6 +40,21 @@
                             <f:property field="processList"/>
                         </f:entry>
                     </f:radioBlock>
+
+                    <f:advanced title="Alternative Execution Manager">
+                        <f:entry help="${descriptor.getHelpFile('altEMConfig')}"
+                                 title="Alternative Execution Manager Configuration"/>
+
+                        <f:entry title="${%URL}" field="url">
+                            <f:textbox/>
+                        </f:entry>
+                        <f:entry title="${%Credentials}" field="credentials">
+                            <c:select/>
+                        </f:entry>
+                        <f:validateButton
+                                title="${%Test Connection}" progress="${%Testing...}"
+                                method="testConnection" with="url,credentials"/>
+                    </f:advanced>
                 </table>
             </div>
         </f:block>

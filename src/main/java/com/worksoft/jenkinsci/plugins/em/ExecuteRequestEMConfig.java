@@ -14,13 +14,12 @@ import com.cloudbees.plugins.credentials.CredentialsScope;
 import com.cloudbees.plugins.credentials.common.StandardUsernameListBoxModel;
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
 import com.cloudbees.plugins.credentials.domains.URIRequirementBuilder;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import com.worksoft.jenkinsci.plugins.em.model.ExecutionManagerServer;
 import hudson.Extension;
-import hudson.model.*;
+import hudson.model.AbstractDescribableImpl;
+import hudson.model.Descriptor;
+import hudson.model.ItemGroup;
+import hudson.model.Queue;
 import hudson.model.queue.Tasks;
 import hudson.security.ACL;
 import hudson.security.AccessControlled;
@@ -34,122 +33,135 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.export.Exported;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 public final class ExecuteRequestEMConfig extends AbstractDescribableImpl<ExecuteRequestEMConfig> {
 
-    @Exported
-    public String url;
-    @Exported
-    public String credentials;
+  @Exported
+  public String url;
+  @Exported
+  public String credentials;
 
-    @DataBoundConstructor
-    public ExecuteRequestEMConfig (String url, String credentials) {
-        this.url = url;
-        this.credentials = credentials;
+  @DataBoundConstructor
+  public ExecuteRequestEMConfig (String url, String credentials) {
+    this.url = url;
+    this.credentials = credentials;
+  }
+
+  public String getUrl () {
+    return url;
+  }
+
+  public String getCredentials () {
+    return credentials;
+  }
+
+  public boolean isValid () {
+    return StringUtil.isNotEmpty(url) && StringUtils.isNotEmpty(credentials);
+  }
+
+  public StandardUsernamePasswordCredentials lookupCredentials () {
+    return lookupCredentials(url, credentials);
+  }
+
+  private static StandardUsernamePasswordCredentials lookupCredentials (String url, String credentialId) {
+    return StringUtils.isBlank(credentialId) ? null : CredentialsMatchers.firstOrNull(
+            CredentialsProvider.lookupCredentials(
+                    StandardUsernamePasswordCredentials.class,
+                    Jenkins.getInstanceOrNull(),
+                    ACL.SYSTEM,
+                    URIRequirementBuilder.fromUri(url).build()
+            ),
+            CredentialsMatchers.allOf(
+                    CredentialsMatchers.withScope(CredentialsScope.GLOBAL),
+                    CredentialsMatchers.withId(credentialId)
+            ));
+  }
+
+  public static ExecuteRequestEMConfig createFromFieldCache() {
+    String url = ExecuteRequest.getCachedFieldValue(ExecuteRequestEMConfig.class, "url");
+    String credentials = ExecuteRequest.getCachedFieldValue(ExecuteRequestEMConfig.class, "credentials");
+
+    return new ExecuteRequestEMConfig(url, credentials);
+  }
+
+  @Extension
+  public static class DescriptorImpl extends Descriptor<ExecuteRequestEMConfig> {
+    public String getDisplayName () {
+      return "ExecuteRequestEMConfig";
     }
 
-    public String getUrl() {
-        return url;
+    public FormValidation doCheckUrl (@QueryParameter String url) {
+      FormValidation ret = FormValidation.ok();
+
+      try {
+        new URL(url);
+        ExecuteRequest.updateFieldCache(getT(), "url", url);
+      } catch (MalformedURLException e) {
+        ret = FormValidation.error("URL is invalid " + e.getMessage());
+      }
+
+      return ret;
     }
 
-    public String getCredentials() {
-        return credentials;
+    public FormValidation doCheckCredentials (@QueryParameter String credentials) {
+      FormValidation ret = FormValidation.ok();
+      ExecuteRequest.updateFieldCache(getT(), "credentials", credentials);
+      return ret;
     }
 
-    public boolean isValid() {
-        return StringUtil.isNotEmpty(url) && StringUtils.isNotEmpty(credentials);
-    }
+    public ListBoxModel doFillCredentialsItems (@AncestorInPath ItemGroup context,
+                                                @QueryParameter String url,
+                                                @QueryParameter String credentialsId) {
+      ListBoxModel data = null;
 
-    public StandardUsernamePasswordCredentials lookupCredentials() {
-        return lookupCredentials(url, credentials);
-    }
-
-    private static StandardUsernamePasswordCredentials lookupCredentials(String url, String credentialId) {
-        return StringUtils.isBlank(credentialId) ? null : CredentialsMatchers.firstOrNull(
-                CredentialsProvider.lookupCredentials(
+      AccessControlled _context = (context instanceof AccessControlled ? (AccessControlled) context : Jenkins.getInstance());
+      if (_context == null || !_context.hasPermission(Jenkins.ADMINISTER)) {
+        data = new StandardUsernameListBoxModel().includeCurrentValue(credentialsId);
+      } else {
+        data = new StandardUsernameListBoxModel()
+                .includeEmptyValue()
+                .includeMatchingAs(context instanceof Queue.Task
+                                ? Tasks.getAuthenticationOf((Queue.Task) context)
+                                : ACL.SYSTEM,
+                        context,
                         StandardUsernamePasswordCredentials.class,
-                        Jenkins.getInstanceOrNull(),
-                        ACL.SYSTEM,
-                        URIRequirementBuilder.fromUri(url).build()
-                ),
-                CredentialsMatchers.allOf(
-                        CredentialsMatchers.withScope(CredentialsScope.GLOBAL),
-                        CredentialsMatchers.withId(credentialId)
-                ));
+                        URIRequirementBuilder.fromUri(url).build(),
+                        CredentialsMatchers.withScope(CredentialsScope.GLOBAL))
+                .includeCurrentValue(credentialsId);
+
+      }
+      return data;
     }
 
-    @Extension
-    public static class DescriptorImpl extends Descriptor<ExecuteRequestEMConfig> {
-        public String getDisplayName() {
-            return "ExecuteRequestEMConfig";
+    public FormValidation doTestConnection (@QueryParameter final String url, @QueryParameter final String credentials) {
+      if (StringUtils.isBlank(credentials)) {
+        return FormValidation.error("Credentials must be selected!");
+      }
+
+
+      try {
+        URL foo = new URL(url);
+      } catch (MalformedURLException e) {
+        return FormValidation.error("URL is invalid " + e.getMessage());
+      }
+
+      StandardUsernamePasswordCredentials creds = lookupCredentials(url, credentials);
+      if (creds == null) {
+        return FormValidation.error("Credentials lookup error!");
+      }
+
+      try {
+        ExecutionManagerServer ems = new ExecutionManagerServer(url, creds);
+        if (!ems.login()) {
+          return FormValidation.error("Authorization Failed!");
         }
+      } catch (Exception e) {
+        return FormValidation.error(e.getMessage());
+      }
 
-        public FormValidation doCheckUrl(@QueryParameter String url) {
-            FormValidation ret = FormValidation.ok();
-
-            try {
-                new URL(url);
-            } catch (MalformedURLException e) {
-                ret=FormValidation.error("URL is invalid " + e.getMessage());
-            }
-
-            return ret;
-        }
-
-        public FormValidation doCheckCredentials(@QueryParameter String credentials) {
-            FormValidation ret = FormValidation.ok();
-            return ret;
-        }
-
-        public ListBoxModel doFillCredentialsItems (@AncestorInPath ItemGroup context,
-                                                    @QueryParameter String url,
-                                                    @QueryParameter String credentialsId) {
-            ListBoxModel data = null;
-
-            AccessControlled _context = (context instanceof AccessControlled ? (AccessControlled) context : Jenkins.getInstance());
-            if (_context == null || !_context.hasPermission(Jenkins.ADMINISTER)) {
-                data = new StandardUsernameListBoxModel().includeCurrentValue(credentialsId);
-            } else {
-                data = new StandardUsernameListBoxModel()
-                        .includeEmptyValue()
-                        .includeMatchingAs(context instanceof Queue.Task
-                                        ? Tasks.getAuthenticationOf((Queue.Task) context)
-                                        : ACL.SYSTEM,
-                                context,
-                                StandardUsernamePasswordCredentials.class,
-                                URIRequirementBuilder.fromUri(url).build(),
-                                CredentialsMatchers.withScope(CredentialsScope.GLOBAL))
-                        .includeCurrentValue(credentialsId);
-
-            }
-            return data;
-        }
-
-        public FormValidation doTestConnection(@QueryParameter final String url, @QueryParameter final String credentials) {
-            if (StringUtils.isBlank(credentials)) {
-                return FormValidation.error("Credentials must be selected!");
-            }
-
-
-            try {
-                URL foo = new URL(url);
-            } catch (MalformedURLException e) {
-                return FormValidation.error("URL is invalid " + e.getMessage());
-            }
-
-            StandardUsernamePasswordCredentials creds = lookupCredentials(url, credentials);
-            if (creds == null)
-                return FormValidation.error("Credentials lookup error!");
-
-            try {
-                ExecutionManagerServer ems = new ExecutionManagerServer(url, creds);
-                if (!ems.login()) {
-                    return FormValidation.error("Authorization Failed!");
-                }
-            } catch (Exception e) {
-                return FormValidation.error(e.getMessage());
-            }
-
-            return FormValidation.ok("Success");
-        }
+      return FormValidation.ok("Success");
     }
+  }
 }
