@@ -79,13 +79,6 @@ public final class ExecuteRequestEMConfig extends AbstractDescribableImpl<Execut
             ));
   }
 
-  public static ExecuteRequestEMConfig createFromFieldCache() {
-    String url = ExecuteRequest.getCachedFieldValue(ExecuteRequestEMConfig.class, "url");
-    String credentials = ExecuteRequest.getCachedFieldValue(ExecuteRequestEMConfig.class, "credentials");
-
-    return new ExecuteRequestEMConfig(url, credentials);
-  }
-
   @Extension
   public static class DescriptorImpl extends Descriptor<ExecuteRequestEMConfig> {
     public String getDisplayName () {
@@ -97,7 +90,6 @@ public final class ExecuteRequestEMConfig extends AbstractDescribableImpl<Execut
 
       try {
         new URL(url);
-        ExecuteRequest.updateFieldCache(getT(), "url", url);
       } catch (MalformedURLException e) {
         ret = FormValidation.error("URL is invalid " + e.getMessage());
       }
@@ -107,7 +99,6 @@ public final class ExecuteRequestEMConfig extends AbstractDescribableImpl<Execut
 
     public FormValidation doCheckCredentials (@QueryParameter String credentials) {
       FormValidation ret = FormValidation.ok();
-      ExecuteRequest.updateFieldCache(getT(), "credentials", credentials);
       return ret;
     }
 

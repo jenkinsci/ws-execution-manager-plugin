@@ -9,12 +9,6 @@
 
 package com.worksoft.jenkinsci.plugins.em;
 
-import com.cloudbees.plugins.credentials.CredentialsMatchers;
-import com.cloudbees.plugins.credentials.CredentialsProvider;
-import com.cloudbees.plugins.credentials.CredentialsScope;
-import com.cloudbees.plugins.credentials.common.StandardUsernameListBoxModel;
-import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
-import com.cloudbees.plugins.credentials.domains.URIRequirementBuilder;
 import com.worksoft.jenkinsci.plugins.em.config.ExecutionManagerConfig;
 import com.worksoft.jenkinsci.plugins.em.model.EmResult;
 import com.worksoft.jenkinsci.plugins.em.model.ExecutionManagerServer;
@@ -22,24 +16,20 @@ import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.*;
-import hudson.model.queue.Tasks;
-import hudson.security.ACL;
-import hudson.security.AccessControlled;
+import hudson.model.AbstractProject;
+import hudson.model.Result;
+import hudson.model.Run;
+import hudson.model.TaskListener;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
-import hudson.util.FormValidation;
 import hudson.util.ListBoxModel;
 import jenkins.model.GlobalConfiguration;
-import jenkins.model.Jenkins;
 import jenkins.tasks.SimpleBuildStep;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.groovy.runtime.StackTraceUtils;
-import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.Stapler;
 
 import javax.annotation.Nonnull;
@@ -49,8 +39,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -58,27 +46,16 @@ import java.util.logging.Logger;
 public class ExecuteRequest extends Builder implements SimpleBuildStep {
   private static final Logger log = Logger.getLogger("jenkins.ExecuteRequest");
 
-  private final String url;
-  private final String credentials;
-
-  public String getUrl () {
-    return url;
-  }
-
-  public String getCredentials () {
-    return credentials;
-  }
-
   // The following instance variables are those provided by the GUI
-  private final String emRequestType;
-  private final ExecuteRequestBookmark bookmark;
-  private final String request;
-  private final ExecuteRequestCertifyProcessList processList;
-  private final ExecuteRequestPostExecute postExecute;
-  private final ExecutionManagerConfig globalConfig;
-  private final ExecuteRequestEMConfig altEMConfig;
-  private final ExecuteRequestWaitConfig waitConfig;
-  private final ExecuteRequestParameters execParams;
+  private String emRequestType;
+  private ExecuteRequestBookmark bookmark;
+  private ExecuteRequestRequest request;
+  private ExecuteRequestCertifyProcessList processList;
+  private ExecuteRequestPostExecute postExecute;
+  private ExecutionManagerConfig globalConfig;
+  private ExecuteRequestEMConfig altEMConfig;
+  private ExecuteRequestWaitConfig waitConfig;
+  private ExecuteRequestParameters execParams;
 
   // These instance variables are those used during execution
   private ExecuteRequestEMConfig emConfig; // EM config used during run
@@ -89,58 +66,56 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
   private TaskListener listener;
   private PrintStream consoleOut; // Console output stream
 
-  // Kludge alert - In order to provide a drop down list of valid requests/bookmarks
-  // for a given Execution Manager, we need to be able to log in and get an API key.
-  // If we only had to handle the global EM config, this would be easy. However,
-  // we provide the user with a means to override the global setting per build step, but
-  // the override setting only exist in the browser until the build step is saved. Fortunately,
-  // Jenkins calls 'doCheckXYZ' methods as the form is loaded and when the user changes
-  // values which gives us an opportunity to save those value for later reference. That (in a
-  // nutshell) is the reasoning behind the following cache and the accompanying methods
-  // to manipulate it.
-  private static HashMap<HttpSession, HashMap<Class, HashMap<String, String>>> fieldCache =
-          new HashMap<HttpSession, HashMap<Class, HashMap<String, String>>>();
+  // Kludge alert - In order to fill the request/bookmark list box with values from
+  // the EM and to provided the user with appropriate feedback, we need to cache
+  // the list box items. We wouldn't need to do this if the 'doCheck' methods were
+  // provided with the EM configuration variables so as to be able to validate them.
+  // Unfortunately, does not provide their values in a consistent manner, so we
+  // use this cache to remember the items from the 'doFill' methods; which we can then
+  // access in the 'doCheck' methods for proper field validation and error display.
+  private static HashMap<HttpSession, HashMap<String, ListBoxModel>> itemsCache =
+          new HashMap<HttpSession, HashMap<String, ListBoxModel>>();
 
-  public static String updateFieldCache (Class clazz, String fieldName, String fieldValue) {
-    String prevVal = null;
+  public static ListBoxModel updateItemsCache (String fieldName, ListBoxModel items) {
+    ListBoxModel prevVal = null;
     HttpServletRequest httpRequest = Stapler.getCurrentRequest();
     HttpSession session = httpRequest.getSession();
     String sessionId = session.getId();
-    synchronized (fieldCache) {
-      HashMap<Class, HashMap<String, String>> sessionCache = fieldCache.get(session);
+    synchronized (itemsCache) {
+      HashMap<String, ListBoxModel> sessionCache = itemsCache.get(session);
       if (sessionCache == null) {
-        fieldCache.put(session, sessionCache = new HashMap<Class, HashMap<String, String>>());
+        itemsCache.put(session, sessionCache = new HashMap<String, ListBoxModel>());
       }
 
-      HashMap<String, String> classCache = sessionCache.get(clazz);
-      if (classCache == null) {
-        sessionCache.put(clazz, classCache = new HashMap<String, String>());
-      }
-
-      prevVal = getCachedFieldValue(clazz, fieldName);
-      classCache.put(fieldName, fieldValue);
-      System.out.println("Updated field cache for " + clazz + "::" + fieldName + "=" + fieldValue + "(prevVal=" + prevVal + ")");
+      prevVal = getCachedItems(fieldName);
+      sessionCache.put(fieldName, items);
+      System.out.println("Updated items cache for " + fieldName + "=" + items + "(prevVal=" + prevVal + ")");
     }
     return prevVal;
   }
 
-  public static String getCachedFieldValue (Class clazz, String fieldName) {
-    String retVal = null;
+  public static ListBoxModel getCachedItems (String fieldName) {
+    ListBoxModel retVal = null;
 
     HttpServletRequest httpRequest = Stapler.getCurrentRequest();
     HttpSession session = httpRequest.getSession();
     String sessionId = session.getId();
-    synchronized (fieldCache) {
-      HashMap<Class, HashMap<String, String>> sessionCache = fieldCache.get(session);
+    synchronized (itemsCache) {
+      HashMap<String, ListBoxModel> sessionCache = itemsCache.get(session);
 
       if (sessionCache != null) {
-        HashMap<String, String> classCache = sessionCache.get(clazz);
-        if (classCache != null) {
-          retVal = classCache.get(fieldName);
-        }
+        retVal = sessionCache.get(fieldName);
       }
     }
     return retVal;
+  }
+
+  public static void invalidateItemsCache () {
+    HttpServletRequest httpRequest = Stapler.getCurrentRequest();
+    HttpSession session = httpRequest.getSession();
+    String sessionId = session.getId();
+    itemsCache.put(session, null);
+    System.out.println("Invalidated items cache for " + sessionId);
   }
 
   static {
@@ -150,19 +125,19 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
         while (true) {
           try {
             Thread.sleep(30000);
-            synchronized (fieldCache) {
-              for (HttpSession key : fieldCache.keySet()) {
+            synchronized (itemsCache) {
+              for (HttpSession key : itemsCache.keySet()) {
                 try {
                   Method isValidMeth = key.getClass().getMethod("isValid");
                   if (isValidMeth != null) {
                     Boolean isValid = (Boolean) isValidMeth.invoke(key);
                     if (!isValid) {
-                      fieldCache.remove(key);
+                      itemsCache.remove(key);
                       System.out.println("Expired field cache for " + key.getId());
                     }
                   }
                 } catch (Exception ignored) {
-                  fieldCache.put(key, null);
+                  itemsCache.put(key, null);
                   System.out.println("Exception expired field cache for " + key.getId());
                 }
               }
@@ -174,11 +149,9 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
     }).start();
   }
 
-  @DataBoundConstructor
-  public ExecuteRequest (String emRequestType, String request, ExecuteRequestCertifyProcessList processList, ExecuteRequestParameters execParams, ExecuteRequestWaitConfig waitConfig, ExecuteRequestEMConfig altEMConfig, ExecuteRequestPostExecute postExecute, ExecuteRequestBookmark bookmark, String url, String credentials) {
-    this.url = url;
-    this.credentials = credentials;
 
+  @DataBoundConstructor
+  public ExecuteRequest (String emRequestType, ExecuteRequestRequest request, ExecuteRequestCertifyProcessList processList, ExecuteRequestParameters execParams, ExecuteRequestWaitConfig waitConfig, ExecuteRequestEMConfig altEMConfig, ExecuteRequestPostExecute postExecute, ExecuteRequestBookmark bookmark) {
     this.emRequestType = emRequestType;
     this.bookmark = bookmark;
     this.request = request;
@@ -190,17 +163,10 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
     globalConfig = GlobalConfiguration.all().get(ExecutionManagerConfig.class);
 
     // When we get here Jenkins is saving our form values, so we can invalidate
-    // this session's fieldCache.
-    HttpServletRequest httpRequest = Stapler.getCurrentRequest();
-    HttpSession session = httpRequest.getSession();
-    String sessionId = session.getId();
-    fieldCache.put(session, null);
-    System.out.println("Invalidated field cache for " + sessionId);
+    // this session's itemsCache.
+    invalidateItemsCache();
   }
 
-  /**
-   * Stapler methods for handling Execute Request Parameters
-   */
   public boolean getExecParamsEnabled () {
     return getExecParams() != null;
   }
@@ -208,12 +174,6 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
   public ExecuteRequestParameters getExecParams () {
     return execParams;
   }
-
-  /**
-   * Stapler methods for handling Execute Request Wait Configuration
-   * }
-   * /** Stapler methods for handling Execute Request Post Execute Action
-   */
 
   public boolean getPostExecuteEnabled () {
     return getPostExecute() != null;
@@ -231,9 +191,6 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
     return waitConfig;
   }
 
-  /**
-   * Stapler methods for handling Execute Request Alt Configuration
-   */
   public boolean getAltEMConfigEnabled () {
     return getAltEMConfig() != null;
   }
@@ -247,20 +204,28 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
   }
 
   public ExecuteRequestBookmark getBookmark () {
+    // When we get here Jenkins is loading our form values, so we can invalidate
+    // this session's itemsCache.
+    invalidateItemsCache();
+
     return bookmark;
   }
 
-  public String getRequest () {
-    return request;
-  }
+  public ExecuteRequestRequest getRequest () {
+    // When we get here Jenkins is loading our form values, so we can invalidate
+    // this session's itemsCache.
+    invalidateItemsCache();
 
-  public String emRequestTypeEquals (String given) {
-    String ret = String.valueOf((emRequestType != null) && (emRequestType.equals(given)));
-    return ret;
+    return request;
   }
 
   public ExecuteRequestCertifyProcessList getProcessList () {
     return processList;
+  }
+
+  // Call from the jelly to determine whether radio block is checked
+  public String emRequestTypeEquals (String given) {
+    return String.valueOf((emRequestType != null) && (emRequestType.equals(given)));
   }
 
   @Extension
@@ -275,137 +240,71 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
     public String getDisplayName () {
       return "Run Execution Manager Request";
     }
+  }
 
-    public ListBoxModel doFillRequestItems (@QueryParameter String emRequestType, @QueryParameter String url, @QueryParameter String credentials) {
-      ListBoxModel items = new ListBoxModel();
+  // Used by doFillRequestItems and doFillBookmarkItems (See ExecuteRequestBookmark class)
+  public static ListBoxModel fillItems (String emRequestType, String url, String credentials) {
+    ListBoxModel items = new ListBoxModel();
 
-      // Pick the right EM configuration
-      /*ExecutionManagerConfig globalConfig = GlobalConfiguration.all().get(ExecutionManagerConfig.class);
-      ExecuteRequestEMConfig emConfig = globalConfig != null ? globalConfig.getEmConfig() : null;
-      ExecuteRequestEMConfig altEMConfig = ExecuteRequestEMConfig.createFromFieldCache();
-      if (altEMConfig != null && altEMConfig.isValid()) {
-        emConfig = altEMConfig;
-      }
+    // Pick the right EM configuration
+    ExecutionManagerConfig globalConfig = GlobalConfiguration.all().get(ExecutionManagerConfig.class);
+    ExecuteRequestEMConfig emConfig = globalConfig != null ? globalConfig.getEmConfig() : null;
+    ExecuteRequestEMConfig altEMConfig = new ExecuteRequestEMConfig(url, credentials);
+    if (altEMConfig != null && altEMConfig.isValid()) {
+      emConfig = altEMConfig;
+    }
 
-      if (emConfig != null) {
-        ExecutionManagerServer server = new ExecutionManagerServer(emConfig.getUrl(), emConfig.lookupCredentials());
-        try {
-          if (server.login()) {
-            JSONObject reqs;
+    if (emConfig != null) {
+      ExecutionManagerServer server = new ExecutionManagerServer(emConfig.getUrl(), emConfig.lookupCredentials());
+      try {
+        if (server.login()) {
+          JSONObject retrievedObjs;
+          if (emRequestType.equals("request")) {
+            retrievedObjs = server.requests();
+          } else {
+            retrievedObjs = server.bookmarks();
+          }
+          if (retrievedObjs != null) {
+            try {
+              items.add("-- Select a " + emRequestType + " --"); // Add blank entry first
 
-            if ((reqs = server.requests()) != null) {
-              try {
-                // Lookup all the requests defined on the EM and find the one specified
-                // by the user
-                JSONArray objs = reqs.getJSONArray("objects");
-                for (int i = 0; i < objs.size(); i++) {
-                  JSONObject req = objs.getJSONObject(i);
-                  String name = req.getString("Name");
-                  items.add(name);
-                }
-              } catch (Exception ignored) {
-                // Bad JSON
+              // Lookup all the requests defined on the EM and find the one specified
+              // by the user
+              JSONArray objs = retrievedObjs.getJSONArray("objects");
+              for (int i = 0; i < objs.size(); i++) {
+                JSONObject req = objs.getJSONObject(i);
+                String name = req.getString("Name");
+                items.add(name);
               }
-            } else {
-              // couldn't get requests
+            } catch (Exception ignored) {
+              // Bad JSON
+              items.add("*** ERROR ***", "ERROR: Bad JSON");
+              items.get(items.size() - 1).selected = true;
             }
           } else {
-            // Couldn't log in
+            // couldn't get requests
+            items.add("*** ERROR ***", "ERROR: Couldn't retrieve " + emRequestType + "s");
+            items.get(items.size() - 1).selected = true;
           }
-        } catch (Exception ex) {
+        } else {
+          // Couldn't log in
+          items.add("*** ERROR ***", "ERROR: Couldn't log in");
+          items.get(items.size() - 1).selected = true;
         }
-      } else {
-        // No EM configuration
-      }*/
-      return items;
+      } catch (Exception ex) {
+        // Exception while logging in
+        items.add("*** ERROR ***", "ERROR: Exception while logging in");
+        items.get(items.size() - 1).selected = true;
+      }
+    } else {
+      // No EM configuration
+      items.add("*** ERROR ***", "ERROR: No EM configuration");
+      items.get(items.size() - 1).selected = true;
     }
 
-    public FormValidation doCheckUrl (@QueryParameter String url) {
-      FormValidation ret = FormValidation.ok();
+    updateItemsCache(emRequestType, items);
 
-      try {
-        new URL(url);
-        ExecuteRequest.updateFieldCache(getT(), "url", url);
-      } catch (MalformedURLException e) {
-        ret = FormValidation.error("URL is invalid " + e.getMessage());
-      }
-
-      return ret;
-    }
-
-    public FormValidation doCheckCredentials (@QueryParameter String credentials) {
-      FormValidation ret = FormValidation.ok();
-      ExecuteRequest.updateFieldCache(getT(), "credentials", credentials);
-      return ret;
-    }
-
-    public ListBoxModel doFillCredentialsItems (@AncestorInPath ItemGroup context,
-                                                @QueryParameter String url,
-                                                @QueryParameter String credentialsId) {
-      ListBoxModel data = null;
-
-      AccessControlled _context = (context instanceof AccessControlled ? (AccessControlled) context : Jenkins.getInstance());
-      if (_context == null || !_context.hasPermission(Jenkins.ADMINISTER)) {
-        data = new StandardUsernameListBoxModel().includeCurrentValue(credentialsId);
-      } else {
-        data = new StandardUsernameListBoxModel()
-                .includeEmptyValue()
-                .includeMatchingAs(context instanceof Queue.Task
-                                ? Tasks.getAuthenticationOf((Queue.Task) context)
-                                : ACL.SYSTEM,
-                        context,
-                        StandardUsernamePasswordCredentials.class,
-                        URIRequirementBuilder.fromUri(url).build(),
-                        CredentialsMatchers.withScope(CredentialsScope.GLOBAL))
-                .includeCurrentValue(credentialsId);
-
-      }
-      return data;
-    }
-
-    private static StandardUsernamePasswordCredentials lookupCredentials (String url, String credentialId) {
-      return StringUtils.isBlank(credentialId) ? null : CredentialsMatchers.firstOrNull(
-              CredentialsProvider.lookupCredentials(
-                      StandardUsernamePasswordCredentials.class,
-                      Jenkins.getInstanceOrNull(),
-                      ACL.SYSTEM,
-                      URIRequirementBuilder.fromUri(url).build()
-              ),
-              CredentialsMatchers.allOf(
-                      CredentialsMatchers.withScope(CredentialsScope.GLOBAL),
-                      CredentialsMatchers.withId(credentialId)
-              ));
-    }
-
-    public FormValidation doTestConnection (@QueryParameter final String url, @QueryParameter final String credentials) {
-      if (StringUtils.isBlank(credentials)) {
-        return FormValidation.error("Credentials must be selected!");
-      }
-
-
-      try {
-        URL foo = new URL(url);
-      } catch (MalformedURLException e) {
-        return FormValidation.error("URL is invalid " + e.getMessage());
-      }
-
-      StandardUsernamePasswordCredentials creds = lookupCredentials(url, credentials);
-      if (creds == null) {
-        return FormValidation.error("Credentials lookup error!");
-      }
-
-      try {
-        ExecutionManagerServer ems = new ExecutionManagerServer(url, creds);
-        if (!ems.login()) {
-          return FormValidation.error("Authorization Failed!");
-        }
-      } catch (Exception e) {
-        return FormValidation.error(e.getMessage());
-      }
-
-      return FormValidation.ok("Success");
-    }
-
+    return items;
   }
 
   // Process the user provided parameters by substituting Jenkins environment
@@ -425,6 +324,9 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
     return ret;
   }
 
+  // This method is called by Jenkins to perform the build step. It sets up some instance
+  // variables, logs in to the EM and dispatches the execute to methods that follow
+  // using reflection.
   @Override
   public void perform (@Nonnull Run<?, ?> run, @Nonnull FilePath workspace, @Nonnull Launcher launcher, @Nonnull TaskListener listener) throws InterruptedException, IOException {
     // Save perform parameters in instance variables for future reference.
@@ -440,13 +342,15 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
       emConfig = getAltEMConfig();
     }
 
+    String guid = null;
+
     if (emConfig != null) {
       server = new ExecutionManagerServer(emConfig.getUrl(), emConfig.lookupCredentials());
       if (server.login()) {
         // Dispatch to one of the methods below
         try {
           Method meth = this.getClass().getMethod("execute_" + emRequestType.toUpperCase().trim());
-          meth.invoke(this);
+          guid = (String)meth.invoke(this);
         } catch (NoSuchMethodException ex) {
           listener.fatalError("Don't know how to execute '%s'", emRequestType);
           run.setResult(Result.FAILURE); // Fail this build step.
@@ -477,19 +381,23 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
     }
 
     if (run.getResult() != Result.FAILURE) {
+      if (guid != null) {
+        server.executionStatus(guid);
+      }
       // wait for completion
       consoleOut.println("Console output test - Hello world");
     }
   }
 
-  // Called via reflection from the dispatcher above
-  public void execute_REQUEST () throws InterruptedException, IOException {
-    if (StringUtils.isEmpty(request)) {
+  // Called via reflection from the dispatcher above to execute a 'request'
+  public String execute_REQUEST () throws InterruptedException, IOException {
+    String guid = null;
+    if (StringUtils.isEmpty(request.getRequest())) {
       listener.fatalError("A request name or ID must be specified!");
       run.setResult(Result.FAILURE); // Fail this build step.
     } else {
       String reqID = null;
-      String theReq = request.trim();
+      String theReq = request.getRequest().trim();
       JSONObject reqs;
 
       if ((reqs = server.requests()) != null) {
@@ -517,12 +425,15 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
         listener.fatalError("No such request '%s'!", theReq);
         run.setResult(Result.FAILURE); // Fail this build step.
       } else {
-        //server.executeRequest(reqID, processParameters());
+        guid = server.executeRequest(reqID, processParameters());
       }
     }
+    return guid;
   }
 
-  public void execute_BOOKMARK () throws InterruptedException, IOException {
+  // Called via reflection from the dispatcher above to execute a 'bookmark'
+  public String execute_BOOKMARK () throws InterruptedException, IOException {
+    String guid = null;
     if (bookmark == null || StringUtils.isEmpty(bookmark.getBookmark())) {
       listener.fatalError("A bookmark name or ID must be specified!");
       run.setResult(Result.FAILURE); // Fail this build step.
@@ -556,12 +467,14 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
         listener.fatalError("No such bookmark '%s'!", theBmark);
         run.setResult(Result.FAILURE); // Fail this build step.
       } else {
-        //server.executeBookmark(bmarkID, processParameters(), bmark.getFolder());
+        guid = server.executeBookmark(bmarkID, bookmark.getFolder(), processParameters());
       }
     }
+    return guid;
   }
 
-  public void execute_PROCESSLIST () throws InterruptedException, IOException {
-
+  // Called via reflection from the dispatcher above to execute a 'process list'
+  public String execute_PROCESSLIST () throws InterruptedException, IOException {
+    return null;
   }
 }

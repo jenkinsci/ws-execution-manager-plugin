@@ -8,11 +8,10 @@
   ~ @author rrinehart on Wed, 19 Sep 2018
   -->
 
-<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form" xmlns:c="/lib/credentials">
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
     <j:set var="doAltEMAsAdvancedButton" value="true"/>
 
     <f:block>
-
         <f:block>
             <h4>${%Request}</h4>
             <h5>Select the Execution Manager Request, Bookmark or Certify Processes to run.</h5>
@@ -22,8 +21,8 @@
                     <f:radioBlock name="emRequestType" title="EM Request" value="request"
                                   help="${descriptor.getHelpFile('request')}" inline="true"
                                   checked="${instance.emRequestTypeEquals('request')}">
-                        <f:entry title="Request" field="request">
-                            <f:select/>
+                        <f:entry>
+                            <f:property field="request"/>
                         </f:entry>
                     </f:radioBlock>
                     <f:radioBlock name="emRequestType" title="EM Bookmark" value="bookmark"
@@ -40,21 +39,13 @@
                             <f:property field="processList"/>
                         </f:entry>
                     </f:radioBlock>
-
-                    <f:advanced title="Alternative Execution Manager">
-                        <f:entry help="${descriptor.getHelpFile('altEMConfig')}"
-                                 title="Alternative Execution Manager Configuration"/>
-
-                        <f:entry title="${%URL}" field="url">
-                            <f:textbox/>
-                        </f:entry>
-                        <f:entry title="${%Credentials}" field="credentials">
-                            <c:select/>
-                        </f:entry>
-                        <f:validateButton
-                                title="${%Test Connection}" progress="${%Testing...}"
-                                method="testConnection" with="url,credentials"/>
-                    </f:advanced>
+                    <j:if test="true">
+                        <j:if test="${doAltEMAsAdvancedButton}">
+                            <f:advanced title="Alternative Execution Manager">
+                                <f:property field="altEMConfig"/>
+                            </f:advanced>
+                        </j:if>
+                    </j:if>
                 </table>
             </div>
         </f:block>
@@ -73,11 +64,12 @@
                 <f:optionalProperty field="postExecute" title="Post Execute Action"></f:optionalProperty>
                 <f:optionalProperty field="waitConfig" title="Wait Configuration"/>
 
-
-                <j:if test="${doAltEMAsAdvancedButton}">
-                    <f:advanced title="Alternative Execution Manager">
-                        <f:property field="altEMConfig"/>
-                    </f:advanced>
+                <j:if test="false">
+                    <j:if test="${doAltEMAsAdvancedButton}">
+                        <f:advanced title="Alternative Execution Manager">
+                            <f:property field="altEMConfig"/>
+                        </f:advanced>
+                    </j:if>
                 </j:if>
             </table>
         </div>

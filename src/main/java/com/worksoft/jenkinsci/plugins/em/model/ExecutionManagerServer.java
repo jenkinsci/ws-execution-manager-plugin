@@ -8,15 +8,11 @@
 
 package com.worksoft.jenkinsci.plugins.em.model;
 
-import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
 import com.cloudbees.plugins.credentials.common.UsernamePasswordCredentials;
-import hudson.util.FormValidation;
-import jdk.nashorn.internal.objects.annotations.Getter;
 import jodd.http.HttpException;
 import jodd.http.HttpRequest;
 import jodd.http.HttpResponse;
 import net.sf.json.JSONObject;
-import org.apache.commons.lang.StringUtils;
 import org.codehaus.groovy.runtime.StackTraceUtils;
 
 import java.io.UnsupportedEncodingException;
@@ -33,13 +29,12 @@ public class ExecutionManagerServer {
 
   private final String url;
   private final UsernamePasswordCredentials credentials;
-  private final List<String> runningRequests = new ArrayList<>();
 
   private EmAuth auth;
 
   private EmResult lastEMResult;
 
-  public EmResult getLastEMResult() {
+  public EmResult getLastEMResult () {
     return lastEMResult;
   }
 
@@ -108,16 +103,18 @@ public class ExecutionManagerServer {
     return null;
   }
 
-  private String formatParameters(HashMap<String, String> parameters) {
+  // Format the provided hash map into a string format acceptable to the EM API
+  private String formatParameters (HashMap<String, String> parameters) {
     return "";
   }
-  public boolean executeRequest (String request, HashMap<String, String> parameters) {
+
+  public String executeRequest (String request, HashMap<String, String> parameters) {
     HttpRequest httpRequest = HttpRequest.put(url + "api/ExecuteRequest")
             .header("id", request)
             .header("parameters", formatParameters(parameters))
             .header("jsonOrXml", "json");
     httpRequest.body("");
-    String guid;
+    String guid = null;
 
     EmResult result = sendRequest(httpRequest);
 
@@ -128,20 +125,18 @@ public class ExecutionManagerServer {
       } else {
         guid = response;
       }
-
-      runningRequests.add(guid);
     }
 
-    return result.is200();
+    return guid;
   }
 
-  public boolean executeBookmark (String bookmark, String folder, HashMap<String, String> parameters) {
+  public String executeBookmark (String bookmark, String folder, HashMap<String, String> parameters) {
     HttpRequest httpRequest = HttpRequest.put(url + "api/Bookmarks/" + bookmark + "/Execute")
             .header("folder", "")
             .header("parameters", formatParameters(parameters))
             .header("jsonOrXml", "json");
     httpRequest.body("");
-    String guid;
+    String guid = null;
 
     EmResult result = sendRequest(httpRequest);
 
@@ -152,17 +147,16 @@ public class ExecutionManagerServer {
       } else {
         guid = response;
       }
-
-      runningRequests.add(guid);
     }
 
-    return result.is200();
+    return guid;
   }
 
-  public EmStatus waitForCompletion (String guid) {
+  public EmStatus executionStatus (String guid) {
 
     HttpRequest httpRequest = HttpRequest.get(url + "api/ExecutionStatus")
-            .header("APIRequestID", guid);
+            .header("ExecutionHistoryID", guid)
+            .header("jsonOrXml", "json");
 
     EmStatus status = EmStatus.Running;
 
@@ -170,12 +164,7 @@ public class ExecutionManagerServer {
       EmResult result = sendRequest(httpRequest);
 
       if (result.isOkAndHasResponse()) {
-        if (result.getResponseData().equalsIgnoreCase("Completed")) {
-          status = EmStatus.Complete;
-        } else {
-          // do somw sort of wait here
-
-        }
+        JSONObject execStatus = result.getJsonData();
       } else if (result.isUnauthorized()) {
         status = EmStatus.Error;
       } else {

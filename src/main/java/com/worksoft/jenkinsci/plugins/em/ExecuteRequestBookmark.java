@@ -8,11 +8,12 @@
 
 package com.worksoft.jenkinsci.plugins.em;
 
-import com.google.common.primitives.Ints;
 import hudson.Extension;
+import hudson.RelativePath;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
 import hudson.util.FormValidation;
+import hudson.util.ListBoxModel;
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
@@ -20,43 +21,57 @@ import org.kohsuke.stapler.export.Exported;
 
 public final class ExecuteRequestBookmark extends AbstractDescribableImpl<ExecuteRequestBookmark> {
 
-    @Exported
-    public String bookmark;
-    @Exported
-    public String folder;
+  @Exported
+  public String bookmark;
+  @Exported
+  public String folder;
 
-    @DataBoundConstructor
-    public ExecuteRequestBookmark (String bookmark, String folder) {
-        this.bookmark = bookmark;
-        this.folder = folder;
+  @DataBoundConstructor
+  public ExecuteRequestBookmark (String bookmark, String folder) {
+    this.bookmark = bookmark;
+    this.folder = folder;
+  }
+
+  public String getBookmark () {
+    return bookmark;
+  }
+
+  public String getFolder () {
+    return folder;
+  }
+
+  @Extension
+  public static class DescriptorImpl extends Descriptor<ExecuteRequestBookmark> {
+    public String getDisplayName () {
+      return "ExecuteRequestWaitConfig";
     }
 
-    public String getBookmark() {
-        return bookmark;
+    public FormValidation doCheckBookmark (@QueryParameter String bookmark) {
+      ListBoxModel listBox = ExecuteRequest.getCachedItems("bookmark");
+      FormValidation ret = FormValidation.ok();
+
+      String msg = bookmark;
+      if (msg.startsWith("ERROR") ||
+              (listBox != null && (msg = listBox.get(0).value).startsWith("ERROR"))) {
+        ret = FormValidation.error("Execution Manager error retrieving bookmarks - " + msg.replace("ERROR: ", "") + "!");
+      } else if (StringUtils.isEmpty(bookmark)) {
+        ret = FormValidation.error("A bookmark must be specified!");
+      }
+
+      return ret;
     }
 
-    public String getFolder() {
-        return folder;
+    public FormValidation doCheckfolder (@QueryParameter String folder) {
+      FormValidation ret = FormValidation.ok();
+
+      return ret;
     }
 
-    @Extension
-    public static class DescriptorImpl extends Descriptor<ExecuteRequestBookmark> {
-        public String getDisplayName() {
-            return "ExecuteRequestWaitConfig";
-        }
-
-        public FormValidation doCheckBookmark(@QueryParameter String bookmark) {
-            FormValidation ret = FormValidation.ok();
-            if (StringUtils.isEmpty(bookmark))
-                ret = FormValidation.error("A bookmark must be specified!");
-
-            return ret;
-        }
-
-        public FormValidation doCheckfolder(@QueryParameter String folder) {
-            FormValidation ret = FormValidation.ok();
-
-            return ret;
-        }
+    // Called whenever emRequestType or alternative EM config changes
+    public ListBoxModel doFillBookmarkItems (@RelativePath("..") @QueryParameter String emRequestType,
+                                             @RelativePath("../altEMConfig") @QueryParameter String url,
+                                             @RelativePath("../altEMConfig") @QueryParameter String credentials) {
+      return ExecuteRequest.fillItems("bookmark", url, credentials);
     }
+  }
 }
