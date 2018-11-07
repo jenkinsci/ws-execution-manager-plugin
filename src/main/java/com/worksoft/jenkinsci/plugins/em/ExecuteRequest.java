@@ -30,6 +30,7 @@ import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 import net.sf.json.util.JSONUtils;
 import org.apache.commons.lang.StringUtils;
+import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.Stapler;
 
@@ -44,6 +45,7 @@ import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
@@ -198,6 +200,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
   }
 
 
+  Map<String, Execute> handlers = new HashMap<>();
   @DataBoundConstructor
   public ExecuteRequest (String emRequestType, ExecuteRequestRequest request, ExecuteRequestCertifyProcessList processList, ExecuteRequestParameters execParams, ExecuteRequestWaitConfig waitConfig, ExecuteRequestEMConfig altEMConfig, ExecuteRequestPostExecute postExecute, ExecuteRequestBookmark bookmark) {
     this.emRequestType = emRequestType;
@@ -212,6 +215,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
     // When we get here Jenkins is saving our form values, so we can invalidate
     // this session's itemsCache.
     invalidateItemsCache();
+    handlers.put("request", byRequest);
   }
 
   public boolean getExecParamsEnabled () {
@@ -275,6 +279,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
     return String.valueOf((emRequestType != null) && (emRequestType.equals(given)));
   }
 
+  @Symbol("execMan")
   @Extension
   public static final class ExecutionManagerBuilderDescriptor extends BuildStepDescriptor<Builder> {
 
@@ -582,6 +587,8 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
     }
   }
 
+  Execute byRequest = this::execute_REQUEST;
+
   // Called via reflection from the dispatcher above to execute a 'request'
   public String execute_REQUEST () throws InterruptedException, IOException {
     String guid = null;
@@ -704,5 +711,9 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
   // Called via reflection from the dispatcher above to execute a 'process list'
   private String execute_PROCESSLIST () throws InterruptedException, IOException {
     return null;
+  }
+
+  interface Execute {
+    String exec() throws IOException, InterruptedException;
   }
 }
