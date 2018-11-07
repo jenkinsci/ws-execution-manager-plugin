@@ -104,6 +104,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
   private ConsoleStream consoleOut; // Console output stream
 
   Map<String, Execute> handlers = new HashMap<>();
+  Map<String, Execute> handlers = new HashMap<>();
   @DataBoundConstructor
   public ExecuteRequest (String emRequestType, ExecuteRequestRequest request, ExecuteRequestCertifyProcessList processList, ExecuteRequestParameters execParams, ExecuteRequestWaitConfig waitConfig, ExecuteRequestEMConfig altEMConfig, ExecuteRequestPostExecute postExecute, ExecuteRequestBookmark bookmark) {
     this.emRequestType = emRequestType;
