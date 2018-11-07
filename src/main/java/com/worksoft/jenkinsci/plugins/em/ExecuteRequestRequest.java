@@ -36,7 +36,7 @@ public final class ExecuteRequestRequest extends AbstractDescribableImpl<Execute
   @Extension
   public static class DescriptorImpl extends Descriptor<ExecuteRequestRequest> {
     public String getDisplayName () {
-      return "ExecuteRequestWaitConfig";
+      return "ExecuteRequestRequest";
     }
 
     public FormValidation doCheckRequest (@QueryParameter String request) {
