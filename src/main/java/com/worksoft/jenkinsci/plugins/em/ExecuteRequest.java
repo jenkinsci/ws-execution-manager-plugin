@@ -26,9 +26,9 @@ import hudson.util.ListBoxModel;
 import jenkins.model.GlobalConfiguration;
 import jenkins.tasks.SimpleBuildStep;
 import net.sf.json.JSONArray;
+import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
-import org.codehaus.groovy.runtime.StackTraceUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.Stapler;
 
@@ -36,15 +36,54 @@ import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.logging.Level;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 public class ExecuteRequest extends Builder implements SimpleBuildStep {
   private static final Logger log = Logger.getLogger("jenkins.ExecuteRequest");
+
+  public class ConsoleStream extends PrintStream {
+    public ConsoleStream (OutputStream out) {
+      super(out);
+    }
+
+    @Override
+    public void println (String string) {
+      Date now = new Date();
+      DateFormat dateFormatter = DateFormat.getDateTimeInstance(
+              DateFormat.SHORT,
+              DateFormat.MEDIUM,
+              Locale.getDefault());
+      Scanner scanner = new Scanner(string);
+      while (scanner.hasNextLine()) {
+        String line = scanner.nextLine();
+        super.println("[" + (dateFormatter.format(now)) + "] " + line);
+      }
+      scanner.close();
+    }
+
+    public void printlnIndented (String indent, String string) {
+      Scanner scanner = new Scanner(string);
+      while (scanner.hasNextLine()) {
+        String line = scanner.nextLine();
+        println(indent + line);
+      }
+      scanner.close();
+    }
+
+    public void printlnIndented (String indent, Object[] objects) {
+      for (Object obj : objects) {
+        printlnIndented(indent, obj.toString());
+      }
+    }
+  }
 
   // The following instance variables are those provided by the GUI
   private String emRequestType;
@@ -52,7 +91,6 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
   private ExecuteRequestRequest request;
   private ExecuteRequestCertifyProcessList processList;
   private ExecuteRequestPostExecute postExecute;
-  private ExecutionManagerConfig globalConfig;
   private ExecuteRequestEMConfig altEMConfig;
   private ExecuteRequestWaitConfig waitConfig;
   private ExecuteRequestParameters execParams;
@@ -64,7 +102,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
   private FilePath workspace;
   private Launcher launcher;
   private TaskListener listener;
-  private PrintStream consoleOut; // Console output stream
+  private ConsoleStream consoleOut; // Console output stream
 
   // Kludge alert - In order to fill the request/bookmark list box with values from
   // the EM and to provided the user with appropriate feedback, we need to cache
@@ -160,7 +198,6 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
     this.waitConfig = waitConfig;
     this.altEMConfig = altEMConfig;
     this.processList = processList;
-    globalConfig = GlobalConfiguration.all().get(ExecutionManagerConfig.class);
 
     // When we get here Jenkins is saving our form values, so we can invalidate
     // this session's itemsCache.
@@ -309,19 +346,145 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
 
   // Process the user provided parameters by substituting Jenkins environment
   // variables referenced in a parameter's value.
-  HashMap<String, String> processParameters () throws InterruptedException, IOException {
+  private HashMap<String, String> processParameters () throws InterruptedException, IOException {
     HashMap<String, String> ret = new HashMap<String, String>();
     EnvVars envVars = run.getEnvironment(listener);
     if (execParams != null) {
       for (ExecuteRequestParameter param : execParams.getExecParamList()) {
         String value = param.getValue();
 
-        // dereference ALL Jenkins vars within the value string
+        if (StringUtils.isNotEmpty(param.getKey()) &&
+                StringUtils.isNotEmpty(value)) {
+          // dereference ALL Jenkins vars within the value string
 
-        ret.put(param.getKey(), value);
+          ret.put(param.getKey(), value);
+        }
       }
     }
     return ret;
+  }
+
+  private void waitForCompletion (String guid) {
+    boolean aborted = false;
+
+    // Setup timing variables
+    Long maxRunTime = waitConfig == null ? null : waitConfig.maxRunTimeInMillis();
+    if (maxRunTime == null) {
+      // Default to 1 year maximum run time
+      maxRunTime = TimeUnit.MILLISECONDS.convert(365L, TimeUnit.DAYS);
+    }
+    Long pollInterval = waitConfig == null ? null : waitConfig.pollIntervalInMillis();
+    if (pollInterval == null) {
+      // Default to 15 second poll interval
+      pollInterval = TimeUnit.MILLISECONDS.convert(15L, TimeUnit.SECONDS);
+    }
+
+    // Stuff for computing elapsed time
+    long startTime = System.currentTimeMillis();
+    long currentTime = startTime;
+    long endTime = (startTime + maxRunTime);
+    SimpleDateFormat elapsedFmt = new SimpleDateFormat("HH:mm:ss.SSS");
+    elapsedFmt.setTimeZone(TimeZone.getTimeZone("UTC"));
+    String elapsedTime = elapsedFmt.format(new Date(currentTime - startTime));
+
+    // loop until complete/aborted
+    consoleOut.println("Waiting for execution to complete...");
+    while (true) {
+      EmResult statusResult = server.executionStatus(guid);
+
+      if (!statusResult.is200()) {
+        consoleOut.println("\n*** ERROR: EM error while checking execution status:");
+        consoleOut.printlnIndented("*** ERROR:   ", statusResult.dumpDebug());
+        break;
+      }
+
+      JSONObject response = statusResult.getJsonData();
+      try {
+        String jobStatus = response.getString("Status");
+        String jobExecutionStatus = response.getString("ExecutionStatus");
+        consoleOut.println("\nElapsed time=" + elapsedTime + " - " + jobStatus + "," + jobExecutionStatus + (aborted ? " *** ABORTING ***" : ""));
+        JSONArray tasks = response.getJSONArray("Tasks");
+
+        // Print the run's status to the build console
+        consoleOut.println("Name            ExecStatus Resource        LastError       Status");
+        consoleOut.println("--------------- ---------- --------------- --------------- --------------------");
+        for (int i = 0; i < tasks.size(); i++) {
+          JSONObject task = tasks.getJSONObject(i);
+          String name = task.getString("Name");
+          String executionStatus = task.getString("ExecutionStatus");
+          String resourceName = task.getString("ResourceName");
+          String lastReportedError = task.getString("LastReportedError");
+          String status = task.getString("Status");
+          consoleOut.println(String.format("%-15.15s %-10.10s %-15.15s %-15.15s %-20.20s",
+                  StringUtils.abbreviate(name, 15),
+                  StringUtils.abbreviate(executionStatus, 10),
+                  StringUtils.abbreviate(resourceName, 15),
+                  StringUtils.abbreviate(lastReportedError, 15),
+                  StringUtils.abbreviate(status, 20)));
+        }
+
+        // Check for completion
+        if (jobStatus.toUpperCase().equals("COMPLETED")) {
+          if (!aborted && jobExecutionStatus.toUpperCase().equals("FAILED")) {
+            run.setResult(Result.FAILURE);
+          } else if (jobExecutionStatus.toUpperCase().equals("PASSED")) {
+            run.setResult(Result.SUCCESS);
+          }
+          break;
+        }
+      } catch (JSONException e) {
+        // JSON badness
+        consoleOut.println("\n*** ERROR: unexpected error while processing status");
+        consoleOut.println("*** ERROR: exception: " + e);
+        consoleOut.println("*** ERROR: exception: " + e.getMessage());
+        consoleOut.println("*** ERROR: stack trace:  ");
+        consoleOut.printlnIndented("*** ERROR:    ", e.getStackTrace());
+      }
+      try {
+        Thread.sleep(pollInterval);
+        currentTime = System.currentTimeMillis();
+        elapsedTime = elapsedFmt.format(new Date(currentTime - startTime));
+        if (maxRunTime != null && currentTime >= endTime) {
+          if (aborted) {
+            consoleOut.println("\n*** ERROR: Abort timed out!!! - abandoning...");
+          } else {
+            consoleOut.println("\n*** ERROR: Execution timed out after " + elapsedTime + " - aborting...");
+
+
+            EmResult result = server.executionAbort(guid);
+            if (!result.is200()) {
+              consoleOut.println("\n*** ERROR: EM error aborting execution:");
+              consoleOut.printlnIndented("*** ERROR:   ", result.dumpDebug());
+            }
+
+            run.setResult(Result.ABORTED);
+          }
+        }
+      } catch (InterruptedException e) {
+        consoleOut.println("\n*** ERROR: User requested aborted of execution after " + elapsedTime);
+
+        // Tell the EM to abort execution
+        EmResult result = server.executionAbort(guid);
+        if (!result.is200()) {
+          consoleOut.println("\n*** ERROR: Error aborting execution:");
+          consoleOut.printlnIndented("*** ERROR:   ", result.dumpDebug());
+        }
+
+        run.setResult(Result.ABORTED);
+      }
+      if (run.getResult() == Result.ABORTED) {
+        // Once we tell the EM we'll wait six cycles for up to 60 seconds
+        pollInterval = TimeUnit.MILLISECONDS.convert(10L, TimeUnit.SECONDS);
+        aborted = true;
+
+        // Set the max run time to one minute from now in order to wait for EM to complete
+        // the abort.
+        maxRunTime = TimeUnit.MILLISECONDS.convert(60L, TimeUnit.SECONDS);
+        endTime = (currentTime + maxRunTime);
+      }
+    }
+
+    consoleOut.println("\n\nExecution " + run.getResult().toString() + " after - " + elapsedTime);
   }
 
   // This method is called by Jenkins to perform the build step. It sets up some instance
@@ -334,58 +497,69 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
     this.workspace = workspace;
     this.launcher = launcher;
     this.listener = listener;
-    this.consoleOut = listener.getLogger();
+    this.consoleOut = new ConsoleStream(listener.getLogger());
+
+    ExecutionManagerConfig globalConfig = GlobalConfiguration.all().get(ExecutionManagerConfig.class);
 
     // Pick the right EM configuration
-    emConfig = this.globalConfig != null ? this.globalConfig.getEmConfig() : null;
+    emConfig = globalConfig != null ? globalConfig.getEmConfig() : null;
     if (altEMConfig != null && altEMConfig.isValid()) {
       emConfig = getAltEMConfig();
     }
 
     String guid = null;
 
-    if (emConfig != null) {
-      server = new ExecutionManagerServer(emConfig.getUrl(), emConfig.lookupCredentials());
-      if (server.login()) {
-        // Dispatch to one of the methods below
-        try {
-          Method meth = this.getClass().getMethod("execute_" + emRequestType.toUpperCase().trim());
-          guid = (String)meth.invoke(this);
-        } catch (NoSuchMethodException ex) {
-          listener.fatalError("Don't know how to execute '%s'", emRequestType);
-          run.setResult(Result.FAILURE); // Fail this build step.
-        } catch (IllegalAccessException ex) {
-          listener.fatalError("Couldn't execute '%s'", emRequestType);
-          run.setResult(Result.FAILURE); // Fail this build step.
+    try {
+      if (emConfig != null && emConfig.isValid()) {
+        server = new ExecutionManagerServer(emConfig.getUrl(), emConfig.lookupCredentials());
+        if (server.login()) {
+          // Dispatch to one of the methods below
+          try {
+            String methName = "execute_" + emRequestType.toUpperCase().trim();
+            Method meth = this.getClass().getDeclaredMethod(methName);
+            guid = (String) meth.invoke(this);
+          } catch (NoSuchMethodException ex) {
+            consoleOut.println("\n*** ERROR: Don't know how to execute '" + emRequestType + "'");
+            run.setResult(Result.FAILURE); // Fail this build step.
+          } catch (IllegalAccessException ex) {
+            consoleOut.println("\n*** ERROR: Couldn't execute '" + emRequestType + "'");
+            consoleOut.println("*** ERROR: unexpected error while processing request: " + emRequestType);
+            consoleOut.println("*** ERROR: exception: " + ex);
+            consoleOut.println("*** ERROR: exception: " + ex.getMessage());
+            consoleOut.println("*** ERROR: stack trace:  ");
+            consoleOut.printlnIndented("*** ERROR:   ", ex.getStackTrace());
 
-          log.severe("ERROR: unexpected error while processing request: " + emRequestType);
-          log.severe("ERROR: exception: " + ex);
-          log.severe("ERROR: exception: " + ex.getMessage());
-          log.severe("ERROR: stack trace:  ");
-          StackTraceUtils.printSanitizedStackTrace(ex.getCause());
-        } catch (InvocationTargetException ex) {
-          listener.fatalError("Exception thrown while executing '%s'", emRequestType);
+            run.setResult(Result.FAILURE); // Fail this build step.
+          } catch (InvocationTargetException ex) {
+            consoleOut.println("*** ERROR: Exception thrown while executing '" + emRequestType + "'");
+            run.setResult(Result.FAILURE); // Fail this build step.
+          }
+        } else {
+          EmResult result = server.getLastEMResult();
+          consoleOut.println("\n*** ERROR: Can't log in to '" + emConfig.getUrl() + "':");
+          consoleOut.printlnIndented("*** ERROR:   ", result.getResponseData());
           run.setResult(Result.FAILURE); // Fail this build step.
         }
       } else {
-        EmResult result = server.getLastEMResult();
-        listener.fatalError("Can't log in to '%s' - %s",
-                emConfig.getUrl(), result.getResponseData());
-        log.log(Level.SEVERE, "Bad credentials!"); // Ends up in the log
+        consoleOut.println("\n*** ERROR: A valid Execution Manager configuration must be specified!");
         run.setResult(Result.FAILURE); // Fail this build step.
-        //throw new RuntimeException("Bad credentials!"); // In console output end build status to fail
       }
-    } else {
-      listener.fatalError("An Execution Manager configuration must be specified!");
+    } catch (Exception ex) {
+      consoleOut.println("\n*** ERROR: Unexpected error while processing request type: " + emRequestType);
+      consoleOut.println("*** ERROR: exception: " + ex);
+      consoleOut.println("*** ERROR: exception: " + ex.getMessage());
+      consoleOut.println("*** ERROR: stack trace:  ");
+      consoleOut.printlnIndented("*** ERROR:   ", ex.getStackTrace());
+
       run.setResult(Result.FAILURE); // Fail this build step.
     }
-
     if (run.getResult() != Result.FAILURE) {
-      if (guid != null) {
-        server.executionStatus(guid);
+      if (guid == null) {
+        consoleOut.println("\n*** ERROR: An unexpected error occurred while requesting execution!");
+        run.setResult(Result.FAILURE); // Fail this build step.
+      } else {
+        waitForCompletion(guid);
       }
-      // wait for completion
-      consoleOut.println("Console output test - Hello world");
     }
   }
 
@@ -393,7 +567,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
   public String execute_REQUEST () throws InterruptedException, IOException {
     String guid = null;
     if (StringUtils.isEmpty(request.getRequest())) {
-      listener.fatalError("A request name or ID must be specified!");
+      consoleOut.println("\n*** ERROR: A request name or ID must be specified!");
       run.setResult(Result.FAILURE); // Fail this build step.
     } else {
       String reqID = null;
@@ -414,18 +588,34 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
             }
           }
         } catch (Exception ex) {
-          log.severe("ERROR: unexpected error during execute_REQUEST:");
-          log.severe("ERROR: exception: " + ex);
-          log.severe("ERROR: exception: " + ex.getMessage());
-          log.severe("ERROR: stack trace:  ");
-          StackTraceUtils.printSanitizedStackTrace(ex.getCause());
+          consoleOut.println("\n*** ERROR: unexpected error during execute_REQUEST:");
+          consoleOut.println("*** ERROR: unexpected error while processing request: " + emRequestType);
+          consoleOut.println("*** ERROR: exception: " + ex);
+          consoleOut.println("*** ERROR: exception: " + ex.getMessage());
+          consoleOut.println("*** ERROR: stack trace:  ");
+          consoleOut.printlnIndented("*** ERROR:   ", ex.getStackTrace());
+          run.setResult(Result.FAILURE); // Fail this build step.
         }
       }
       if (reqID == null) {
-        listener.fatalError("No such request '%s'!", theReq);
+        consoleOut.println("\n*** ERROR: No such request '" + theReq + "'!");
         run.setResult(Result.FAILURE); // Fail this build step.
       } else {
+        consoleOut.println("Requesting execution of request '" + theReq + "'(id=" + reqID + ")");
+        consoleOut.println("   on Execution Manager @ " + emConfig.getUrl());
+        HashMap<String, String> params = processParameters();
+        if (params.keySet().size() > 0) {
+          consoleOut.println("   with parameters (key=value):");
+          for (String key : params.keySet()) {
+            consoleOut.println("      " + key + "=" + params.get(key));
+          }
+        }
+        consoleOut.println("\n");
         guid = server.executeRequest(reqID, processParameters());
+        if (guid == null) {
+          consoleOut.println("\n*** ERROR: Request to execute '" + theReq + " failed:");
+          consoleOut.printlnIndented("   ", server.getLastEMResult().dumpDebug());
+        }
       }
     }
     return guid;
@@ -435,7 +625,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
   public String execute_BOOKMARK () throws InterruptedException, IOException {
     String guid = null;
     if (bookmark == null || StringUtils.isEmpty(bookmark.getBookmark())) {
-      listener.fatalError("A bookmark name or ID must be specified!");
+      consoleOut.println("\n*** ERROR: A bookmark name or ID must be specified!");
       run.setResult(Result.FAILURE); // Fail this build step.
     } else {
       String bmarkID = null;
@@ -445,7 +635,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
       if ((bmarks = server.bookmarks()) != null) {
         try {
           // Lookup all the bookmarks defined on the EM and find the one specified
-          // by the user
+          // by the user.
           JSONArray objs = bmarks.getJSONArray("objects");
           for (int i = 0; i < objs.size(); i++) {
             JSONObject bmark;
@@ -456,25 +646,44 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
             }
           }
         } catch (Exception ex) {
-          log.severe("ERROR: unexpected error during execute_BOOKMARK");
-          log.severe("ERROR: exception: " + ex);
-          log.severe("ERROR: exception: " + ex.getMessage());
-          log.severe("ERROR: stack trace:  ");
-          StackTraceUtils.printSanitizedStackTrace(ex.getCause());
+          consoleOut.println("\n*** ERROR: unexpected error during execute_REQUEST:");
+          consoleOut.println("*** ERROR: unexpected error while processing request: " + emRequestType);
+          consoleOut.println("*** ERROR: exception: " + ex);
+          consoleOut.println("*** ERROR: exception: " + ex.getMessage());
+          consoleOut.println("*** ERROR: stack trace:  ");
+          consoleOut.printlnIndented("*** ERROR:   ", ex.getStackTrace());
+          run.setResult(Result.FAILURE); // Fail this build step.
         }
       }
       if (bmarkID == null) {
-        listener.fatalError("No such bookmark '%s'!", theBmark);
+        consoleOut.println("\n*** ERROR: No such bookmark '" + theBmark + "'!");
         run.setResult(Result.FAILURE); // Fail this build step.
       } else {
-        guid = server.executeBookmark(bmarkID, bookmark.getFolder(), processParameters());
+        consoleOut.println("Requesting execution of bookmark '" + theBmark + "'(id=" + bmarkID + ")");
+        consoleOut.println("   on Execution Manager @ " + emConfig.getUrl());
+        if (StringUtils.isNotEmpty(bookmark.getFolder())) {
+          consoleOut.println("   with results folder='" + bookmark.getFolder() + "'");
+        }
+        HashMap<String, String> params = processParameters();
+        if (params.keySet().size() > 0) {
+          consoleOut.println("   with parameters (key=value):");
+          for (String key : params.keySet()) {
+            consoleOut.println("      " + key + "=" + params.get(key));
+          }
+        }
+        consoleOut.println("\n");
+        guid = server.executeBookmark(bmarkID, bookmark.getFolder(), params);
+        if (guid == null) {
+          consoleOut.println("\n*** ERROR: Request to execute bookmark failed:");
+          consoleOut.printlnIndented("   ", server.getLastEMResult().dumpDebug());
+        }
       }
     }
     return guid;
   }
 
   // Called via reflection from the dispatcher above to execute a 'process list'
-  public String execute_PROCESSLIST () throws InterruptedException, IOException {
+  private String execute_PROCESSLIST () throws InterruptedException, IOException {
     return null;
   }
 }
