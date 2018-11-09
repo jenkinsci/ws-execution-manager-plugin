@@ -13,14 +13,13 @@ import jodd.http.HttpException;
 import jodd.http.HttpRequest;
 import jodd.http.HttpResponse;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.groovy.runtime.StackTraceUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.logging.Logger;
 
 public class ExecutionManagerServer {
@@ -131,8 +130,8 @@ public class ExecutionManagerServer {
   }
 
   public String executeBookmark (String bookmark, String folder, HashMap<String, String> parameters) {
-    HttpRequest httpRequest = HttpRequest.put(url + "api/Bookmarks/" + bookmark + "/Execute")
-            .header("folder", "")
+    HttpRequest httpRequest = HttpRequest.put(url + "api/Bookmarks/" + bookmark + "/Execute" +
+            (StringUtils.isNotEmpty(folder)?"?folder="+folder:""))
             .header("parameters", formatParameters(parameters))
             .header("jsonOrXml", "json");
     httpRequest.body("");
@@ -152,33 +151,28 @@ public class ExecutionManagerServer {
     return guid;
   }
 
-  public EmStatus executionStatus (String guid) {
+  public EmResult executionStatus (String guid) {
 
     HttpRequest httpRequest = HttpRequest.get(url + "api/ExecutionStatus")
-            .header("ExecutionHistoryID", guid)
+            .header("APIRequestID ", guid)
             .header("jsonOrXml", "json");
 
-    EmStatus status = EmStatus.Running;
+    EmResult result = sendRequest(httpRequest);
 
-    try {
-      EmResult result = sendRequest(httpRequest);
+    return result;
+  }
 
-      if (result.isOkAndHasResponse()) {
-        JSONObject execStatus = result.getJsonData();
-      } else if (result.isUnauthorized()) {
-        status = EmStatus.Error;
-      } else {
-        status = EmStatus.Unknown;
-        log.warning("EM status query failed: " + result.dumpDebug());
-        // log response data
-        // check for errors here
-      }
+  public EmResult executionAbort (String guid) {
 
-    } catch (Throwable ignored) {
-      status = EmStatus.Error;
-    }
+    HttpRequest httpRequest = HttpRequest.put(url + "api/Execution/" + guid + "/Abort")
+            .header("id", guid)
+            .header("jsonOrXml", "json");
 
-    return status;
+    httpRequest.body("");
+
+    EmResult result = sendRequest(httpRequest);
+
+    return result;
   }
 
   private EmResult sendRequest (HttpRequest request) throws HttpException {

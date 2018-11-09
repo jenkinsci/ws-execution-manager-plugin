@@ -13,7 +13,7 @@
     <f:block>
         <div style="margin-left: 1em;">
             <table width="100%">
-                <f:entry title="Database name:" field="database">
+                <f:entry title="Database alias:" field="database">
                     <f:textbox/>
                 </f:entry>
                 <f:entry title="Project name:" field="project">

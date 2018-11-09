@@ -70,10 +70,18 @@ public class ExecuteRequestCertifyProcessList extends AbstractDescribableImpl<Ex
     }
 
 
+    public FormValidation doRequestName (@QueryParameter String database) {
+      FormValidation ret = FormValidation.ok();
+      if (StringUtils.isEmpty(database)) {
+        ret = FormValidation.error("A request name must be specified!");
+      }
+      return ret;
+    }
+
     public FormValidation doCheckDatabase (@QueryParameter String database) {
       FormValidation ret = FormValidation.ok();
       if (StringUtils.isEmpty(database)) {
-        ret = FormValidation.error("A database must be specified!");
+        ret = FormValidation.error("A database alias must be specified!");
       }
       return ret;
     }
