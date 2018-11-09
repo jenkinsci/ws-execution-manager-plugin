@@ -368,6 +368,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
 
   private void waitForCompletion (String guid) {
     boolean aborted = false;
+    String abortReason = "";
 
     // Setup timing variables
     Long maxRunTime = waitConfig == null ? null : waitConfig.maxRunTimeInMillis();
@@ -456,6 +457,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
           } else {
             consoleOut.println("\n*** ERROR: Execution timed out after " + elapsedTime + " - aborting...");
 
+            abortReason = " due to max wait time exceeded";
 
             EmResult result = server.executionAbort(guid);
             if (!result.is200()) {
@@ -467,7 +469,9 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
           }
         }
       } catch (InterruptedException e) {
-        consoleOut.println("\n*** ERROR: User requested aborted of execution after " + elapsedTime);
+        consoleOut.println("\n*** ERROR: User requested abort of execution after " + elapsedTime);
+
+        abortReason = " due to user request";
 
         // Tell the EM to abort execution
         EmResult result = server.executionAbort(guid);
@@ -490,7 +494,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
       }
     }
 
-    consoleOut.println("\n\nExecution " + run.getResult().toString() + " after - " + elapsedTime);
+    consoleOut.println("\n\nExecution " + run.getResult().toString() + " after - " + elapsedTime + abortReason);
   }
 
   // This method is called by Jenkins to perform the build step. It sets up some instance

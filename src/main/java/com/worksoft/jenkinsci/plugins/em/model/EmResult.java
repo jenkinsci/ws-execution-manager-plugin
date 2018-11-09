@@ -44,6 +44,10 @@ public class EmResult {
     }
   }
 
+  public HttpResponse getResponse() {
+    return response;
+  }
+
   public JSONObject getJsonData () {
     return jsonData;
   }

@@ -14,6 +14,7 @@ import com.cloudbees.plugins.credentials.CredentialsScope;
 import com.cloudbees.plugins.credentials.common.StandardUsernameListBoxModel;
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
 import com.cloudbees.plugins.credentials.domains.URIRequirementBuilder;
+import com.worksoft.jenkinsci.plugins.em.model.EmResult;
 import com.worksoft.jenkinsci.plugins.em.model.ExecutionManagerServer;
 import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
@@ -146,7 +147,17 @@ public final class ExecuteRequestEMConfig extends AbstractDescribableImpl<Execut
       try {
         ExecutionManagerServer ems = new ExecutionManagerServer(url, creds);
         if (!ems.login()) {
-          return FormValidation.error("Authorization Failed!");
+          EmResult result = ems.getLastEMResult();
+          String err = result.getResponse().statusPhrase();
+          if (result.getJsonData() == null) {
+            return FormValidation.error(err);
+          } else {
+            try {
+              err = result.getJsonData().getString("error_description");
+            } catch (Exception ignored) {
+            }
+            return FormValidation.error(err);
+          }
         }
       } catch (Exception e) {
         return FormValidation.error(e.getMessage());
