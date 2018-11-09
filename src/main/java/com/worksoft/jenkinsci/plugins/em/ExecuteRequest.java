@@ -623,8 +623,16 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
         consoleOut.println("\n");
         guid = server.executeRequest(reqID, processParameters());
         if (guid == null) {
-          consoleOut.println("\n*** ERROR: Request to execute '" + theReq + " failed:");
-          consoleOut.printlnIndented("   ", server.getLastEMResult().dumpDebug());
+          EmResult result = server.getLastEMResult();
+          String err = result.dumpDebug();
+          if (result.getJsonData() != null) {
+            try {
+              err = result.getJsonData().getString("Message");
+            } catch (Exception ignored) {
+            }
+          }
+          consoleOut.println("\n*** ERROR: Request to execute '" + theReq + "' failed:");
+          consoleOut.printlnIndented("   ", err);
         }
       }
     }
@@ -684,8 +692,16 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
         consoleOut.println("\n");
         guid = server.executeBookmark(bmarkID, bookmark.getFolder(), params);
         if (guid == null) {
+          EmResult result = server.getLastEMResult();
+          String err = result.dumpDebug();
+          if (result.getJsonData() != null) {
+            try {
+              err = result.getJsonData().getString("Message");
+            } catch (Exception ignored) {
+            }
+          }
           consoleOut.println("\n*** ERROR: Request to execute bookmark failed:");
-          consoleOut.printlnIndented("   ", server.getLastEMResult().dumpDebug());
+          consoleOut.printlnIndented("   ", err);
         }
       }
     }
@@ -694,6 +710,55 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
 
   // Called via reflection from the dispatcher above to execute a 'process list'
   private String execute_PROCESSLIST () throws InterruptedException, IOException {
-    return null;
+    JSONObject processes = new JSONObject();
+    JSONArray processList = new JSONArray();
+
+    String guid = null;
+    consoleOut.println("Requesting execution of Certify processes");
+    consoleOut.println("   on Execution Manager @ " + emConfig.getUrl());
+    consoleOut.println("   with database alias='" + getProcessList().getDatabase() + "'");
+    processes.put("CertifyDatabaseAlias", getProcessList().getDatabase());
+    consoleOut.println("   with project name='" + getProcessList().getProject() + "'");
+    processes.put("ProjectName", getProcessList().getProject());
+    consoleOut.println("   with request name='" + getProcessList().getRequestName() + "'");
+    processes.put("RequestName", getProcessList().getRequestName());
+    if (StringUtils.isNotEmpty(getProcessList().getFolder())) {
+      consoleOut.println("   with results folder='" + getProcessList().getFolder() + "'");
+      processes.put("ResultsFolder", getProcessList().getFolder());
+    }
+    consoleOut.println("   with process path(s):");
+    for (ExecuteRequestCertifyProcess proc : getProcessList().getProcessList()) {
+      if (StringUtils.isNotEmpty(proc.getProcessPath())) {
+        consoleOut.println("      " + proc.getProcessPath());
+        processList.add(proc.getProcessPath());
+      }
+    }
+    processes.put("Processes", processList);
+
+    HashMap<String, String> params = processParameters();
+    if (params.keySet().size() > 0) {
+      consoleOut.println("   with parameters (key=value):");
+      for (String key : params.keySet()) {
+        consoleOut.println("      " + key + "=" + params.get(key));
+      }
+    }
+    consoleOut.println("\n");
+
+    consoleOut.println(JSONUtils.valueToString(processes, 4, 0));
+
+    guid = server.executeProcesses(processes, params);
+    if (guid == null) {
+      EmResult result = server.getLastEMResult();
+      String err = result.dumpDebug();
+      if (result.getJsonData() != null) {
+        try {
+          err = result.getJsonData().getString("Message");
+        } catch (Exception ignored) {
+        }
+      }
+      consoleOut.println("\n*** ERROR: Request to execute Certify process(es) failed:");
+      consoleOut.printlnIndented("   ", err);
+    }
+    return guid;
   }
 }

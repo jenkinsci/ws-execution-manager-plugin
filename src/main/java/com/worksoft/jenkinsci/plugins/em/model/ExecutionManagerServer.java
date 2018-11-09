@@ -13,6 +13,7 @@ import jodd.http.HttpException;
 import jodd.http.HttpRequest;
 import jodd.http.HttpResponse;
 import net.sf.json.JSONObject;
+import net.sf.json.util.JSONUtils;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.groovy.runtime.StackTraceUtils;
 
@@ -150,6 +151,29 @@ public class ExecutionManagerServer {
 
     return guid;
   }
+
+  public String executeProcesses (JSONObject processes, HashMap<String, String> parameters) {
+    HttpRequest httpRequest = HttpRequest.put(url + "api/Processes/Execute")
+            .header("parameters", formatParameters(parameters))
+            .header("jsonOrXml", "json")
+            .header("content-type", "application/json");
+    httpRequest.body(JSONUtils.valueToString(processes, 4, 0));
+    String guid = null;
+
+    EmResult result = sendRequest(httpRequest);
+
+    if (result.is200()) {
+      String response = result.getResponseData();
+      if (response.length() >= 2 && response.charAt(0) == '"' && response.charAt(response.length() - 1) == '"') {
+        guid = response.substring(1, response.length() - 1);
+      } else {
+        guid = response;
+      }
+    }
+
+    return guid;
+  }
+
 
   public EmResult executionStatus (String guid) {
 
