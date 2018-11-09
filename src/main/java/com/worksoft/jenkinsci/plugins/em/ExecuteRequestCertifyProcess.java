@@ -42,7 +42,7 @@ public class ExecuteRequestCertifyProcess extends AbstractDescribableImpl<Execut
     public FormValidation doCheckProcessPath (@QueryParameter String processPath) {
       FormValidation ret = FormValidation.ok();
       if (StringUtils.isEmpty(processPath)) {
-        ret = FormValidation.error("A process Path must be specified!");
+        ret = FormValidation.error("A process path must be specified!");
       }
       return ret;
     }

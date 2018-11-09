@@ -28,6 +28,7 @@ import jenkins.tasks.SimpleBuildStep;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
+import net.sf.json.util.JSONUtils;
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.Stapler;
@@ -127,7 +128,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
 
       prevVal = getCachedItems(fieldName);
       sessionCache.put(fieldName, items);
-      System.out.println("Updated items cache for " + fieldName + "=" + items + "(prevVal=" + prevVal + ")");
+      //System.out.println("Updated items cache for " + fieldName + "=" + items + "(prevVal=" + prevVal + ")");
     }
     return prevVal;
   }
@@ -153,7 +154,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
     HttpSession session = httpRequest.getSession();
     String sessionId = session.getId();
     itemsCache.put(session, null);
-    System.out.println("Invalidated items cache for " + sessionId);
+    //System.out.println("Invalidated items cache for " + sessionId);
   }
 
   static {
@@ -171,12 +172,12 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
                     Boolean isValid = (Boolean) isValidMeth.invoke(key);
                     if (!isValid) {
                       itemsCache.remove(key);
-                      System.out.println("Expired field cache for " + key.getId());
+                      //System.out.println("Expired field cache for " + key.getId());
                     }
                   }
                 } catch (Exception ignored) {
                   itemsCache.put(key, null);
-                  System.out.println("Exception expired field cache for " + key.getId());
+                  //System.out.println("Exception expired field cache for " + key.getId());
                 }
               }
             }
@@ -355,6 +356,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
 
         if (StringUtils.isNotEmpty(param.getKey()) &&
                 StringUtils.isNotEmpty(value)) {
+
           // dereference ALL Jenkins vars within the value string
 
           ret.put(param.getKey(), value);
@@ -387,6 +389,8 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
     elapsedFmt.setTimeZone(TimeZone.getTimeZone("UTC"));
     String elapsedTime = elapsedFmt.format(new Date(currentTime - startTime));
 
+    JSONArray prevTasks = null;
+
     // loop until complete/aborted
     consoleOut.println("Waiting for execution to complete...");
     while (true) {
@@ -404,25 +408,27 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
         String jobExecutionStatus = response.getString("ExecutionStatus");
         consoleOut.println("\nElapsed time=" + elapsedTime + " - " + jobStatus + "," + jobExecutionStatus + (aborted ? " *** ABORTING ***" : ""));
         JSONArray tasks = response.getJSONArray("Tasks");
+        if (prevTasks == null || !prevTasks.equals(tasks)) {
+          // Print the run's status to the build console
+          consoleOut.println("Name            ExecStatus Resource        LastError       Status");
+          consoleOut.println("--------------- ---------- --------------- --------------- --------------------");
+          for (int i = 0; i < tasks.size(); i++) {
+            JSONObject task = tasks.getJSONObject(i);
+            String name = task.getString("Name");
+            String executionStatus = task.getString("ExecutionStatus");
+            String resourceName = task.getString("ResourceName");
+            String lastReportedError = task.getString("LastReportedError");
+            String status = task.getString("Status");
+            consoleOut.println(String.format("%-15.15s %-10.10s %-15.15s %-15.15s %-20.20s",
+                    StringUtils.abbreviate(name, 15),
+                    StringUtils.abbreviate(executionStatus, 10),
+                    StringUtils.abbreviate(resourceName, 15),
+                    StringUtils.abbreviate(lastReportedError, 15),
+                    StringUtils.abbreviate(status, 20)));
 
-        // Print the run's status to the build console
-        consoleOut.println("Name            ExecStatus Resource        LastError       Status");
-        consoleOut.println("--------------- ---------- --------------- --------------- --------------------");
-        for (int i = 0; i < tasks.size(); i++) {
-          JSONObject task = tasks.getJSONObject(i);
-          String name = task.getString("Name");
-          String executionStatus = task.getString("ExecutionStatus");
-          String resourceName = task.getString("ResourceName");
-          String lastReportedError = task.getString("LastReportedError");
-          String status = task.getString("Status");
-          consoleOut.println(String.format("%-15.15s %-10.10s %-15.15s %-15.15s %-20.20s",
-                  StringUtils.abbreviate(name, 15),
-                  StringUtils.abbreviate(executionStatus, 10),
-                  StringUtils.abbreviate(resourceName, 15),
-                  StringUtils.abbreviate(lastReportedError, 15),
-                  StringUtils.abbreviate(status, 20)));
+            prevTasks = tasks;
+          }
         }
-
         // Check for completion
         if (jobStatus.toUpperCase().equals("COMPLETED")) {
           if (!aborted && jobExecutionStatus.toUpperCase().equals("FAILED")) {
