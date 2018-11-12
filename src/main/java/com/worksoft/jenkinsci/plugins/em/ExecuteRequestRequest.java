@@ -15,39 +15,44 @@ import hudson.model.Descriptor;
 import hudson.util.FormValidation;
 import hudson.util.ListBoxModel;
 import org.apache.commons.lang.StringUtils;
+import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.export.Exported;
 
+import javax.annotation.Nonnull;
+
 public final class ExecuteRequestRequest extends AbstractDescribableImpl<ExecuteRequestRequest> {
 
   @Exported
-  public String request;
+  public String name;
 
   @DataBoundConstructor
-  public ExecuteRequestRequest (String request) {
-    this.request = request;
+  public ExecuteRequestRequest (String name) {
+    this.name = name;
   }
 
-  public String getRequest () {
-    return request;
+  public String getName () {
+    return name;
   }
 
+  @Symbol("emRequest")
   @Extension
   public static class DescriptorImpl extends Descriptor<ExecuteRequestRequest> {
+    @Nonnull
     public String getDisplayName () {
-      return "ExecuteRequestRequest";
+      return "Execute Request";
     }
 
-    public FormValidation doCheckRequest (@QueryParameter String request) {
+    public FormValidation doCheckRequest (@QueryParameter String name) {
       ListBoxModel listBox = EMItemCache.getCachedItems("request");
       FormValidation ret = FormValidation.ok();
 
-      String msg = request;
+      String msg = name;
       if (msg.startsWith("ERROR") ||
               (listBox != null && (msg = listBox.get(0).value).startsWith("ERROR"))) {
         ret = FormValidation.error("Execution Manager error retrieving requests - " + msg.replace("ERROR: ", "") + "!");
-      } else if (StringUtils.isEmpty(request)) {
+      } else if (StringUtils.isEmpty(name)) {
         ret = FormValidation.error("A request must be specified!");
       }
 
@@ -55,7 +60,7 @@ public final class ExecuteRequestRequest extends AbstractDescribableImpl<Execute
     }
 
     // Called whenever emRequestType or alternative EM config changes
-    public ListBoxModel doFillRequestItems (@RelativePath("..") @QueryParameter String emRequestType,
+    public ListBoxModel doFillNameItems (@RelativePath("..") @QueryParameter String requestType,
                                             @RelativePath("../altEMConfig") @QueryParameter String url,
                                             @RelativePath("../altEMConfig") @QueryParameter String credentials) {
       return ExecuteRequest.fillItems("request", url, credentials);

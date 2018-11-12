@@ -11,11 +11,11 @@
 <j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
     <f:block>
         <table width="100%">
-            <f:entry title="Name:" field="postExecuteActionName">
+            <f:entry title="Name:" field="action">
                 <f:combobox/>
             </f:entry>
 
-            <f:entry title="Parameters:" field="postExecuteActionParams">
+            <f:entry title="Parameters:" field="params">
                 <f:expandableTextbox/>
             </f:entry>
 

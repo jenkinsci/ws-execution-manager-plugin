@@ -11,32 +11,36 @@ package com.worksoft.jenkinsci.plugins.em;
 import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
+import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.export.Exported;
 
 import java.util.List;
 
 public final class ExecuteRequestParameters extends AbstractDescribableImpl<ExecuteRequestParameters> {
   @Exported
-  private List<ExecuteRequestParameter> execParamList;
+  private List<ExecuteRequestParameter> list;
 
   @DataBoundConstructor
-  public ExecuteRequestParameters (List<ExecuteRequestParameter> execParamList) {
-    this.execParamList = execParamList;
+  public ExecuteRequestParameters (List<ExecuteRequestParameter> list) {
+    this.list = list;
   }
 
-  public List<ExecuteRequestParameter> getExecParamList () {
-    return execParamList;
+  public List<ExecuteRequestParameter> getList () {
+    return list;
   }
 
-  public void setExecParamList (List<ExecuteRequestParameter> execParamList) {
-    this.execParamList = execParamList;
+  @DataBoundSetter
+  public void setList (List<ExecuteRequestParameter> list) {
+    this.list = list;
   }
 
+  @Symbol("execParams")
   @Extension
   public static class DescriptorImpl extends Descriptor<ExecuteRequestParameters> {
     public String getDisplayName () {
-      return "ExecuteRequestParameters";
+      return "Execution Parameters";
     }
   }
 }

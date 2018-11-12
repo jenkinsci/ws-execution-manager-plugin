@@ -32,48 +32,48 @@ public class ExecuteRequestCertifyProcessList extends AbstractDescribableImpl<Ex
   @Exported
   String requestName;
   @Exported
-  List<ExecuteRequestCertifyProcess> processList;
+  List<ExecuteRequestCertifyProcess> processes;
 
-  @DataBoundConstructor
-  public ExecuteRequestCertifyProcessList (String database, String project, List<ExecuteRequestCertifyProcess> processList, String folder, String requestName) {
-    this.database = database;
-    this.project = project;
-    this.processList = processList;
-    this.folder = folder;
-    this.requestName = requestName;
-  }
-
-  public List<ExecuteRequestCertifyProcess> getProcessList () {
-    return processList;
-  }
-
-  public String getDatabase () {
-    return database;
-  }
-
-  public String getProject () {
-    return project;
-  }
-
-  public String getFolder () {
-    return folder;
-  }
-
-  public String getRequestName () {
-    return requestName;
-  }
-
-  @Extension
-  public static class DescriptorImpl extends Descriptor<ExecuteRequestCertifyProcessList> {
-    public String getDisplayName () {
-      return "Certify Process Config";
+    @DataBoundConstructor
+    public ExecuteRequestCertifyProcessList (String database, String project, List<ExecuteRequestCertifyProcess> processes, String folder, String requestName) {
+      this.database = database;
+      this.project = project;
+      this.processes = processes;
+      this.folder = folder;
+      this.requestName = requestName;
     }
 
+    public List<ExecuteRequestCertifyProcess> getProcesses () {
+      return processes;
+    }
 
-    public FormValidation doRequestName (@QueryParameter String database) {
+    public String getDatabase () {
+      return database;
+    }
+
+    public String getProject () {
+      return project;
+    }
+
+    public String getFolder () {
+      return folder;
+    }
+
+    public String getRequestName () {
+      return requestName;
+    }
+
+    @Extension
+    public static class DescriptorImpl extends Descriptor<ExecuteRequestCertifyProcessList> {
+      public String getDisplayName () {
+        return "Certify Process Config";
+      }
+
+
+      public FormValidation doFolder (@QueryParameter String folder) {
       FormValidation ret = FormValidation.ok();
-      if (StringUtils.isEmpty(database)) {
-        ret = FormValidation.error("A request name must be specified!");
+      if (StringUtils.isEmpty(folder)) {
+        ret = FormValidation.error("A folder must be specified!");
       }
       return ret;
     }

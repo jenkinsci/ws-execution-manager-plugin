@@ -26,7 +26,7 @@
                     <f:textbox/>
                 </f:entry>
                 <f:entry title="Certify Process List">
-                    <f:repeatableProperty field="processList" header="Path" minimum="1" default=" "
+                    <f:repeatableProperty field="processes" header="Path" minimum="1" default=" "
                                           add="${%Add Certify Process}"/>
                 </f:entry>
             </table>

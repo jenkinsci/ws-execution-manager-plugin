@@ -30,7 +30,7 @@
                 </f:entry>
             </j:if>
             <f:entry>
-                <f:repeatableProperty field="execParamList" header=""/>
+                <f:repeatableProperty field="list" header=""/>
                 <div><br/>See list of
                     <a href="${rootURL}/env-vars.html" target="_blank">available Jenkins environment variables
                     </a>
