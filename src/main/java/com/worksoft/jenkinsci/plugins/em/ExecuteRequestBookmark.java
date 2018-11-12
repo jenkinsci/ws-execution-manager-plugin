@@ -17,20 +17,18 @@ import hudson.util.ListBoxModel;
 import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
-import org.kohsuke.stapler.export.Exported;
 
 public final class ExecuteRequestBookmark extends AbstractDescribableImpl<ExecuteRequestBookmark> {
 
-  @Exported
-  public String bookmark;
-  @Exported
-  public String folder;
+  private String bookmark;
+  private String folder;
 
   @DataBoundConstructor
-  public ExecuteRequestBookmark (String bookmark, String folder) {
+  public ExecuteRequestBookmark (String bookmark) {
     this.bookmark = bookmark;
-    this.folder = folder;
+    this.folder = "";
   }
 
   public String getBookmark () {
@@ -41,6 +39,12 @@ public final class ExecuteRequestBookmark extends AbstractDescribableImpl<Execut
     return folder;
   }
 
+  @DataBoundSetter
+  public void setFolder (String folder) {
+    this.folder = folder;
+  }
+
+  @Symbol("bookmark")
   @Extension
   public static class DescriptorImpl extends Descriptor<ExecuteRequestBookmark> {
     public String getDisplayName () {

@@ -31,7 +31,9 @@ import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
 
+import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -85,7 +87,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
   }
 
   // The following instance variables are those provided by the GUI
-  private String emRequestType;
+  private String requestType;
   private ExecuteRequestBookmark bookmark;
   private ExecuteRequestRequest request;
   private ExecuteRequestCertifyProcessList processList;
@@ -104,22 +106,26 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
   private ConsoleStream consoleOut; // Console output stream
 
   Map<String, Execute> handlers = new HashMap<>();
-  Map<String, Execute> handlers = new HashMap<>();
   @DataBoundConstructor
-  public ExecuteRequest (String emRequestType, ExecuteRequestRequest request, ExecuteRequestCertifyProcessList processList, ExecuteRequestParameters execParams, ExecuteRequestWaitConfig waitConfig, ExecuteRequestEMConfig altEMConfig, ExecuteRequestPostExecute postExecute, ExecuteRequestBookmark bookmark) {
-    this.emRequestType = emRequestType;
-    this.bookmark = bookmark;
-    this.request = request;
-    this.execParams = execParams;
-    this.postExecute = postExecute;
-    this.waitConfig = waitConfig;
-    this.altEMConfig = altEMConfig;
-    this.processList = processList;
+  public ExecuteRequest (String requestType) {
+    //, ExecuteRequestRequest request, ExecuteRequestCertifyProcessList processList, ExecuteRequestParameters execParams, ExecuteRequestWaitConfig waitConfig, ExecuteRequestEMConfig altEMConfig, ExecuteRequestPostExecute postExecute, ExecuteRequestBookmark bookmark) {
+    this.requestType = requestType;
+//    this.bookmark = bookmark;
+//    this.request = request;
+//    this.execParams = execParams;
+//    this.postExecute = postExecute;
+//    this.waitConfig = waitConfig;
+//    this.altEMConfig = altEMConfig;
+//    this.processList = processList;
 
     // When we get here Jenkins is saving our form values, so we can invalidate
     // this session's itemsCache.
     EMItemCache.invalidateItemsCache();
-    handlers.put("request", byRequest);
+  }
+
+  public ExecuteRequest (String requestType, ExecuteRequestBookmark bookmark) {
+    this(requestType);
+    this.bookmark = bookmark;
   }
 
   public boolean getExecParamsEnabled () {
@@ -154,8 +160,8 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
     return altEMConfig;
   }
 
-  public String getEmRequestType () {
-    return emRequestType;
+  public String getRequestType () {
+    return requestType;
   }
 
   public ExecuteRequestBookmark getBookmark () {
@@ -178,9 +184,49 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
     return processList;
   }
 
+  @DataBoundSetter
+  public void setRequestType (@Nonnull String requestType) {
+    this.requestType = requestType;
+  }
+
+  @DataBoundSetter
+  public void setBookmark (ExecuteRequestBookmark bookmark) {
+    this.bookmark = bookmark;
+  }
+
+  @DataBoundSetter
+  public void setRequest (ExecuteRequestRequest request) {
+    this.request = request;
+  }
+
+  @DataBoundSetter
+  public void setProcessList (ExecuteRequestCertifyProcessList processList) {
+    this.processList = processList;
+  }
+
+  @DataBoundSetter
+  public void setPostExecute (ExecuteRequestPostExecute postExecute) {
+    this.postExecute = postExecute;
+  }
+
+  @DataBoundSetter
+  public void setAltEMConfig (ExecuteRequestEMConfig altEMConfig) {
+    this.altEMConfig = altEMConfig;
+  }
+
+  @DataBoundSetter
+  public void setWaitConfig (ExecuteRequestWaitConfig waitConfig) {
+    this.waitConfig = waitConfig;
+  }
+
+  @DataBoundSetter
+  public void setExecParams (ExecuteRequestParameters execParams) {
+    this.execParams = execParams;
+  }
+
   // Call from the jelly to determine whether radio block is checked
   public String emRequestTypeEquals (String given) {
-    return String.valueOf((emRequestType != null) && (emRequestType.equals(given)));
+    return String.valueOf((requestType != null) && (requestType.equals(given)));
   }
 
   @Symbol("execMan")
@@ -461,15 +507,15 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
         if (server.login()) {
           // Dispatch to one of the methods below
           try {
-            String methName = "execute_" + emRequestType.toUpperCase().trim();
+            String methName = "execute_" + requestType.toUpperCase().trim();
             Method meth = this.getClass().getDeclaredMethod(methName);
             guid = (String) meth.invoke(this);
           } catch (NoSuchMethodException ex) {
-            consoleOut.println("\n*** ERROR: Don't know how to execute '" + emRequestType + "'");
+            consoleOut.println("\n*** ERROR: Don't know how to execute '" + requestType + "'");
             run.setResult(Result.FAILURE); // Fail this build step.
           } catch (IllegalAccessException ex) {
-            consoleOut.println("\n*** ERROR: Couldn't execute '" + emRequestType + "'");
-            consoleOut.println("*** ERROR: unexpected error while processing request: " + emRequestType);
+            consoleOut.println("\n*** ERROR: Couldn't execute '" + requestType + "'");
+            consoleOut.println("*** ERROR: unexpected error while processing request: " + requestType);
             consoleOut.println("*** ERROR: exception: " + ex);
             consoleOut.println("*** ERROR: exception: " + ex.getMessage());
             consoleOut.println("*** ERROR: stack trace:  ");
@@ -477,7 +523,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
 
             run.setResult(Result.FAILURE); // Fail this build step.
           } catch (InvocationTargetException ex) {
-            consoleOut.println("*** ERROR: Exception thrown while executing '" + emRequestType + "'");
+            consoleOut.println("*** ERROR: Exception thrown while executing '" + requestType + "'");
             run.setResult(Result.FAILURE); // Fail this build step.
           }
         } else {
@@ -491,7 +537,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
         run.setResult(Result.FAILURE); // Fail this build step.
       }
     } catch (Exception ex) {
-      consoleOut.println("\n*** ERROR: Unexpected error while processing request type: " + emRequestType);
+      consoleOut.println("\n*** ERROR: Unexpected error while processing request type: " + requestType);
       consoleOut.println("*** ERROR: exception: " + ex);
       consoleOut.println("*** ERROR: exception: " + ex.getMessage());
       consoleOut.println("*** ERROR: stack trace:  ");
@@ -508,8 +554,6 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
       }
     }
   }
-
-  Execute byRequest = this::execute_REQUEST;
 
   // Called via reflection from the dispatcher above to execute a 'request'
   public String execute_REQUEST () throws InterruptedException, IOException {
@@ -537,7 +581,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
           }
         } catch (Exception ex) {
           consoleOut.println("\n*** ERROR: unexpected error during execute_REQUEST:");
-          consoleOut.println("*** ERROR: unexpected error while processing request: " + emRequestType);
+          consoleOut.println("*** ERROR: unexpected error while processing request: " + requestType);
           consoleOut.println("*** ERROR: exception: " + ex);
           consoleOut.println("*** ERROR: exception: " + ex.getMessage());
           consoleOut.println("*** ERROR: stack trace:  ");
@@ -603,7 +647,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
           }
         } catch (Exception ex) {
           consoleOut.println("\n*** ERROR: unexpected error during execute_REQUEST:");
-          consoleOut.println("*** ERROR: unexpected error while processing request: " + emRequestType);
+          consoleOut.println("*** ERROR: unexpected error while processing request: " + requestType);
           consoleOut.println("*** ERROR: exception: " + ex);
           consoleOut.println("*** ERROR: exception: " + ex.getMessage());
           consoleOut.println("*** ERROR: stack trace:  ");
@@ -698,9 +742,5 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
       consoleOut.printlnIndented("   ", err);
     }
     return guid;
-  }
-
-  interface Execute {
-    String exec() throws IOException, InterruptedException;
   }
 }
