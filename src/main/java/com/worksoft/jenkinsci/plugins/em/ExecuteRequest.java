@@ -118,32 +118,38 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
   public static ListBoxModel updateItemsCache (String fieldName, ListBoxModel items) {
     ListBoxModel prevVal = null;
     HttpServletRequest httpRequest = Stapler.getCurrentRequest();
-    HttpSession session = httpRequest.getSession();
-    String sessionId = session.getId();
-    synchronized (itemsCache) {
-      HashMap<String, ListBoxModel> sessionCache = itemsCache.get(session);
-      if (sessionCache == null) {
-        itemsCache.put(session, sessionCache = new HashMap<String, ListBoxModel>());
-      }
 
-      prevVal = getCachedItems(fieldName);
-      sessionCache.put(fieldName, items);
-      //System.out.println("Updated items cache for " + fieldName + "=" + items + "(prevVal=" + prevVal + ")");
+    // Protect against non-UI related calls to this method
+    if (httpRequest != null) {
+      HttpSession session = httpRequest.getSession();
+      String sessionId = session.getId();
+      synchronized (itemsCache) {
+        HashMap<String, ListBoxModel> sessionCache = itemsCache.get(session);
+        if (sessionCache == null) {
+          itemsCache.put(session, sessionCache = new HashMap<String, ListBoxModel>());
+        }
+
+        prevVal = getCachedItems(fieldName);
+        sessionCache.put(fieldName, items);
+        //System.out.println("Updated items cache for " + fieldName + "=" + items + "(prevVal=" + prevVal + ")");
+      }
     }
     return prevVal;
   }
 
   public static ListBoxModel getCachedItems (String fieldName) {
     ListBoxModel retVal = null;
-
     HttpServletRequest httpRequest = Stapler.getCurrentRequest();
-    HttpSession session = httpRequest.getSession();
-    String sessionId = session.getId();
-    synchronized (itemsCache) {
-      HashMap<String, ListBoxModel> sessionCache = itemsCache.get(session);
+    // Protect against non-UI related calls to this method
+    if (httpRequest != null) {
+      HttpSession session = httpRequest.getSession();
+      String sessionId = session.getId();
+      synchronized (itemsCache) {
+        HashMap<String, ListBoxModel> sessionCache = itemsCache.get(session);
 
-      if (sessionCache != null) {
-        retVal = sessionCache.get(fieldName);
+        if (sessionCache != null) {
+          retVal = sessionCache.get(fieldName);
+        }
       }
     }
     return retVal;
@@ -151,10 +157,13 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
 
   public static void invalidateItemsCache () {
     HttpServletRequest httpRequest = Stapler.getCurrentRequest();
-    HttpSession session = httpRequest.getSession();
-    String sessionId = session.getId();
-    itemsCache.put(session, null);
-    //System.out.println("Invalidated items cache for " + sessionId);
+    // Protect against non-UI related calls to this method
+    if (httpRequest != null) {
+      HttpSession session = httpRequest.getSession();
+      String sessionId = session.getId();
+      itemsCache.put(session, null);
+      //System.out.println("Invalidated items cache for " + sessionId);
+    }
   }
 
   static {
