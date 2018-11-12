@@ -199,10 +199,8 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
   }
 
 
-  Map<String, Execute> handlers = new HashMap<>();
   @DataBoundConstructor
   public ExecuteRequest (String requestType) {
-    //, ExecuteRequestRequest request, ExecuteRequestCertifyProcessList processList, ExecuteRequestParameters execParams, ExecuteRequestWaitConfig waitConfig, ExecuteRequestEMConfig altEMConfig, ExecuteRequestPostExecute postExecute, ExecuteRequestBookmark bookmark) {
     this.requestType = requestType;
 //    this.bookmark = bookmark;
 //    this.request = request;
@@ -215,12 +213,6 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
     // When we get here Jenkins is saving our form values, so we can invalidate
     // this session's itemsCache.
     invalidateItemsCache();
-    handlers.put("request", byRequest);
-  }
-
-  public ExecuteRequest (String requestType, ExecuteRequestBookmark bookmark) {
-    this(requestType);
-    this.bookmark = bookmark;
   }
 
   public boolean getExecParamsEnabled () {
@@ -410,7 +402,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
     HashMap<String, String> ret = new HashMap<String, String>();
     EnvVars envVars = run.getEnvironment(listener);
     if (execParams != null) {
-      for (ExecuteRequestParameter param : execParams.getExecParamList()) {
+      for (ExecuteRequestParameter param : execParams.getList()) {
         String value = param.getValue();
 
         if (StringUtils.isNotEmpty(param.getKey()) &&
@@ -632,17 +624,16 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
     }
   }
 
-  Execute byRequest = this::execute_REQUEST;
 
   // Called via reflection from the dispatcher above to execute a 'request'
   public String execute_REQUEST () throws InterruptedException, IOException {
     String guid = null;
-    if (StringUtils.isEmpty(request.getRequest())) {
+    if (StringUtils.isEmpty(request.getName())) {
       consoleOut.println("\n*** ERROR: A request name or ID must be specified!");
       run.setResult(Result.FAILURE); // Fail this build step.
     } else {
       String reqID = null;
-      String theReq = request.getRequest().trim();
+      String theReq = request.getName().trim();
       JSONObject reqs;
 
       if ((reqs = server.requests()) != null) {
@@ -695,12 +686,12 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
   // Called via reflection from the dispatcher above to execute a 'bookmark'
   public String execute_BOOKMARK () throws InterruptedException, IOException {
     String guid = null;
-    if (bookmark == null || StringUtils.isEmpty(bookmark.getBookmark())) {
+    if (bookmark == null || StringUtils.isEmpty(bookmark.getName())) {
       consoleOut.println("\n*** ERROR: A bookmark name or ID must be specified!");
       run.setResult(Result.FAILURE); // Fail this build step.
     } else {
       String bmarkID = null;
-      String theBmark = bookmark.getBookmark().trim();
+      String theBmark = bookmark.getName().trim();
       JSONObject bmarks;
 
       if ((bmarks = server.bookmarks()) != null) {
@@ -758,7 +749,4 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
     return null;
   }
 
-  interface Execute {
-    String exec() throws IOException, InterruptedException;
-  }
 }

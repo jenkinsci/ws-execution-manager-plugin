@@ -15,33 +15,36 @@ import hudson.util.ComboBoxModel;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.export.Exported;
 
+import javax.annotation.Nonnull;
+
 public final class ExecuteRequestPostExecute extends AbstractDescribableImpl<ExecuteRequestPostExecute> {
   @Exported
-  public String postExecuteActionName;
+  public String action;
   @Exported
-  public String postExecuteActionParams;
+  public String params;
 
   @DataBoundConstructor
-  public ExecuteRequestPostExecute (String postExecuteActionName, String postExecuteActionParams) {
-    this.postExecuteActionName = postExecuteActionName;
-    this.postExecuteActionParams = postExecuteActionParams;
+  public ExecuteRequestPostExecute (String action, String params) {
+    this.action = action;
+    this.params = params;
   }
 
-  public String getpostExecuteActionName () {
-    return postExecuteActionName;
+  public String getAction () {
+    return action;
   }
 
-  public String getpostExecuteActionParams () {
-    return postExecuteActionParams;
+  public String getParams () {
+    return params;
   }
 
   @Extension
   public static class DescriptorImpl extends Descriptor<ExecuteRequestPostExecute> {
+    @Nonnull
     public String getDisplayName () {
-      return "ExecuteRequestPostExecute";
+      return "Post Execute Action";
     }
 
-    public ComboBoxModel doFillPostExecuteActionNameItems () {
+    public ComboBoxModel doFillActionItems () {
       return new ComboBoxModel("BPP Report");
     }
   }
