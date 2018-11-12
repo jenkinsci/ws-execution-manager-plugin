@@ -28,14 +28,12 @@ import jenkins.tasks.SimpleBuildStep;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
-import net.sf.json.util.JSONUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.Stapler;
 
-import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -47,7 +45,6 @@ import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
@@ -202,6 +199,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
   }
 
 
+  Map<String, Execute> handlers = new HashMap<>();
   @DataBoundConstructor
   public ExecuteRequest (String requestType) {
     //, ExecuteRequestRequest request, ExecuteRequestCertifyProcessList processList, ExecuteRequestParameters execParams, ExecuteRequestWaitConfig waitConfig, ExecuteRequestEMConfig altEMConfig, ExecuteRequestPostExecute postExecute, ExecuteRequestBookmark bookmark) {
@@ -217,6 +215,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
     // When we get here Jenkins is saving our form values, so we can invalidate
     // this session's itemsCache.
     invalidateItemsCache();
+    handlers.put("request", byRequest);
   }
 
   public ExecuteRequest (String requestType, ExecuteRequestBookmark bookmark) {
@@ -633,6 +632,8 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
     }
   }
 
+  Execute byRequest = this::execute_REQUEST;
+
   // Called via reflection from the dispatcher above to execute a 'request'
   public String execute_REQUEST () throws InterruptedException, IOException {
     String guid = null;
@@ -755,5 +756,9 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
   // Called via reflection from the dispatcher above to execute a 'process list'
   private String execute_PROCESSLIST () throws InterruptedException, IOException {
     return null;
+  }
+
+  interface Execute {
+    String exec() throws IOException, InterruptedException;
   }
 }
