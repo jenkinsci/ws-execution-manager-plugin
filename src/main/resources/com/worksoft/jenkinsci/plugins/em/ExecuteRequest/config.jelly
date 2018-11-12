@@ -18,21 +18,21 @@
             <div style="margin-left: 1em;">
                 <table width="100%">
                     <!--<f:entry title="Select the Execution Manager Request, Bookmark or Certify Processes to run.">-->
-                    <f:radioBlock name="emRequestType" title="EM Request" value="request"
+                    <f:radioBlock name="requestType" title="EM Request" value="request"
                                   help="${descriptor.getHelpFile('request')}" inline="true"
                                   checked="${instance.emRequestTypeEquals('request')}">
                         <f:entry>
                             <f:property field="request"/>
                         </f:entry>
                     </f:radioBlock>
-                    <f:radioBlock name="emRequestType" title="EM Bookmark" value="bookmark"
+                    <f:radioBlock name="requestType" title="EM Bookmark" value="bookmark"
                                   help="${descriptor.getHelpFile('request')}" inline="true"
                                   checked="${instance.emRequestTypeEquals('bookmark')}">
                         <f:entry>
                             <f:property field="bookmark"/>
                         </f:entry>
                     </f:radioBlock>
-                    <f:radioBlock name="emRequestType" title="Certify Processes" value="processList"
+                    <f:radioBlock name="requestType" title="Certify Processes" value="processList"
                                   help="${descriptor.getHelpFile('request')}" inline="true"
                                   checked="${instance.emRequestTypeEquals('processList')}">
                         <f:entry>
