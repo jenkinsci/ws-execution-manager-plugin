@@ -34,6 +34,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.export.Exported;
 
+import javax.annotation.CheckForNull;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -45,7 +46,7 @@ public final class ExecuteRequestEMConfig extends AbstractDescribableImpl<Execut
   public String credentials;
 
   @DataBoundConstructor
-  public ExecuteRequestEMConfig (String url, String credentials) {
+  public ExecuteRequestEMConfig (@CheckForNull  String url, String credentials) {
     this.url = url;
     this.credentials = credentials;
   }
@@ -83,7 +84,7 @@ public final class ExecuteRequestEMConfig extends AbstractDescribableImpl<Execut
   @Extension
   public static class DescriptorImpl extends Descriptor<ExecuteRequestEMConfig> {
     public String getDisplayName () {
-      return "ExecuteRequestEMConfig";
+      return "Execution Manager Config";
     }
 
     public FormValidation doCheckUrl (@QueryParameter String url) {

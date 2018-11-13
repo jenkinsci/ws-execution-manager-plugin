@@ -62,6 +62,7 @@ jenkinsPlugin {
 
 dependencies {
     jenkinsPlugins 'org.jenkins-ci.plugins:credentials:2.1.10'
+    jenkinsPlugins 'org.jenkins-ci.plugins:structs:1.17'
     compile 'org.jodd:jodd-http:5.0.1'
     compile "org.codehaus.groovy:groovy-all:${groovyVersion}"
 }

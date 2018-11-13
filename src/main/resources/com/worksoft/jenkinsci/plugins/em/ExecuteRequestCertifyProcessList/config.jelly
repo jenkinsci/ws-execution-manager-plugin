@@ -25,8 +25,8 @@
                 <f:entry title="Request name:" field="requestName">
                     <f:textbox/>
                 </f:entry>
-                <f:entry title="Certify Process List">
-                    <f:repeatableProperty field="processList" header="Path" minimum="1" default=" "
+                <f:entry title="Certify Process List" help="${descriptor.getHelpFile('processes')}">
+                    <f:repeatableProperty field="processes" header="Path" minimum="1" default=" "
                                           add="${%Add Certify Process}"/>
                 </f:entry>
             </table>

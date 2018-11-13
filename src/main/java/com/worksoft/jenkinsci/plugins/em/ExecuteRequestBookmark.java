@@ -15,60 +15,70 @@ import hudson.model.Descriptor;
 import hudson.util.FormValidation;
 import hudson.util.ListBoxModel;
 import org.apache.commons.lang.StringUtils;
+import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.export.Exported;
+
+import javax.annotation.Nonnull;
 
 public final class ExecuteRequestBookmark extends AbstractDescribableImpl<ExecuteRequestBookmark> {
 
   @Exported
-  public String bookmark;
+  private String name;
   @Exported
-  public String folder;
+  private String folder;
 
   @DataBoundConstructor
-  public ExecuteRequestBookmark (String bookmark, String folder) {
-    this.bookmark = bookmark;
-    this.folder = folder;
+  public ExecuteRequestBookmark (String name) {
+    this.name = name;
+    this.folder = "";
   }
 
-  public String getBookmark () {
-    return bookmark;
+  public String getName () {
+    return name;
   }
 
   public String getFolder () {
     return folder;
   }
 
+  @DataBoundSetter
+  public void setFolder (String folder) {
+    this.folder = folder;
+  }
+
   @Extension
   public static class DescriptorImpl extends Descriptor<ExecuteRequestBookmark> {
+    @Nonnull
     public String getDisplayName () {
-      return "ExecuteRequestWaitConfig";
+      return "Execute Bookmark";
     }
 
-    public FormValidation doCheckBookmark (@QueryParameter String bookmark) {
+    public FormValidation doCheckName (@QueryParameter String name) {
       ListBoxModel listBox = EMItemCache.getCachedItems("bookmark");
       FormValidation ret = FormValidation.ok();
 
-      String msg = bookmark;
+      String msg = name;
       if (msg.startsWith("ERROR") ||
               (listBox != null && (msg = listBox.get(0).value).startsWith("ERROR"))) {
         ret = FormValidation.error("Execution Manager error retrieving bookmarks - " + msg.replace("ERROR: ", "") + "!");
-      } else if (StringUtils.isEmpty(bookmark)) {
+      } else if (StringUtils.isEmpty(name)) {
         ret = FormValidation.error("A bookmark must be specified!");
       }
 
       return ret;
     }
 
-    public FormValidation doCheckfolder (@QueryParameter String folder) {
+    public FormValidation doCheckFolder (@QueryParameter String folder) {
       FormValidation ret = FormValidation.ok();
 
       return ret;
     }
 
     // Called whenever emRequestType or alternative EM config changes
-    public ListBoxModel doFillBookmarkItems (@RelativePath("..") @QueryParameter String emRequestType,
+    public ListBoxModel doFillNameItems (@RelativePath("..") @QueryParameter String requestType,
                                              @RelativePath("../altEMConfig") @QueryParameter String url,
                                              @RelativePath("../altEMConfig") @QueryParameter String credentials) {
       return ExecuteRequest.fillItems("bookmark", url, credentials);

@@ -13,6 +13,7 @@ import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
 import hudson.util.FormValidation;
 import org.apache.commons.lang.StringUtils;
+import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.export.Exported;
@@ -21,7 +22,7 @@ import org.kohsuke.stapler.export.Exported;
 public class ExecuteRequestCertifyProcess extends AbstractDescribableImpl<ExecuteRequestCertifyProcess> {
 
   @Exported
-  String processPath;
+  public String processPath;
 
   @DataBoundConstructor
   public ExecuteRequestCertifyProcess (String processPath) {
@@ -32,6 +33,7 @@ public class ExecuteRequestCertifyProcess extends AbstractDescribableImpl<Execut
     return processPath;
   }
 
+  @Symbol("certifyProcess")
   @Extension
   public static class DescriptorImpl extends Descriptor<ExecuteRequestCertifyProcess> {
     public String getDisplayName () {
