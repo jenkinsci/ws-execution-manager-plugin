@@ -57,7 +57,7 @@ pipeline {
 
                 script {
                     def request = emRequest name: 'WAIT_300-Pass'
-                    def params = execParms list: [[key: 'a', value: '456'], [key: 'b', value: '123']]
+                    def params = execParams list: [[key: 'a', value: '456'], [key: 'b', value: '123']]
 
                     def processList = [[certifyProcess: 'Project1\\Folder1\\Folder2\\Process1'], [certifyProcess: 'testproject\\testfolder\\testprocess']]
                 }

@@ -43,6 +43,7 @@ public final class ExecuteRequestParameter extends AbstractDescribableImpl<Execu
     return value;
   }
 
+  @Symbol("emParam")
   @Extension
   public static class DescriptorImpl extends Descriptor<ExecuteRequestParameter> {
     public String getDisplayName () {
