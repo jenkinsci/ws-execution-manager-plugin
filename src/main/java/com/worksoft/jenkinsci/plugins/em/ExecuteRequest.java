@@ -33,7 +33,6 @@ import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
-import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -43,7 +42,6 @@ import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
@@ -108,13 +106,6 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
   @DataBoundConstructor
   public ExecuteRequest (String requestType) {
     this.requestType = requestType;
-//    this.bookmark = bookmark;
-//    this.request = request;
-//    this.execParams = execParams;
-//    this.postExecute = postExecute;
-//    this.waitConfig = waitConfig;
-//    this.altEMConfig = altEMConfig;
-//    this.processList = processList;
 
     // When we get here Jenkins is saving our form values, so we can invalidate
     // this session's itemsCache.
@@ -702,7 +693,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
       processes.put("ResultsFolder", getProcessList().getFolder());
     }
     consoleOut.println("   with process path(s):");
-    for (ExecuteRequestCertifyProcess proc : getProcessList().getProcessList()) {
+    for (ExecuteRequestCertifyProcess proc : getProcessList().getProcesses()) {
       if (StringUtils.isNotEmpty(proc.getProcessPath())) {
         consoleOut.println("      " + proc.getProcessPath());
         processList.add(proc.getProcessPath());
@@ -735,4 +726,5 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
       consoleOut.printlnIndented("   ", err);
     }
     return guid;
+  }
 }

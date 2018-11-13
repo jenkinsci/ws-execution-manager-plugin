@@ -84,7 +84,7 @@ public final class ExecuteRequestEMConfig extends AbstractDescribableImpl<Execut
   @Extension
   public static class DescriptorImpl extends Descriptor<ExecuteRequestEMConfig> {
     public String getDisplayName () {
-      return "ExecuteRequestEMConfig";
+      return "Execution Manager Config";
     }
 
     public FormValidation doCheckUrl (@QueryParameter String url) {

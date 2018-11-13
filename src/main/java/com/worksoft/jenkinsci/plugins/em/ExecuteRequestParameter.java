@@ -47,7 +47,7 @@ public final class ExecuteRequestParameter extends AbstractDescribableImpl<Execu
   @Extension
   public static class DescriptorImpl extends Descriptor<ExecuteRequestParameter> {
     public String getDisplayName () {
-      return "ExecuteRequestParameter";
+      return "Execution Request Parameter";
     }
 
     public FormValidation doCheckKey (@QueryParameter String key) {
