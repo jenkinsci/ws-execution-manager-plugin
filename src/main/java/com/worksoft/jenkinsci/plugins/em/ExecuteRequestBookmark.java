@@ -47,7 +47,7 @@ public final class ExecuteRequestBookmark extends AbstractDescribableImpl<Execut
     }
 
     public FormValidation doCheckBookmark (@QueryParameter String bookmark) {
-      ListBoxModel listBox = ExecuteRequest.getCachedItems("bookmark");
+      ListBoxModel listBox = EMItemCache.getCachedItems("bookmark");
       FormValidation ret = FormValidation.ok();
 
       String msg = bookmark;
