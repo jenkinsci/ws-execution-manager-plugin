@@ -28,14 +28,10 @@ import jenkins.tasks.SimpleBuildStep;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
-import net.sf.json.util.JSONUtils;
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.Stapler;
 
 import javax.annotation.Nonnull;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -105,99 +101,6 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
   private TaskListener listener;
   private ConsoleStream consoleOut; // Console output stream
 
-  // Kludge alert - In order to fill the request/bookmark list box with values from
-  // the EM and to provided the user with appropriate feedback, we need to cache
-  // the list box items. We wouldn't need to do this if the 'doCheck' methods were
-  // provided with the EM configuration variables so as to be able to validate them.
-  // Unfortunately, does not provide their values in a consistent manner, so we
-  // use this cache to remember the items from the 'doFill' methods; which we can then
-  // access in the 'doCheck' methods for proper field validation and error display.
-  private static HashMap<HttpSession, HashMap<String, ListBoxModel>> itemsCache =
-          new HashMap<HttpSession, HashMap<String, ListBoxModel>>();
-
-  public static ListBoxModel updateItemsCache (String fieldName, ListBoxModel items) {
-    ListBoxModel prevVal = null;
-    HttpServletRequest httpRequest = Stapler.getCurrentRequest();
-
-    // Protect against non-UI related calls to this method
-    if (httpRequest != null) {
-      HttpSession session = httpRequest.getSession();
-      String sessionId = session.getId();
-      synchronized (itemsCache) {
-        HashMap<String, ListBoxModel> sessionCache = itemsCache.get(session);
-        if (sessionCache == null) {
-          itemsCache.put(session, sessionCache = new HashMap<String, ListBoxModel>());
-        }
-
-        prevVal = getCachedItems(fieldName);
-        sessionCache.put(fieldName, items);
-        //System.out.println("Updated items cache for " + fieldName + "=" + items + "(prevVal=" + prevVal + ")");
-      }
-    }
-    return prevVal;
-  }
-
-  public static ListBoxModel getCachedItems (String fieldName) {
-    ListBoxModel retVal = null;
-    HttpServletRequest httpRequest = Stapler.getCurrentRequest();
-    // Protect against non-UI related calls to this method
-    if (httpRequest != null) {
-      HttpSession session = httpRequest.getSession();
-      String sessionId = session.getId();
-      synchronized (itemsCache) {
-        HashMap<String, ListBoxModel> sessionCache = itemsCache.get(session);
-
-        if (sessionCache != null) {
-          retVal = sessionCache.get(fieldName);
-        }
-      }
-    }
-    return retVal;
-  }
-
-  public static void invalidateItemsCache () {
-    HttpServletRequest httpRequest = Stapler.getCurrentRequest();
-    // Protect against non-UI related calls to this method
-    if (httpRequest != null) {
-      HttpSession session = httpRequest.getSession();
-      String sessionId = session.getId();
-      itemsCache.put(session, null);
-      //System.out.println("Invalidated items cache for " + sessionId);
-    }
-  }
-
-  static {
-    // Thread to monitor the field cache and remove entries for invalid sessions
-    (new Thread() {
-      public void run () {
-        while (true) {
-          try {
-            Thread.sleep(30000);
-            synchronized (itemsCache) {
-              for (HttpSession key : itemsCache.keySet()) {
-                try {
-                  Method isValidMeth = key.getClass().getMethod("isValid");
-                  if (isValidMeth != null) {
-                    Boolean isValid = (Boolean) isValidMeth.invoke(key);
-                    if (!isValid) {
-                      itemsCache.remove(key);
-                      //System.out.println("Expired field cache for " + key.getId());
-                    }
-                  }
-                } catch (Exception ignored) {
-                  itemsCache.put(key, null);
-                  //System.out.println("Exception expired field cache for " + key.getId());
-                }
-              }
-            }
-          } catch (Exception ignored) {
-          }
-        }
-      }
-    }).start();
-  }
-
-
   @DataBoundConstructor
   public ExecuteRequest (String emRequestType, ExecuteRequestRequest request, ExecuteRequestCertifyProcessList processList, ExecuteRequestParameters execParams, ExecuteRequestWaitConfig waitConfig, ExecuteRequestEMConfig altEMConfig, ExecuteRequestPostExecute postExecute, ExecuteRequestBookmark bookmark) {
     this.emRequestType = emRequestType;
@@ -211,7 +114,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
 
     // When we get here Jenkins is saving our form values, so we can invalidate
     // this session's itemsCache.
-    invalidateItemsCache();
+    EMItemCache.invalidateItemsCache();
   }
 
   public boolean getExecParamsEnabled () {
@@ -253,7 +156,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
   public ExecuteRequestBookmark getBookmark () {
     // When we get here Jenkins is loading our form values, so we can invalidate
     // this session's itemsCache.
-    invalidateItemsCache();
+    EMItemCache.invalidateItemsCache();
 
     return bookmark;
   }
@@ -261,7 +164,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
   public ExecuteRequestRequest getRequest () {
     // When we get here Jenkins is loading our form values, so we can invalidate
     // this session's itemsCache.
-    invalidateItemsCache();
+    EMItemCache.invalidateItemsCache();
 
     return request;
   }
@@ -349,7 +252,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
       items.get(items.size() - 1).selected = true;
     }
 
-    updateItemsCache(emRequestType, items);
+    EMItemCache.updateItemsCache(emRequestType, items);
 
     return items;
   }
@@ -420,8 +323,8 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
         JSONArray tasks = response.getJSONArray("Tasks");
         if (prevTasks == null || !prevTasks.equals(tasks)) {
           // Print the run's status to the build console
-          consoleOut.println("Name            ExecStatus Resource        LastError       Status");
-          consoleOut.println("--------------- ---------- --------------- --------------- --------------------");
+          consoleOut.println("Name  Status                     Resource        Last Error");
+          consoleOut.println("----- -------------------------- --------------- -----------------------------------");
           for (int i = 0; i < tasks.size(); i++) {
             JSONObject task = tasks.getJSONObject(i);
             String name = task.getString("Name");
@@ -429,12 +332,16 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
             String resourceName = task.getString("ResourceName");
             String lastReportedError = task.getString("LastReportedError");
             String status = task.getString("Status");
-            consoleOut.println(String.format("%-15.15s %-10.10s %-15.15s %-15.15s %-20.20s",
-                    StringUtils.abbreviate(name, 15),
-                    StringUtils.abbreviate(executionStatus, 10),
+            if (StringUtils.isNotEmpty(status) && StringUtils.isNotEmpty(executionStatus)) {
+              status += ",";
+            }
+            status += executionStatus;
+
+            consoleOut.println(name + ":");
+            consoleOut.println(String.format("      %-26.26s %-15.15s %s",
+                    StringUtils.abbreviate(status, 26),
                     StringUtils.abbreviate(resourceName, 15),
-                    StringUtils.abbreviate(lastReportedError, 15),
-                    StringUtils.abbreviate(status, 20)));
+                    lastReportedError, 15));
 
             prevTasks = tasks;
           }
@@ -462,7 +369,11 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
         elapsedTime = elapsedFmt.format(new Date(currentTime - startTime));
         if (maxRunTime != null && currentTime >= endTime) {
           if (aborted) {
+            // We get here when it's taken too long for the EM to abort execution, so
+            // we're abandoning our wait.
             consoleOut.println("\n*** ERROR: Abort timed out!!! - abandoning...");
+            abortReason += " (abandoned!)";
+            break;
           } else {
             consoleOut.println("\n*** ERROR: Execution timed out after " + elapsedTime + " - aborting...");
 
@@ -478,28 +389,38 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
           }
         }
       } catch (InterruptedException e) {
-        consoleOut.println("\n*** ERROR: User requested abort of execution after " + elapsedTime);
+        if (!aborted) {
+          consoleOut.println("\n*** ERROR: User requested abort of execution after " + elapsedTime);
 
-        abortReason = " due to user request";
+          abortReason = " due to user request";
 
+          run.setResult(Result.ABORTED);
+        } else {
+          // We'll get here if the user tries to abort an aborting execution, so flag it
+          // as such and abandon our wait.
+          consoleOut.println("\n*** ERROR: User requested abort of execution (again) after " + elapsedTime);
+          abortReason += " (forced!)";
+          break;
+        }
+      }
+      if (run.getResult() == Result.ABORTED) {
         // Tell the EM to abort execution
         EmResult result = server.executionAbort(guid);
-        if (!result.is200()) {
+        if (!result.is200() && !aborted) {
           consoleOut.println("\n*** ERROR: Error aborting execution:");
           consoleOut.printlnIndented("*** ERROR:   ", result.dumpDebug());
         }
+        if (!aborted) {
+          // Once we tell the EM to abort we'll wait for up to 60 seconds. We're reducing the
+          // poll interval to give faster feedback to the user.
+          pollInterval = TimeUnit.MILLISECONDS.convert(5L, TimeUnit.SECONDS);
+          aborted = true;
 
-        run.setResult(Result.ABORTED);
-      }
-      if (run.getResult() == Result.ABORTED) {
-        // Once we tell the EM we'll wait six cycles for up to 60 seconds
-        pollInterval = TimeUnit.MILLISECONDS.convert(10L, TimeUnit.SECONDS);
-        aborted = true;
-
-        // Set the max run time to one minute from now in order to wait for EM to complete
-        // the abort.
-        maxRunTime = TimeUnit.MILLISECONDS.convert(60L, TimeUnit.SECONDS);
-        endTime = (currentTime + maxRunTime);
+          // Set the max run time to one minute from now in order to wait for EM to complete
+          // the abort.
+          maxRunTime = TimeUnit.MILLISECONDS.convert(60L, TimeUnit.SECONDS);
+          endTime = (currentTime + maxRunTime);
+        }
       }
     }
 
@@ -632,8 +553,16 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
         consoleOut.println("\n");
         guid = server.executeRequest(reqID, processParameters());
         if (guid == null) {
-          consoleOut.println("\n*** ERROR: Request to execute '" + theReq + " failed:");
-          consoleOut.printlnIndented("   ", server.getLastEMResult().dumpDebug());
+          EmResult result = server.getLastEMResult();
+          String err = result.dumpDebug();
+          if (result.getJsonData() != null) {
+            try {
+              err = result.getJsonData().getString("Message");
+            } catch (Exception ignored) {
+            }
+          }
+          consoleOut.println("\n*** ERROR: Request to execute '" + theReq + "' failed:");
+          consoleOut.printlnIndented("   ", err);
         }
       }
     }
@@ -693,8 +622,16 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
         consoleOut.println("\n");
         guid = server.executeBookmark(bmarkID, bookmark.getFolder(), params);
         if (guid == null) {
+          EmResult result = server.getLastEMResult();
+          String err = result.dumpDebug();
+          if (result.getJsonData() != null) {
+            try {
+              err = result.getJsonData().getString("Message");
+            } catch (Exception ignored) {
+            }
+          }
           consoleOut.println("\n*** ERROR: Request to execute bookmark failed:");
-          consoleOut.printlnIndented("   ", server.getLastEMResult().dumpDebug());
+          consoleOut.printlnIndented("   ", err);
         }
       }
     }
@@ -703,6 +640,55 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
 
   // Called via reflection from the dispatcher above to execute a 'process list'
   private String execute_PROCESSLIST () throws InterruptedException, IOException {
-    return null;
+    JSONObject processes = new JSONObject();
+    JSONArray processList = new JSONArray();
+
+    String guid = null;
+    consoleOut.println("Requesting execution of Certify processes");
+    consoleOut.println("   on Execution Manager @ " + emConfig.getUrl());
+    consoleOut.println("   with database alias='" + getProcessList().getDatabase() + "'");
+    processes.put("CertifyDatabaseAlias", getProcessList().getDatabase());
+    consoleOut.println("   with project name='" + getProcessList().getProject() + "'");
+    processes.put("ProjectName", getProcessList().getProject());
+    consoleOut.println("   with request name='" + getProcessList().getRequestName() + "'");
+    processes.put("RequestName", getProcessList().getRequestName());
+    if (StringUtils.isNotEmpty(getProcessList().getFolder())) {
+      consoleOut.println("   with results folder='" + getProcessList().getFolder() + "'");
+      processes.put("ResultsFolder", getProcessList().getFolder());
+    }
+    consoleOut.println("   with process path(s):");
+    for (ExecuteRequestCertifyProcess proc : getProcessList().getProcessList()) {
+      if (StringUtils.isNotEmpty(proc.getProcessPath())) {
+        consoleOut.println("      " + proc.getProcessPath());
+        processList.add(proc.getProcessPath());
+      }
+    }
+    processes.put("Processes", processList);
+
+    HashMap<String, String> params = processParameters();
+    if (params.keySet().size() > 0) {
+      consoleOut.println("   with parameters (key=value):");
+      for (String key : params.keySet()) {
+        consoleOut.println("      " + key + "=" + params.get(key));
+      }
+    }
+    consoleOut.println("\n");
+
+    //consoleOut.println(JSONUtils.valueToString(processes, 4, 0));
+
+    guid = server.executeProcesses(processes, params);
+    if (guid == null) {
+      EmResult result = server.getLastEMResult();
+      String err = result.dumpDebug();
+      if (result.getJsonData() != null) {
+        try {
+          err = result.getJsonData().getString("Message");
+        } catch (Exception ignored) {
+        }
+      }
+      consoleOut.println("\n*** ERROR: Request to execute Certify process(es) failed:");
+      consoleOut.printlnIndented("   ", err);
+    }
+    return guid;
   }
 }

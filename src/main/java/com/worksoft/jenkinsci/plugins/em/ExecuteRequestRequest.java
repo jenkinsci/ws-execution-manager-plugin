@@ -40,7 +40,7 @@ public final class ExecuteRequestRequest extends AbstractDescribableImpl<Execute
     }
 
     public FormValidation doCheckRequest (@QueryParameter String request) {
-      ListBoxModel listBox = ExecuteRequest.getCachedItems("request");
+      ListBoxModel listBox = EMItemCache.getCachedItems("request");
       FormValidation ret = FormValidation.ok();
 
       String msg = request;
