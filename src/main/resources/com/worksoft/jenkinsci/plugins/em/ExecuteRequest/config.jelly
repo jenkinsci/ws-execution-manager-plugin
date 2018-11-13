@@ -26,14 +26,14 @@
                         </f:entry>
                     </f:radioBlock>
                     <f:radioBlock name="emRequestType" title="EM Bookmark" value="bookmark"
-                                  help="${descriptor.getHelpFile('request')}" inline="true"
+                                  help="${descriptor.getHelpFile('bookmark')}" inline="true"
                                   checked="${instance.emRequestTypeEquals('bookmark')}">
                         <f:entry>
                             <f:property field="bookmark"/>
                         </f:entry>
                     </f:radioBlock>
                     <f:radioBlock name="emRequestType" title="Certify Processes" value="processList"
-                                  help="${descriptor.getHelpFile('request')}" inline="true"
+                                  help="${descriptor.getHelpFile('processList')}" inline="true"
                                   checked="${instance.emRequestTypeEquals('processList')}">
                         <f:entry>
                             <f:property field="processList"/>
