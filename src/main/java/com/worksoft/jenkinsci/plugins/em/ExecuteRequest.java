@@ -356,30 +356,32 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
         String jobStatus = response.getString("Status");
         String jobExecutionStatus = response.getString("ExecutionStatus");
         consoleOut.println("\nElapsed time=" + elapsedTime + " - " + jobStatus + "," + jobExecutionStatus + (aborted ? " *** ABORTING ***" : ""));
-        JSONArray tasks = response.getJSONArray("Tasks");
-        if (prevTasks == null || !prevTasks.equals(tasks)) {
-          // Print the run's status to the build console
-          consoleOut.println("Name  Status                     Resource        Last Error");
-          consoleOut.println("----- -------------------------- --------------- -----------------------------------");
-          for (int i = 0; i < tasks.size(); i++) {
-            JSONObject task = tasks.getJSONObject(i);
-            String name = task.getString("Name");
-            String executionStatus = task.getString("ExecutionStatus");
-            String resourceName = task.getString("ResourceName");
-            String lastReportedError = task.getString("LastReportedError");
-            String status = task.getString("Status");
-            if (StringUtils.isNotEmpty(status) && StringUtils.isNotEmpty(executionStatus)) {
-              status += ",";
+        if (response.containsKey("Tasks")) { // Check for "Tasks" before proceeding
+          JSONArray tasks = response.getJSONArray("Tasks");
+          if (prevTasks == null || !prevTasks.equals(tasks)) {
+            // Print the run's status to the build console
+            consoleOut.println("Name  Status                     Resource        Last Error");
+            consoleOut.println("----- -------------------------- --------------- -----------------------------------");
+            for (int i = 0; i < tasks.size(); i++) {
+              JSONObject task = tasks.getJSONObject(i);
+              String name = task.getString("Name");
+              String executionStatus = task.getString("ExecutionStatus");
+              String resourceName = task.getString("ResourceName");
+              String lastReportedError = task.getString("LastReportedError");
+              String status = task.getString("Status");
+              if (StringUtils.isNotEmpty(status) && StringUtils.isNotEmpty(executionStatus)) {
+                status += ",";
+              }
+              status += executionStatus;
+
+              consoleOut.println(name + ":");
+              consoleOut.println(String.format("      %-26.26s %-15.15s %s",
+                      StringUtils.abbreviate(status, 26),
+                      StringUtils.abbreviate(resourceName, 15),
+                      lastReportedError, 15));
+
+              prevTasks = tasks;
             }
-            status += executionStatus;
-
-            consoleOut.println(name + ":");
-            consoleOut.println(String.format("      %-26.26s %-15.15s %s",
-                    StringUtils.abbreviate(status, 26),
-                    StringUtils.abbreviate(resourceName, 15),
-                    lastReportedError, 15));
-
-            prevTasks = tasks;
           }
         }
         // Check for completion
