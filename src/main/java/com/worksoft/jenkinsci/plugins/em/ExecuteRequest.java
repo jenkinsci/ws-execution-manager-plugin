@@ -44,6 +44,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ExecuteRequest extends Builder implements SimpleBuildStep {
   private static final Logger log = Logger.getLogger("jenkins.ExecuteRequest");
@@ -306,8 +308,21 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
                 StringUtils.isNotEmpty(value)) {
 
           // dereference ALL Jenkins vars within the value string
-
-          ret.put(param.getKey(), value);
+          Matcher m = Pattern.compile("([^$]*)[$][{]([^}]*)[}]([^$]*)").matcher(value);
+          String expandedValue = "";
+          while (m.find()) {
+            for (int i = 1; i <= m.groupCount(); i++) {
+              if (i == 2) {
+                String envVar = envVars.get(m.group(i));
+                if (envVar != null) {
+                  expandedValue += envVars.get(m.group(i));
+                }
+              } else {
+                expandedValue += m.group(i);
+              }
+            }
+          }
+          ret.put(param.getKey(), expandedValue);
         }
       }
     }
