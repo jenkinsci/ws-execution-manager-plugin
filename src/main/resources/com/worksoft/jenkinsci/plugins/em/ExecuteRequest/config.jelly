@@ -62,6 +62,7 @@
                 <f:optionalProperty field="execParams" title="Parameters"/>
 
                 <f:optionalProperty field="postExecute" title="Post Execute Action"></f:optionalProperty>
+                <!--f:optionalProperty field="postExecute" title="Post Execute Action"></f:optionalProperty-->
                 <f:optionalProperty field="waitConfig" title="Wait Configuration"/>
 
                 <j:if test="false">
