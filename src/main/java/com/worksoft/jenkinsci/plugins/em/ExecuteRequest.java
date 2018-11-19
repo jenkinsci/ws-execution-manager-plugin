@@ -300,27 +300,32 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
   private HashMap<String, String> processParameters () throws InterruptedException, IOException {
     HashMap<String, String> ret = new HashMap<String, String>();
     EnvVars envVars = run.getEnvironment(listener);
-    if (execParams != null) {
+    if (execParams != null && execParams.getList() != null) {
       for (ExecuteRequestParameter param : execParams.getList()) {
         String value = param.getValue();
 
         if (StringUtils.isNotEmpty(param.getKey()) &&
                 StringUtils.isNotEmpty(value)) {
 
-          // dereference ALL Jenkins vars within the value string
+          // Dereference/expand ALL Jenkins vars within the value string
           Matcher m = Pattern.compile("([^$]*)[$][{]([^}]*)[}]([^$]*)").matcher(value);
           String expandedValue = "";
+          boolean found = false;
           while (m.find()) {
+            found = true;
             for (int i = 1; i <= m.groupCount(); i++) {
               if (i == 2) {
                 String envVar = envVars.get(m.group(i));
                 if (envVar != null) {
-                  expandedValue += envVars.get(m.group(i));
+                  expandedValue += envVar;
                 }
               } else {
                 expandedValue += m.group(i);
               }
             }
+          }
+          if (!found) {
+            expandedValue = value;
           }
           ret.put(param.getKey(), expandedValue);
         }
@@ -596,15 +601,22 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
       } else {
         consoleOut.println("Requesting execution of request '" + theReq + "'(id=" + reqID + ")");
         consoleOut.println("   on Execution Manager @ " + emConfig.getUrl());
-        HashMap<String, String> params = processParameters();
+
+        // Use TreeMap so that the keys are sorted
+        Map<String, String> params = new TreeMap<String, String>(processParameters());
         if (params.keySet().size() > 0) {
           consoleOut.println("   with parameters (key=value):");
           for (String key : params.keySet()) {
-            consoleOut.println("      " + key + "=" + params.get(key));
+            String value = params.get(key);
+            String sanitizedValue = server.sanitizeParameter(value);
+            if (!value.equals(sanitizedValue)) {
+              value = sanitizedValue + " (sanitized from '" + value + "')";
+            }
+            consoleOut.println("      " + key + "=" + value);
           }
         }
         consoleOut.println("\n");
-        guid = server.executeRequest(reqID, processParameters());
+        guid = server.executeRequest(reqID, params);
         if (guid == null) {
           EmResult result = server.getLastEMResult();
           String err = result.dumpDebug();
@@ -665,11 +677,18 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
         if (StringUtils.isNotEmpty(bookmark.getFolder())) {
           consoleOut.println("   with results folder='" + bookmark.getFolder() + "'");
         }
-        HashMap<String, String> params = processParameters();
+
+        // Use TreeMap so that the keys are sorted
+        Map<String, String> params = new TreeMap<String, String>(processParameters());
         if (params.keySet().size() > 0) {
           consoleOut.println("   with parameters (key=value):");
           for (String key : params.keySet()) {
-            consoleOut.println("      " + key + "=" + params.get(key));
+            String value = params.get(key);
+            String sanitizedValue = server.sanitizeParameter(value);
+            if (!value.equals(sanitizedValue)) {
+              value = sanitizedValue + " (sanitized from '" + value + "')";
+            }
+            consoleOut.println("      " + key + "=" + value);
           }
         }
         consoleOut.println("\n");
@@ -718,11 +737,17 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
     }
     processes.put("Processes", processList);
 
-    HashMap<String, String> params = processParameters();
+    // Use TreeMap so that the keys are sorted
+    Map<String, String> params = new TreeMap<String, String>(processParameters());
     if (params.keySet().size() > 0) {
       consoleOut.println("   with parameters (key=value):");
       for (String key : params.keySet()) {
-        consoleOut.println("      " + key + "=" + params.get(key));
+        String value = params.get(key);
+        String sanitizedValue = server.sanitizeParameter(value);
+        if (!value.equals(sanitizedValue)) {
+          value = sanitizedValue + " (sanitized from '" + value + "')";
+        }
+        consoleOut.println("      " + key + "=" + value);
       }
     }
     consoleOut.println("\n");

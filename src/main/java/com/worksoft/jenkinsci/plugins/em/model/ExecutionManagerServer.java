@@ -20,7 +20,7 @@ import org.codehaus.groovy.runtime.StackTraceUtils;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 public class ExecutionManagerServer {
@@ -103,12 +103,42 @@ public class ExecutionManagerServer {
     return null;
   }
 
-  // Format the provided hash map into a string format acceptable to the EM API
-  private String formatParameters (HashMap<String, String> parameters) {
-    return "";
+  public String escapeParameter (String value) {
+    // Escape the value... In short, these values are passed to Certify as
+    // command line arguments with in double quotes, so we should escape user input
+    // double quotes and backslashes appropriately. BTW - This is misplaced
+    // logic that should be performed by the EM.
+    value = value.replaceAll("\\\\", "\\\\\\\\");
+    value = value.replaceAll("\"", "\\\\\"");
+
+    return value;
   }
 
-  public String executeRequest (String request, HashMap<String, String> parameters) {
+  public String sanitizeParameter (String value) {
+    // Certify's syntax for these parameters is - <key>|<value>, so if the
+    // value has a pipe (|), it'll mess up Certify's parsing. BTW - This is misplaced
+    // logic that should be performed by the EM.
+    value = value.replaceAll("\\|", "");
+    // The EM has no way of escaping curly braces, so we'll remove them or it'll
+    // mess with the EM's parsing algorithm
+    value = value.replaceAll("[{}]", "");
+
+    return value;
+  }
+
+  // Format the provided hash map into a string format acceptable to the EM API
+  private String formatParameters (Map<String, String> parameters) {
+    String params = "";
+    for (String key : parameters.keySet()) {
+      String value = parameters.get(key);
+
+      params += "{" + key + "}";
+      params += "{" + escapeParameter(sanitizeParameter(value)) + "}";
+    }
+    return params;
+  }
+
+  public String executeRequest (String request, Map<String, String> parameters) {
     HttpRequest httpRequest = HttpRequest.put(url + "api/ExecuteRequest")
             .header("id", request)
             .header("parameters", formatParameters(parameters))
@@ -130,9 +160,9 @@ public class ExecutionManagerServer {
     return guid;
   }
 
-  public String executeBookmark (String bookmark, String folder, HashMap<String, String> parameters) {
+  public String executeBookmark (String bookmark, String folder, Map<String, String> parameters) {
     HttpRequest httpRequest = HttpRequest.put(url + "api/Bookmarks/" + bookmark + "/Execute" +
-            (StringUtils.isNotEmpty(folder)?"?folder="+folder:""))
+            (StringUtils.isNotEmpty(folder) ? "?folder=" + folder : ""))
             .header("parameters", formatParameters(parameters))
             .header("jsonOrXml", "json");
     httpRequest.body("");
@@ -152,7 +182,7 @@ public class ExecutionManagerServer {
     return guid;
   }
 
-  public String executeProcesses (JSONObject processes, HashMap<String, String> parameters) {
+  public String executeProcesses (JSONObject processes, Map<String, String> parameters) {
     HttpRequest httpRequest = HttpRequest.put(url + "api/Processes/Execute")
             .header("parameters", formatParameters(parameters))
             .header("jsonOrXml", "json")
