@@ -9,7 +9,25 @@
   -->
 
 <j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
-    <j:set var="doAltEMAsAdvancedButton" value="true"/>
+    <!--
+      ** If 'doAltEMAsAdvancedButton' is set to false, the RelativePath annotations for 'altEMConfig'
+      ** in ExecuteRequestRequest.java and ExecuteRequestBookmark must be set to:
+      **
+      **    @RelativePath("../_.altEMConfig")
+      **
+      ** When set to true, change them to:
+      **
+      **    @RelativePath("../altEMConfig")
+      **
+      -->
+    <j:set var="doAltEMAsAdvancedButton" value="false"/>
+
+    <!--
+      **
+      ** Set the following to true if you want the Alt EM Config area to be grouped with
+      ** the request. Set to false if you want it grouped with the additional options
+      -->
+    <j:set var="altEMWithRequest" value="true"/>
 
     <f:block>
         <f:block>
@@ -39,7 +57,12 @@
                             <f:property field="processList"/>
                         </f:entry>
                     </f:radioBlock>
-                    <j:if test="true">
+                    <j:if test="${altEMWithRequest}">
+                        <j:if test="${!doAltEMAsAdvancedButton}">
+                            <f:entry/><!-- Give a little separation -->
+                            <f:optionalProperty field="altEMConfig"
+                                                title="Alternative Execution Manager Configuration"/>
+                        </j:if>
                         <j:if test="${doAltEMAsAdvancedButton}">
                             <f:advanced title="Alternative Execution Manager">
                                 <f:property field="altEMConfig"/>
@@ -55,17 +78,18 @@
         <h4>${%Additional Options}</h4>
         <div style="margin-left: 1em;">
             <table width="100%">
-                <j:if test="${!doAltEMAsAdvancedButton}">
-                    <f:optionalProperty field="altEMConfig" title="Alternative Execution Manager"/>
+                <j:if test="${!altEMWithRequest}">
+                    <j:if test="${!doAltEMAsAdvancedButton}">
+                        <f:optionalProperty field="altEMConfig" title="Alternative Execution Manager"/>
+                    </j:if>
                 </j:if>
 
                 <f:optionalProperty field="execParams" title="Parameters"/>
 
-                <f:optionalProperty field="postExecute" title="Post Execute Action"></f:optionalProperty>
                 <!--f:optionalProperty field="postExecute" title="Post Execute Action"></f:optionalProperty-->
                 <f:optionalProperty field="waitConfig" title="Wait Configuration"/>
 
-                <j:if test="false">
+                <j:if test="${!altEMWithRequest}">
                     <j:if test="${doAltEMAsAdvancedButton}">
                         <f:advanced title="Alternative Execution Manager">
                             <f:property field="altEMConfig"/>
