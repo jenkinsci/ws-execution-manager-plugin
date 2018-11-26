@@ -72,7 +72,7 @@ pipeline {
             }
             steps {
                 bat returnStatus: true, script: "buildit.cmd"
-                bat script: "deliverit.cmd \"${ArtifactBaseDir}\\${branch}\""
+                bat script: "deliverit.cmd \"${ArtifactBaseDir}\\${branch}\\${currentBuild.displayName}\""
             }
         }
 
