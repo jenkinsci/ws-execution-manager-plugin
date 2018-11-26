@@ -10,6 +10,8 @@ def gitRepo = "http://wsengtfs01:8080/tfs/DefaultCollection/Worksoft/_git/workso
 def branches = ['develop', 'master', "doug/INT-506"]
 def testVMHost = 'iftestvm'
 
+branches = branches.join("\n")
+
 pipeline {
     agent {
         node {
@@ -23,7 +25,7 @@ pipeline {
     }
 
     parameters {
-        choice(name: 'branch', choices: branches.join("\n"), description: 'Name of branch to pull and build')
+        choice(name: 'branch', choices: branches, description: 'Name of branch to pull and build')
         string(name: 'PackageStagingDir', defaultValue: "\\\\wsengfiles01\\Automated_Builds\\JenkinsEMPlugin\\" + "${branch}".replaceAll("/", "#"), description: 'location to put the installer staging artifacts')
         booleanParam(name: 'shouldBuild', description: 'DEBUG USE ONLY: execute build/compile', defaultValue: true)
         booleanParam(name: 'deployVM', description: 'DEBUG USE ONLY: Create a new VM from template and install/update certify and interfaces', defaultValue: true)
