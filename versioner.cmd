@@ -1,4 +1,4 @@
-@echo on
+@echo off
 cd /d %~dp0
 set BatchPath=%~dp0
 
