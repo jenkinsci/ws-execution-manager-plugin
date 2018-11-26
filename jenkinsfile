@@ -3,7 +3,7 @@
  */
 
 def workspace = 'Hudson-${JOB_NAME}-${NODE_NAME}'
-def workspacePath = "E:\\hudson\\Builds\\JenkinsEMPlugin\\" + ${branch}.replaceAll("/", ",");
+def workspacePath = "E:\\hudson\\Builds\\JenkinsEMPlugin\\" + "${branch}".replaceAll("/", ",");
 def gitRepo ="http://wsengtfs01:8080/tfs/DefaultCollection/Worksoft/_git/worksoft-em-plugin"
 //def branches = ['develop', 'master']
 def branches = 'doug/INT-506'
