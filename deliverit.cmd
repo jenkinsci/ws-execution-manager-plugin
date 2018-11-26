@@ -2,4 +2,6 @@
 cd /d %~dp0
 set BatchPath=%~dp0
 
-echo %1
+mkdir %1
+
+copy build\libs\*.hpi %1
