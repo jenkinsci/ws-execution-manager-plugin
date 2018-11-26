@@ -1,10 +1,10 @@
 #!/usr/bin/env groovy
 
-/*
- * Jenkins build file for Execution Manager Jenkins Plugin
- */
+//
+// Jenkins build file for Execution Manager Jenkins Plugin
+//
 
-// Build the branch specified in the UI
+// We don't support multi-branch builds, so build only the first branch specified in the UI
 def branch = scm.branches[0]
 branch = "${branch}".replaceAll("/", "#")
 
