@@ -1,12 +1,24 @@
 #!/usr/bin/env groovy
 
 /*
- * Jenkins bootstrap jenkinsfile for Execution Manager Jenkins Plugin
+ * Bootstrap jenkinsfile for the Execution Manager Jenkins Plugin
+ *
+ * How to use:
+ *
+ *    1. Create Pipeline project
+ *    2. Pipeline configuration:
+ *       a. Definition = Pipeline script from SCM
+ *       b. SCM = Git
+ *       c. Repository URL = http://wsengtfs01:8080/tfs/DefaultCollection/Worksoft/_git/worksoft-em-plugin
+ *       d. Repository credentials = <valid credentials>
+ *       e. Branch = <branch containing this file> (e.g. develop, master, etc.)
+ *       f. Script path = jenkinsfile.bootstrap
+ *    3. Save the project
+ *    4. Build Now
+ *    5. Configure the project again:
+ *       a. Script path = jenkinsfile
+ *
  */
-
-def branches = ["doug/INT-506", 'develop', 'master']
-
-branches = branches.join("\n")
 
 pipeline {
     agent {
@@ -21,7 +33,6 @@ pipeline {
     }*/
 
     parameters {
-        choice(name: 'branch', choices: branches, description: 'Name of branch to pull and build')
         string(name: 'ArtifactBaseDir', defaultValue: "\\\\wsengfiles01\\Automated_Builds\\JenkinsEMPlugin", description: 'base location where to put build artifacts')
         booleanParam(name: 'shouldBuild', description: 'DEBUG USE ONLY: execute build/compile', defaultValue: true)
         booleanParam(name: 'deployVM', description: 'DEBUG USE ONLY: Create a new VM from template and install/update certify and interfaces', defaultValue: true)
@@ -40,6 +51,6 @@ pipeline {
             steps {
                 echo "------------------------------- Bootstrap jenkinsfile --------------------------------------"
             }
-	}
-}
+        }
+    }
 }
