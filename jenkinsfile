@@ -4,11 +4,8 @@
  * Jenkins build file for Execution Manager Jenkins Plugin
  */
 
-def workspace = 'Hudson-${JOB_NAME}-${NODE_NAME}'
 def workspacePath = "D:\\hudson\\Builds\\JenkinsEMPlugin\\" + "${branch}".replaceAll("/", "#");
-def gitRepo = "http://wsengtfs01:8080/tfs/DefaultCollection/Worksoft/_git/worksoft-em-plugin"
-def branches = ['develop', 'master', "doug/INT-506"]
-def testVMHost = 'iftestvm'
+def branches = ["doug/INT-506", 'develop', 'master']
 
 branches = branches.join("\n")
 
