@@ -70,7 +70,7 @@ pipeline {
                 equals expected: true, actual: params.shouldBuild
             }
             steps {
-                bat script: "buildit.cmd"
+                bat returnStatus: true, script: "buildit.cmd"
             }
         }
 
