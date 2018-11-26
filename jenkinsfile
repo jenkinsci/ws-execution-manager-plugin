@@ -5,8 +5,8 @@
 def workspace = 'Hudson-${JOB_NAME}-${NODE_NAME}'
 def workspacePath = "E:\\hudson\\Builds\\JenkinsEMPlugin\\${branch}"
 def gitRepo ="http://wsengtfs01:8080/tfs/DefaultCollection/Worksoft/_git/worksoft-em-plugin"
-def branches = ['develop', 'master']
-//def branches = 'doug/INT-506'
+//def branches = ['develop', 'master']
+def branches = 'doug/INT-506'
 def testVMHost = 'iftestvm'
 
 pipeline {
