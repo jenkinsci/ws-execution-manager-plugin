@@ -4,7 +4,8 @@
  * Jenkins build file for Execution Manager Jenkins Plugin
  */
 
-def workspacePath = "D:\\hudson\\Builds\\JenkinsEMPlugin\\" + "${branch}".replaceAll("/", "#");
+branch = "${branch}".replaceAll("/", "#")
+def workspacePath = "D:\\hudson\\Builds\\JenkinsEMPlugin\\${branch}"
 def branches = ["doug/INT-506", 'develop', 'master']
 
 branches = branches.join("\n")
