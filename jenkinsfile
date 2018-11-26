@@ -4,7 +4,7 @@
  * Jenkins build file for Execution Manager Jenkins Plugin
  */
 
-def branch = scm.userRemoteConfigs
+def branch = scm.branches[0]
 branch = "${branch}".replaceAll("/", "#")
 def workspacePath = "D:\\hudson\\Builds\\JenkinsEMPlugin\\${branch}"
 
