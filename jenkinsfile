@@ -8,6 +8,7 @@
 def branch = scm.branches[0]
 branch = "${branch}".replaceAll("/", "#")
 
+// Adjust the following for the desired build node and where to clone the repo
 def workspacePath = "D:\\hudson\\Builds\\JenkinsEMPlugin\\${branch}"
 def buildNode = 'master'
 
