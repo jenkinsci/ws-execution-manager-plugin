@@ -8,10 +8,6 @@ def gitRepo ="http://wsengtfs01:8080/tfs/DefaultCollection/Worksoft/_git/worksof
 def branches = ['develop', 'master']
 def testVMHost = 'iftestvm'
 
-def lib = library('automation')
-def vm = lib.com.worksoft.automation.VM.new(this)
-def em = lib.com.worksoft.automation.EM.new(this, 'http://professorbutts')
-
 pipeline {
     agent {
         node {
