@@ -49,7 +49,7 @@ pipeline {
                           doGenerateSubmoduleConfigurations: false,
                           extensions                       : [],
                           submoduleCfg                     : [],
-                          userRemoteConfigs                : [[]]
+                          userRemoteConfigs                : scm.userRemoteConfigs
                 ])
             }
         }
