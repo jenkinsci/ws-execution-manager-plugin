@@ -23,10 +23,10 @@ pipeline {
     
     parameters {
         choice(name: 'branch', choices: branches, description: 'Name of branch to pull and build')
-        //string(name: 'PackageStagingDir', defaultValue: "\\\\wsengfiles01\\Automated_Builds\\JenkinsEMPlugin\\${branch}", description: 'location to put the installer staging artifacts')
-        //booleanParam(name: 'shouldBuild', description: 'DEBUG USE ONLY: execute build/compile', defaultValue: true)
-        //booleanParam(name: 'deployVM', description: 'DEBUG USE ONLY: Create a new VM from template and install/update certify and interfaces', defaultValue: true)
-        //booleanParam(name: 'executeTests', description: 'DEBUG USE ONLY: execute tests (certify processes, unit, regression)', defaultValue: true)
+        string(name: 'PackageStagingDir', defaultValue: "\\\\wsengfiles01\\Automated_Builds\\JenkinsEMPlugin\\${branch}", description: 'location to put the installer staging artifacts')
+        booleanParam(name: 'shouldBuild', description: 'DEBUG USE ONLY: execute build/compile', defaultValue: true)
+        booleanParam(name: 'deployVM', description: 'DEBUG USE ONLY: Create a new VM from template and install/update certify and interfaces', defaultValue: true)
+        booleanParam(name: 'executeTests', description: 'DEBUG USE ONLY: execute tests (certify processes, unit, regression)', defaultValue: true)
     }
 
     options {
