@@ -58,7 +58,7 @@ pipeline {
 
         stage('Pre-Build') {
             steps {
-                bat returnStatus: true, script: "powershell -noprofile -command \".\\Versioner.ps1 -b ${BUILD_NUMBER}\" >version.txt"
+                bat returnStatus: true, script: "versioner.cmd ${BUILD_NUMBER} > version.txt"
                 bat script: "type version.txt"
                 script {
                     currentBuild.displayName = readFile 'version.txt'
@@ -72,7 +72,7 @@ pipeline {
             }
             steps {
                 bat returnStatus: true, script: "buildit.cmd"
-                bat script: "deliverit.cmd \"${ArtifactBaseDir}\\\\${branch}\""
+                bat script: "deliverit.cmd \"${ArtifactBaseDir}\\${branch}\""
             }
         }
 
