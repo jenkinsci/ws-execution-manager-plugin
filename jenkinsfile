@@ -4,14 +4,17 @@
  * Jenkins build file for Execution Manager Jenkins Plugin
  */
 
+// Build the branch specified in the UI
 def branch = scm.branches[0]
 branch = "${branch}".replaceAll("/", "#")
+
 def workspacePath = "D:\\hudson\\Builds\\JenkinsEMPlugin\\${branch}"
+def buildNode = 'master'
 
 pipeline {
     agent {
         node {
-            label 'master'
+            label "${buildNode}"
             customWorkspace workspacePath
         }
     }
