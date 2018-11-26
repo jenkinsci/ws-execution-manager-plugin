@@ -71,6 +71,7 @@ pipeline {
             }
             steps {
                 bat returnStatus: true, script: "buildit.cmd"
+                bat script: "deliverit.cmd"
             }
         }
 
