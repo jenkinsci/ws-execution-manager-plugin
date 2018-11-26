@@ -5,6 +5,13 @@
  */
 
 pipeline {
+    agent {
+        node {
+            label 'master'
+            customWorkspace workspacePath
+        }
+    }
+
     /*triggers {
         pollSCM('H/15 * * * *')
     }*/
@@ -23,4 +30,12 @@ pipeline {
         disableConcurrentBuilds()
         timeout(time: 3, unit: 'HOURS')
     }
+
+    stages {
+        stage('Bootstrap') {
+            steps {
+                echo "------------------------------- Bootstrap jenkinsfile --------------------------------------"
+            }
+	}
+}
 }
