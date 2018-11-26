@@ -13,7 +13,13 @@ pipeline {
     agent {
         node {
             label 'master'
-            customWorkspace workspacePath
+            try {
+                customWorkspace workspacePath
+                currentBuild.result = 'SUCCESS'
+            } catch (Exception err) {
+                currentBuild.result = 'FAILURE'
+            }
+            echo "RESULT: ${currentBuild.result}"
         }
     }
 
