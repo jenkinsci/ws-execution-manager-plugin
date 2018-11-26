@@ -4,6 +4,8 @@
  * Jenkins bootstrap jenkinsfile for Execution Manager Jenkins Plugin
  */
 
+def branches = ["doug/INT-506", 'develop', 'master']
+
 pipeline {
     agent {
         node {
