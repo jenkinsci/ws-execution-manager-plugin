@@ -41,10 +41,8 @@ pipeline {
                 echo "parameters = $params"
                 cleanWs cleanWhenFailure: false
 
-                // For Git checkout we'll use our branch parameter (see above) and
-                // the repo/credentials configured via the UI.
                 checkout([$class                           : 'GitSCM',
-                          branches                         : [[name: '${branch}']],
+                          branches                         : scm.branches,
                           doGenerateSubmoduleConfigurations: false,
                           extensions                       : [],
                           submoduleCfg                     : [],
