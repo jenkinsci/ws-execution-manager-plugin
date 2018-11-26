@@ -6,6 +6,8 @@
 
 def branches = ["doug/INT-506", 'develop', 'master']
 
+branches = branches.join("\n")
+
 pipeline {
     agent {
         node {
