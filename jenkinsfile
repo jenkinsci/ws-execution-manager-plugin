@@ -12,7 +12,7 @@ def testVMHost = 'iftestvm'
 pipeline {
     agent {
         node {
-            label 'colobuild02'
+            label 'master'
             customWorkspace workspacePath
         }
     }
