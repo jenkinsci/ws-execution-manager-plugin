@@ -17,6 +17,8 @@
  *    4. Build Now
  *    5. Configure the project again:
  *       a. Script path = jenkinsfile
+ *    6. Save the project
+ *    7. Build with parameters
  *
  */
 
