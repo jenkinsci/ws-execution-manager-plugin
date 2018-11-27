@@ -9,11 +9,11 @@ def branch = scm.branches[0]
 branch = "${branch}".replaceAll("/", "#")
 def buildType = ""
 if (branch == 'master') {
-    branchType = ""
+    buildType = ""
 } else if (branch == 'develop') {
-    branchType = "beta"
+    buildType = "beta"
 } else {
-    branchType = "SNAPSHOT"
+    buildType = "SNAPSHOT"
 }
 
 // Adjust the following for the desired build node and where to clone the repo
