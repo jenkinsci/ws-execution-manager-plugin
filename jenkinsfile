@@ -9,10 +9,10 @@ def branch = scm.branches[0]
 branch = "${branch}".replaceAll("/", "#")
 def buildType = { branch ->
     if (branch == 'master') {
-       ""
-    } if (branch == 'develop') {
-       "beta"
-    else {
+        ""
+    } else if (branch == 'develop') {
+        "beta"
+    } else {
         "SNAPSHOT"
     }
 }
