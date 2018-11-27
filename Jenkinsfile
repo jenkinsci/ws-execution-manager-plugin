@@ -38,6 +38,8 @@ if (branch == 'master') {
 def workspacePath = "D:\\hudson\\Builds\\JenkinsEMPlugin\\${branch}"
 def buildNode = 'master'
 
+def params_shouldBuild = true
+
 pipeline {
     agent {
         node {
@@ -57,11 +59,6 @@ pipeline {
         booleanParam(name: 'executeTests', description: 'DEBUG USE ONLY: execute tests (certify processes, unit, regression)', defaultValue: true)
     }
 
-    def params_shouldBuild = true
-    if (params.containsKey("params.shouldBuild")) {
-        params_shouldBuild = params.shouldBuild
-    }
-
     options {
         timestamps()
         buildDiscarder(logRotator(numToKeepStr: '10'))
@@ -71,6 +68,12 @@ pipeline {
 
 
     stages {
+        script {
+            if (params.containsKey("params.shouldBuild")) {
+                params_shouldBuild = params.shouldBuild
+            }
+        }
+
         stage('Checkout') {
             steps {
                 echo "parameters = $params"
