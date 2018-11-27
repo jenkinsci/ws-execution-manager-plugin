@@ -33,14 +33,18 @@ repositories {
     }
 }
 
-group = 'com.worksoft.plugins'
-description = 'Worksoft Execution Manager Plugin'
+group = 'org.jenkins-ci.plugins'
+version = '0.0.2.12345-beta'
+description = 'Adds build step for interacting with a Worksoft Execution Manager.'
 
 jenkinsPlugin {
-    coreVersion = jenkinsVersion
+    coreVersion = '2.73.3'
     displayName = "Worksoft Execution Manager Plugin"
     shortName = "ws-execution-manager"
-
+    
+    // URL for plugin on Jenkins wiki or elsewhere
+    url = 'http://wiki.jenkins-ci.org/display/JENKINS/Worksoft+Execution+Manager+Plugin'
+    
     developers {
         developer {
             id "rrinehart"

@@ -10,6 +10,6 @@
         </style>
     </l:header>
     <div>
-        Worksoft Execution Manager Plugin
+        Adds build step for interacting with a Worksoft Execution Manager.
     </div>
 </j:jelly>

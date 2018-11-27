@@ -20,7 +20,7 @@
       **    @RelativePath("../altEMConfig")
       **
       -->
-    <j:set var="doAltEMAsAdvancedButton" value="false"/>
+    <j:set var="doAltEMAsAdvancedButton" value="true"/>
 
     <!--
       **
@@ -98,5 +98,4 @@
                 </j:if>
             </table>
         </div>
-    </f:block>
-</j:jelly>
+    </f:block></j:jelly>
