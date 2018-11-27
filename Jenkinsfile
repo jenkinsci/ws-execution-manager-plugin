@@ -91,13 +91,15 @@ pipeline {
             }
         }
 
-        stage('Build') {
-            when {
-                equals expected: true, actual: params.shouldBuild
-            }
-            steps {
-                bat returnStatus: true, script: "buildit.cmd"
-                bat script: "deliverit.cmd \"${ArtifactBaseDir}\\${branch}\\${currentBuild.displayName}\""
+        if (params.containsKey("params.shouldBuild")) {
+            stage('Build') {
+                when {
+                    equals expected: true, actual: params.shouldBuild
+                }
+                steps {
+                    bat returnStatus: true, script: "buildit.cmd"
+                    bat script: "deliverit.cmd \"${ArtifactBaseDir}\\${branch}\\${currentBuild.displayName}\""
+                }
             }
         }
 
