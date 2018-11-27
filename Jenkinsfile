@@ -12,7 +12,7 @@
  *       c. Repository URL = http://wsengtfs01:8080/tfs/DefaultCollection/Worksoft/_git/worksoft-em-plugin
  *       d. Repository credentials = <valid credentials>
  *       e. Branch = <branch containing this file> (e.g. develop, master, etc.)
- *       f. Script path = jenkinsfile
+ *       f. Script path = jenkinsfile (case sensitive)
  *    3. Save the project
  *    4. Build until the following script signatures have been approved:
  *       method hudson.plugins.git.GitSCM getBranches
