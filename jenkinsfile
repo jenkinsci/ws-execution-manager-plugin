@@ -66,6 +66,7 @@ pipeline {
 
         stage('Pre-Build') {
             steps {
+                echo "powershell -noprofile -command \".\\versioner.ps1 -b ${BUILD_NUMBER} -t ${buildType}\" > version.txt"
                 bat returnStatus: true, script: "powershell -noprofile -command \".\\versioner.ps1 -b ${BUILD_NUMBER} -t ${buildType}\" > version.txt"
                 script {
                     currentBuild.displayName = readFile 'version.txt'
