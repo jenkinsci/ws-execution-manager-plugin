@@ -101,7 +101,7 @@ pipeline {
 
         stage('Build') {
             when {
-                equals expected: true, actual: params.shouldBuild
+                equals expected: true, actual: params_shouldBuild
             }
             steps {
                 bat returnStatus: true, script: "buildit.cmd"
