@@ -20,7 +20,7 @@
       **    @RelativePath("../altEMConfig")
       **
       -->
-    <j:set var="doAltEMAsAdvancedButton" value="false"/>
+    <j:set var="doAltEMAsAdvancedButton" value="true"/>
 
     <!--
       **
