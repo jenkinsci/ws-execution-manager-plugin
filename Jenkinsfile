@@ -38,8 +38,6 @@ if (branch == 'master') {
 def workspacePath = "D:\\hudson\\Builds\\JenkinsEMPlugin\\${branch}"
 def buildNode = 'master'
 
-def params_shouldBuild = true
-
 pipeline {
     agent {
         node {
@@ -85,12 +83,6 @@ pipeline {
 
         stage('Pre-Build') {
             steps {
-                script {
-                    if (params.containsKey("params.shouldBuild")) {
-                        params_shouldBuild = params.shouldBuild
-                    }
-                }
-
                 echo "powershell -noprofile -command \".\\versioner.ps1 -b ${BUILD_NUMBER} -t ${buildType}\" > version.txt"
                 bat returnStatus: true, script: "powershell -noprofile -command \".\\versioner.ps1 -b ${BUILD_NUMBER} -t ${buildType}\" > version.txt"
                 script {
@@ -101,7 +93,7 @@ pipeline {
 
         stage('Build') {
             when {
-                equals expected: true, actual: params_shouldBuild
+                equals expected: true, actual: params.shouldBuild
             }
             steps {
                 bat returnStatus: true, script: "buildit.cmd"
