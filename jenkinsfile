@@ -7,6 +7,15 @@
 // We don't support multi-branch builds, so build only the first branch specified in the UI
 def branch = scm.branches[0]
 branch = "${branch}".replaceAll("/", "#")
+def buildType = { branch ->
+    if (branch == 'master') {
+       ""
+    } if (branch == 'develop') {
+       "beta"
+    else {
+        "SNAPSHOT"
+    }
+}
 
 // Adjust the following for the desired build node and where to clone the repo
 def workspacePath = "D:\\hudson\\Builds\\JenkinsEMPlugin\\${branch}"
@@ -57,8 +66,7 @@ pipeline {
 
         stage('Pre-Build') {
             steps {
-                bat returnStatus: true, script: "versioner.cmd ${BUILD_NUMBER} > version.txt"
-                bat script: "type version.txt"
+                bat returnStatus: true, script: "powershell -noprofile -command \".\\versioner.ps1 -b ${BUILD_NUMBER} -t ${buildType}\" > version.txt"
                 script {
                     currentBuild.displayName = readFile 'version.txt'
                 }
