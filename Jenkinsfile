@@ -57,6 +57,11 @@ pipeline {
         booleanParam(name: 'executeTests', description: 'DEBUG USE ONLY: execute tests (certify processes, unit, regression)', defaultValue: true)
     }
 
+    def params_shouldBuild = true
+    if (params.containsKey("params.shouldBuild")) {
+        params_shouldBuild = params.shouldBuild
+    }
+
     options {
         timestamps()
         buildDiscarder(logRotator(numToKeepStr: '10'))
@@ -91,15 +96,13 @@ pipeline {
             }
         }
 
-        if (params.containsKey("params.shouldBuild")) {
-            stage('Build') {
-                when {
-                    equals expected: true, actual: params.shouldBuild
-                }
-                steps {
-                    bat returnStatus: true, script: "buildit.cmd"
-                    bat script: "deliverit.cmd \"${ArtifactBaseDir}\\${branch}\\${currentBuild.displayName}\""
-                }
+        stage('Build') {
+            when {
+                equals expected: true, actual: params.shouldBuild
+            }
+            steps {
+                bat returnStatus: true, script: "buildit.cmd"
+                bat script: "deliverit.cmd \"${ArtifactBaseDir}\\${branch}\\${currentBuild.displayName}\""
             }
         }
 
