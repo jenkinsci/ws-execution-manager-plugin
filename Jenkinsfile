@@ -46,15 +46,15 @@ pipeline {
         }
     }
 
-    /*triggers {
+    triggers {
         pollSCM('H/15 * * * *')
-    }*/
+    }
 
     parameters {
         string(name: 'ArtifactBaseDir', defaultValue: "\\\\wsengfiles01\\Automated_Builds\\JenkinsEMPlugin", description: 'base location where to put build artifacts')
         booleanParam(name: 'shouldBuild', description: 'DEBUG USE ONLY: execute build/compile', defaultValue: true)
-        booleanParam(name: 'deployVM', description: 'DEBUG USE ONLY: Create a new VM from template and install/update certify and interfaces', defaultValue: true)
-        booleanParam(name: 'executeTests', description: 'DEBUG USE ONLY: execute tests (certify processes, unit, regression)', defaultValue: true)
+        /*booleanParam(name: 'deployVM', description: 'DEBUG USE ONLY: Create a new VM from template and install/update certify and interfaces', defaultValue: true)
+        booleanParam(name: 'executeTests', description: 'DEBUG USE ONLY: execute tests (certify processes, unit, regression)', defaultValue: true)*/
     }
 
     options {
@@ -101,6 +101,7 @@ pipeline {
             }
         }
 
+        /*
         stage('Deploy for Test') {
             when {
                 equals expected: true, actual: params.deployVM
@@ -119,13 +120,14 @@ pipeline {
                 echo "---------------------------------- Exec Tests -------------------------------------------"
             }
         }
+	    */
+
         stage('Post Results') {
             steps {
                 bat script: "echo post"
             }
 
         }
-
     }
     post {
         failure {
