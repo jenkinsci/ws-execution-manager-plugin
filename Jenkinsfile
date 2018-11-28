@@ -24,7 +24,7 @@
 
 // We don't support multi-branch builds, so build only the first branch specified in the UI
 def branch = scm.branches[0]
-branch = "${branch}".replaceAll("/", "#")
+branch = "${branch}".replaceAll("/", "+")
 def buildType = ""
 if (branch == 'master') {
     buildType = ""
@@ -120,7 +120,6 @@ pipeline {
                 echo "---------------------------------- Exec Tests -------------------------------------------"
             }
         }
-	    */
 
         stage('Post Results') {
             steps {
@@ -128,6 +127,7 @@ pipeline {
             }
 
         }
+        */
     }
     post {
         failure {
