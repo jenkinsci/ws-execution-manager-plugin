@@ -9,11 +9,6 @@ buildscript {
             url 'https://plugins.gradle.org/m2/'
         }
     }
-    // These are Gradle Plugins this build uses.  See also the plugins block below
-    dependencies {
-//        classpath 'gradle.plugin.de.fuerstenau:BuildConfigPlugin:1.1.8'
-//        classpath 'net.saliman:gradle-properties-plugin:1.4.5'
-    }
 }
 
 plugins {
@@ -23,7 +18,6 @@ plugins {
 }
 
 apply plugin: 'idea'
-//apply plugin: 'gradle-one-jar'
 
 // Where to resolve external dependencies.
 repositories {

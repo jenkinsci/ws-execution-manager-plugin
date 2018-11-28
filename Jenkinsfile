@@ -12,7 +12,7 @@
  *       c. Repository URL = http://wsengtfs01:8080/tfs/DefaultCollection/Worksoft/_git/worksoft-em-plugin
  *       d. Repository credentials = <valid credentials>
  *       e. Branch = <branch containing this file> (e.g. develop, master, etc.)
- *       f. Script path = jenkinsfile
+ *       f. Script path = Jenkinsfile (case sensitive)
  *    3. Save the project
  *    4. Build until the following script signatures have been approved:
  *       method hudson.plugins.git.GitSCM getBranches
@@ -24,7 +24,7 @@
 
 // We don't support multi-branch builds, so build only the first branch specified in the UI
 def branch = scm.branches[0]
-branch = "${branch}".replaceAll("/", "#")
+branch = "${branch}".replaceAll("/", "+")
 def buildType = ""
 if (branch == 'master') {
     buildType = ""
@@ -46,15 +46,15 @@ pipeline {
         }
     }
 
-    /*triggers {
+    triggers {
         pollSCM('H/15 * * * *')
-    }*/
+    }
 
     parameters {
         string(name: 'ArtifactBaseDir', defaultValue: "\\\\wsengfiles01\\Automated_Builds\\JenkinsEMPlugin", description: 'base location where to put build artifacts')
         booleanParam(name: 'shouldBuild', description: 'DEBUG USE ONLY: execute build/compile', defaultValue: true)
-        booleanParam(name: 'deployVM', description: 'DEBUG USE ONLY: Create a new VM from template and install/update certify and interfaces', defaultValue: true)
-        booleanParam(name: 'executeTests', description: 'DEBUG USE ONLY: execute tests (certify processes, unit, regression)', defaultValue: true)
+        /*booleanParam(name: 'deployVM', description: 'DEBUG USE ONLY: Create a new VM from template and install/update certify and interfaces', defaultValue: true)
+        booleanParam(name: 'executeTests', description: 'DEBUG USE ONLY: execute tests (certify processes, unit, regression)', defaultValue: true)*/
     }
 
     options {
@@ -101,6 +101,7 @@ pipeline {
             }
         }
 
+        /*
         stage('Deploy for Test') {
             when {
                 equals expected: true, actual: params.deployVM
@@ -119,13 +120,14 @@ pipeline {
                 echo "---------------------------------- Exec Tests -------------------------------------------"
             }
         }
+
         stage('Post Results') {
             steps {
                 bat script: "echo post"
             }
 
         }
-
+        */
     }
     post {
         failure {
