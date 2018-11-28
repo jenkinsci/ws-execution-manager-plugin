@@ -1,10 +1,10 @@
-Message-ID: <1223056776.58316.1543346488726.JavaMail.wiki@22457b040dbe>
+Message-ID: <1360368785.59201.1543415837366.JavaMail.wiki@22457b040dbe>
 Subject: Exported From Confluence
 MIME-Version: 1.0
 Content-Type: multipart/related; 
-	boundary="----=_Part_58315_1312044197.1543346488726"
+	boundary="----=_Part_59200_894274369.1543415837366"
 
-------=_Part_58315_1312044197.1543346488726
+------=_Part_59200_894274369.1543415837366
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 Content-Location: file:///C:/exported.html
@@ -247,8 +247,22 @@ manager' is available. It may have been removed from distribution. </p></td=
 <br>
 <p></p>
 <h1 id=3D"WorksoftExecutionManagerPlugin-Description">Description</h1>
-<p>Provides a build step for automating Worksoft Certify process execution =
-via its Execution Manager.</p>
+<p>Adds build step for interacting with a Worksoft's Execution Manager..</p=
+>
+<h1 id=3D"WorksoftExecutionManagerPlugin-Installation(manual)">Installation=
+ (manual)</h1>
+<ol>
+<li>Open Jenkins in a browser (e.g. http://&lt;<em>jenkins-host</em>&gt;:80=
+80)</li>
+<li>Navigate to <strong>Manage Jenkins</strong>&nbsp;=E2=86=92 <strong>Mana=
+ge Plugins</strong> and select the <strong>Advanced</strong> tab.</li>
+<li>Click the <strong>Choose File&nbsp;</strong>button in the <strong>Uploa=
+d Plugin</strong> section.</li>
+<li>Find the location of the <strong>ws-execution-manager.hpi</strong> file=
+ and click the <strong>Open</strong> button and <strong>Upload</strong> the=
+ file.</li>
+<li>Restart Jenkins, if necessary.</li>
+</ol>
 <h1 id=3D"WorksoftExecutionManagerPlugin-Usage">Usage</h1>
 <h2 id=3D"WorksoftExecutionManagerPlugin-ConfigureGlobalWorksoftExecutionMa=
 nagerSettings">Configure&nbsp;Global Worksoft Execution Manager Settings</h=
@@ -268,7 +282,7 @@ ta-linked-resource-id=3D"165579875" data-linked-resource-version=3D"1" data=
 -linked-resource-type=3D"attachment" data-linked-resource-default-alias=3D"=
 GlobCfg.jpg" data-base-url=3D"https://wiki.jenkins.io" data-linked-resource=
 -content-type=3D"image/jpeg" data-linked-resource-container-id=3D"165579425=
-" data-linked-resource-container-version=3D"16" width=3D"468"></span></p>
+" data-linked-resource-container-version=3D"18" width=3D"468"></span></p>
 <p>Configure the URL of the Execution Manager (typically http://&lt;em-host=
 &gt;/executionmanager):</p>
 <p style=3D"margin-left: 30.0px;"><span class=3D"confluence-embedded-file-w=
@@ -280,7 +294,7 @@ ata-linked-resource-id=3D"165579876" data-linked-resource-version=3D"1" dat=
 a-linked-resource-type=3D"attachment" data-linked-resource-default-alias=3D=
 "GlobCfg1.jpg" data-base-url=3D"https://wiki.jenkins.io" data-linked-resour=
 ce-content-type=3D"image/jpeg" data-linked-resource-container-id=3D"1655794=
-25" data-linked-resource-container-version=3D"16" width=3D"468"></span></p>
+25" data-linked-resource-container-version=3D"18" width=3D"468"></span></p>
 <p>And credentials:</p>
 <p style=3D"margin-left: 30.0px;"><span class=3D"confluence-embedded-file-w=
 rapper confluence-embedded-manual-size"><img class=3D"confluence-embedded-i=
@@ -291,7 +305,7 @@ ata-linked-resource-id=3D"165579877" data-linked-resource-version=3D"1" dat=
 a-linked-resource-type=3D"attachment" data-linked-resource-default-alias=3D=
 "GlobCfg2.jpg" data-base-url=3D"https://wiki.jenkins.io" data-linked-resour=
 ce-content-type=3D"image/jpeg" data-linked-resource-container-id=3D"1655794=
-25" data-linked-resource-container-version=3D"16" width=3D"468"></span></p>
+25" data-linked-resource-container-version=3D"18" width=3D"468"></span></p>
 <p>Save these configuration settings after which they can be used by Execut=
 ion Manager build steps (Freestyle and Pipeline).</p>
 <h2 id=3D"WorksoftExecutionManagerPlugin-FreestyleProject">Freestyle Projec=
@@ -307,7 +321,7 @@ odificationDate=3D1543329476000&amp;api=3Dv2" data-unresolved-comment-count=
 =3D"2" data-linked-resource-type=3D"attachment" data-linked-resource-defaul=
 t-alias=3D"BuildStepSelect1.jpg" data-base-url=3D"https://wiki.jenkins.io" =
 data-linked-resource-content-type=3D"image/jpeg" data-linked-resource-conta=
-iner-id=3D"165579425" data-linked-resource-container-version=3D"16" width=
+iner-id=3D"165579425" data-linked-resource-container-version=3D"18" width=
 =3D"426"></span></p>
 <p>Select the type of request to execute:</p>
 <p style=3D"margin-left: 30.0px;"><span class=3D"confluence-embedded-file-w=
@@ -319,7 +333,7 @@ ficationDate=3D1543329604000&amp;api=3Dv2" data-unresolved-comment-count=3D=
 " data-linked-resource-type=3D"attachment" data-linked-resource-default-ali=
 as=3D"BuildStepCfg1.jpg" data-base-url=3D"https://wiki.jenkins.io" data-lin=
 ked-resource-content-type=3D"image/jpeg" data-linked-resource-container-id=
-=3D"165579425" data-linked-resource-container-version=3D"16" width=3D"468">=
+=3D"165579425" data-linked-resource-container-version=3D"18" width=3D"468">=
 </span></p>
 <h3 id=3D"WorksoftExecutionManagerPlugin-ExecutionManagerRequest">Execution=
  Manager Request</h3>
@@ -336,7 +350,7 @@ ficationDate=3D1543329686000&amp;api=3Dv2" data-unresolved-comment-count=3D=
 " data-linked-resource-type=3D"attachment" data-linked-resource-default-ali=
 as=3D"BuildStepCfg2.jpg" data-base-url=3D"https://wiki.jenkins.io" data-lin=
 ked-resource-content-type=3D"image/jpeg" data-linked-resource-container-id=
-=3D"165579425" data-linked-resource-container-version=3D"16" width=3D"468">=
+=3D"165579425" data-linked-resource-container-version=3D"18" width=3D"468">=
 </span></p>
 <h3 id=3D"WorksoftExecutionManagerPlugin-ExecutionManagerBookmark">Executio=
 n Manager Bookmark</h3>
@@ -353,7 +367,7 @@ ficationDate=3D1543329770000&amp;api=3Dv2" data-unresolved-comment-count=3D=
 " data-linked-resource-type=3D"attachment" data-linked-resource-default-ali=
 as=3D"BuildStepCfg4.jpg" data-base-url=3D"https://wiki.jenkins.io" data-lin=
 ked-resource-content-type=3D"image/jpeg" data-linked-resource-container-id=
-=3D"165579425" data-linked-resource-container-version=3D"16" width=3D"468">=
+=3D"165579425" data-linked-resource-container-version=3D"18" width=3D"468">=
 </span></p>
 <p>Optionally, a result folder can be specified by filling in the <strong>R=
 esults folder</strong> text box:</p>
@@ -366,7 +380,7 @@ ficationDate=3D1543329786000&amp;api=3Dv2" data-unresolved-comment-count=3D=
 " data-linked-resource-type=3D"attachment" data-linked-resource-default-ali=
 as=3D"BuildStepCfg5.jpg" data-base-url=3D"https://wiki.jenkins.io" data-lin=
 ked-resource-content-type=3D"image/jpeg" data-linked-resource-container-id=
-=3D"165579425" data-linked-resource-container-version=3D"16" width=3D"468">=
+=3D"165579425" data-linked-resource-container-version=3D"18" width=3D"468">=
 </span></p>
 <h3 id=3D"WorksoftExecutionManagerPlugin-CertifyProcesses">Certify Processe=
 s</h3>
@@ -382,7 +396,7 @@ i=3Dv2" data-unresolved-comment-count=3D"0" data-linked-resource-id=3D"1655=
 chment" data-linked-resource-default-alias=3D"BuildStepCfg6.jpg" data-base-=
 url=3D"https://wiki.jenkins.io" data-linked-resource-content-type=3D"image/=
 jpeg" data-linked-resource-container-id=3D"165579425" data-linked-resource-=
-container-version=3D"16" width=3D"468"></span></h2>
+container-version=3D"18" width=3D"468"></span></h2>
 <p>Provide an database alias name of the Certify connection saved in Manage=
 ment Studio -&gt; Configuration -&gt; Certify Configuration:</p>
 <p style=3D"margin-left: 30.0px;"><span class=3D"confluence-embedded-file-w=
@@ -394,7 +408,7 @@ ficationDate=3D1543331139000&amp;api=3Dv2" data-unresolved-comment-count=3D=
 " data-linked-resource-type=3D"attachment" data-linked-resource-default-ali=
 as=3D"BuildStepCfg7.jpg" data-base-url=3D"https://wiki.jenkins.io" data-lin=
 ked-resource-content-type=3D"image/jpeg" data-linked-resource-container-id=
-=3D"165579425" data-linked-resource-container-version=3D"16" width=3D"468">=
+=3D"165579425" data-linked-resource-container-version=3D"18" width=3D"468">=
 </span></p>
 <p>Specify the Certify project where processes reside:</p>
 <p style=3D"margin-left: 30.0px;"><span class=3D"confluence-embedded-file-w=
@@ -406,7 +420,7 @@ ficationDate=3D1543331200000&amp;api=3Dv2" data-unresolved-comment-count=3D=
 " data-linked-resource-type=3D"attachment" data-linked-resource-default-ali=
 as=3D"BuildStepCfg8.jpg" data-base-url=3D"https://wiki.jenkins.io" data-lin=
 ked-resource-content-type=3D"image/jpeg" data-linked-resource-container-id=
-=3D"165579425" data-linked-resource-container-version=3D"16" width=3D"468">=
+=3D"165579425" data-linked-resource-container-version=3D"18" width=3D"468">=
 </span></p>
 <p>Optionally, specify a folder where Certify Results will be saved. If not=
  specified, results go to the root results folder:</p>
@@ -419,7 +433,7 @@ ficationDate=3D1543331288000&amp;api=3Dv2" data-unresolved-comment-count=3D=
 " data-linked-resource-type=3D"attachment" data-linked-resource-default-ali=
 as=3D"BuildStepCfg9.jpg" data-base-url=3D"https://wiki.jenkins.io" data-lin=
 ked-resource-content-type=3D"image/jpeg" data-linked-resource-container-id=
-=3D"165579425" data-linked-resource-container-version=3D"16" width=3D"468">=
+=3D"165579425" data-linked-resource-container-version=3D"18" width=3D"468">=
 </span></p>
 <p>Specify a name to be given to the request execution:</p>
 <p style=3D"margin-left: 30.0px;"><span class=3D"confluence-embedded-file-w=
@@ -431,7 +445,7 @@ ificationDate=3D1543331354000&amp;api=3Dv2" data-unresolved-comment-count=
 =3D"1" data-linked-resource-type=3D"attachment" data-linked-resource-defaul=
 t-alias=3D"BuildStepCfg10.jpg" data-base-url=3D"https://wiki.jenkins.io" da=
 ta-linked-resource-content-type=3D"image/jpeg" data-linked-resource-contain=
-er-id=3D"165579425" data-linked-resource-container-version=3D"16" width=3D"=
+er-id=3D"165579425" data-linked-resource-container-version=3D"18" width=3D"=
 468"></span></p>
 <p>Provide a fully qualified path to each process to execute:</p>
 <p style=3D"margin-left: 30.0px;"><span class=3D"confluence-embedded-file-w=
@@ -443,7 +457,7 @@ ificationDate=3D1543331408000&amp;api=3Dv2" data-unresolved-comment-count=
 =3D"1" data-linked-resource-type=3D"attachment" data-linked-resource-defaul=
 t-alias=3D"BuildStepCfg11.jpg" data-base-url=3D"https://wiki.jenkins.io" da=
 ta-linked-resource-content-type=3D"image/jpeg" data-linked-resource-contain=
-er-id=3D"165579425" data-linked-resource-container-version=3D"16" width=3D"=
+er-id=3D"165579425" data-linked-resource-container-version=3D"18" width=3D"=
 468"></span></p>
 <p>Add additional processes by clicking the Add Certify Process button:</p>
 <p style=3D"margin-left: 30.0px;"><span class=3D"confluence-embedded-file-w=
@@ -455,7 +469,7 @@ ificationDate=3D1543331493000&amp;api=3Dv2" data-unresolved-comment-count=
 =3D"1" data-linked-resource-type=3D"attachment" data-linked-resource-defaul=
 t-alias=3D"BuildStepCfg12.jpg" data-base-url=3D"https://wiki.jenkins.io" da=
 ta-linked-resource-content-type=3D"image/jpeg" data-linked-resource-contain=
-er-id=3D"165579425" data-linked-resource-container-version=3D"16" width=3D"=
+er-id=3D"165579425" data-linked-resource-container-version=3D"18" width=3D"=
 468"></span></p>
 <h3 id=3D"WorksoftExecutionManagerPlugin-ConfigureAlternativeExecutionManag=
 er">Configure Alternative Execution Manager</h3>
@@ -470,7 +484,7 @@ Date=3D1543331908000&amp;api=3Dv2" data-unresolved-comment-count=3D"0" data=
 inked-resource-type=3D"attachment" data-linked-resource-default-alias=3D"Al=
 tCfg.jpg" data-base-url=3D"https://wiki.jenkins.io" data-linked-resource-co=
 ntent-type=3D"image/jpeg" data-linked-resource-container-id=3D"165579425" d=
-ata-linked-resource-container-version=3D"16" width=3D"468"></span></p>
+ata-linked-resource-container-version=3D"18" width=3D"468"></span></p>
 <p>Configure the URL of the Execution Manager (typically http://&lt;em-host=
 &gt;/executionmanager):</p>
 <p style=3D"margin-left: 30.0px;"><span class=3D"confluence-embedded-file-w=
@@ -482,7 +496,7 @@ ta-linked-resource-id=3D"165579906" data-linked-resource-version=3D"1" data=
 -linked-resource-type=3D"attachment" data-linked-resource-default-alias=3D"=
 AltCfg2.jpg" data-base-url=3D"https://wiki.jenkins.io" data-linked-resource=
 -content-type=3D"image/jpeg" data-linked-resource-container-id=3D"165579425=
-" data-linked-resource-container-version=3D"16" width=3D"468"></span></p>
+" data-linked-resource-container-version=3D"18" width=3D"468"></span></p>
 <p>And credentials:</p>
 <p style=3D"margin-left: 30.0px;"><span class=3D"confluence-embedded-file-w=
 rapper confluence-embedded-manual-size"><img class=3D"confluence-embedded-i=
@@ -493,7 +507,7 @@ ta-linked-resource-id=3D"165579907" data-linked-resource-version=3D"1" data=
 -linked-resource-type=3D"attachment" data-linked-resource-default-alias=3D"=
 AltCfg3.jpg" data-base-url=3D"https://wiki.jenkins.io" data-linked-resource=
 -content-type=3D"image/jpeg" data-linked-resource-container-id=3D"165579425=
-" data-linked-resource-container-version=3D"16" width=3D"468"></span></p>
+" data-linked-resource-container-version=3D"18" width=3D"468"></span></p>
 <h3 id=3D"WorksoftExecutionManagerPlugin-AdditionalOptions">Additional Opti=
 ons</h3>
 <p>Each request type (request, bookmark and processes) can be configured to=
@@ -507,7 +521,7 @@ linked-resource-id=3D"165579908" data-linked-resource-version=3D"1" data-li=
 nked-resource-type=3D"attachment" data-linked-resource-default-alias=3D"Opt=
 s..jpg" data-base-url=3D"https://wiki.jenkins.io" data-linked-resource-cont=
 ent-type=3D"image/jpeg" data-linked-resource-container-id=3D"165579425" dat=
-a-linked-resource-container-version=3D"16" width=3D"468"></span></p>
+a-linked-resource-container-version=3D"18" width=3D"468"></span></p>
 <h4 id=3D"WorksoftExecutionManagerPlugin-CertifyParameters">Certify Paramet=
 ers</h4>
 <p>Optionally, Certify parameters can be specified. Both a key and value mu=
@@ -523,7 +537,7 @@ a-linked-resource-id=3D"165579909" data-linked-resource-version=3D"1" data-=
 linked-resource-type=3D"attachment" data-linked-resource-default-alias=3D"O=
 pts1..jpg" data-base-url=3D"https://wiki.jenkins.io" data-linked-resource-c=
 ontent-type=3D"image/jpeg" data-linked-resource-container-id=3D"165579425" =
-data-linked-resource-container-version=3D"16" width=3D"468"></span></p>
+data-linked-resource-container-version=3D"18" width=3D"468"></span></p>
 <p>Optionally, execution wait configuration can be specified. Both the poll=
 ing interval and maximum run time must be specified in seconds:</p>
 <p style=3D"margin-left: 30.0px;"><span class=3D"confluence-embedded-file-w=
@@ -535,7 +549,7 @@ a-linked-resource-id=3D"165579910" data-linked-resource-version=3D"1" data-=
 linked-resource-type=3D"attachment" data-linked-resource-default-alias=3D"O=
 pts2..jpg" data-base-url=3D"https://wiki.jenkins.io" data-linked-resource-c=
 ontent-type=3D"image/jpeg" data-linked-resource-container-id=3D"165579425" =
-data-linked-resource-container-version=3D"16" width=3D"468"></span></p>
+data-linked-resource-container-version=3D"18" width=3D"468"></span></p>
 <h2 id=3D"WorksoftExecutionManagerPlugin-Pipeline">Pipeline</h2>
 <h3 id=3D"WorksoftExecutionManagerPlugin-DSLReference-execMan:RunExecutionM=
 anagerRequest">DSL Reference - <strong><em>execMan: Run Execution Manager R=
@@ -680,7 +694,7 @@ an></em>']]]</p>
     </div>
 </body>
 </html>
-------=_Part_58315_1312044197.1543346488726
+------=_Part_59200_894274369.1543415837366
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/171fbda11835b48092f37dfae042f3a3
@@ -1092,7 +1106,7 @@ ooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACi
 iigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKK
 KACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAoooo
 AKKKKACiiigAooooAKKKKAP/2Q==
-------=_Part_58315_1312044197.1543346488726
+------=_Part_59200_894274369.1543415837366
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/58bc3a9c3d08523ff3208d58f39ecb77
@@ -1601,7 +1615,7 @@ f+Ajf/HaKKLILsP7M1L/AJ/bT/wEb/47R/Zmpf8AP7af+Ajf/HaKKLILsP7M1L/n9tP/AAEb/wCO
 0f2ZqX/P7af+Ajf/AB2iiiyC7D+zNS/5/bT/AMBG/wDjtH9mal/z+2n/AICN/wDHaKKLILsP7M1L
 /n9tP/ARv/jtH9mal/z+2n/gI3/x2iiiyC7D+zNS/wCf20/8BG/+O0f2ZqX/AD+2n/gI3/x2iiiy
 C7P/2Q==
-------=_Part_58315_1312044197.1543346488726
+------=_Part_59200_894274369.1543415837366
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/1e4fdd160156fc266ae2a4c310b05383
@@ -1965,7 +1979,7 @@ xqRzRRzIFkRZFDdGGRToY0RNqKEVeiqMAUUUAOooooAKKKKACiiigAooooAKKKKACiiigAooooAK
 KKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAoo
 ooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiii
 gAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAP//Z
-------=_Part_58315_1312044197.1543346488726
+------=_Part_59200_894274369.1543415837366
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/c4f996a443c94ef8d99f1616c6448ce0
@@ -2404,7 +2418,7 @@ RQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFF
 ABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUA
 FFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQB/
 /9k=
-------=_Part_58315_1312044197.1543346488726
+------=_Part_59200_894274369.1543415837366
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/078c8697a8d0323580c944680f09284c
@@ -2754,7 +2768,7 @@ AHG/Kjyn/uN+VaFFHKFzP8p/7jflR5T/ANxvyrQoo5QuZ/lP/cb8qPKf+435VoUUcoXM/wAp/wC4
 Kf8AuN+VaFFHKFzP8p/7jflR5T/3G/KtCijlC5n+U/8Acb8qPKf+435VoUUcoXM/yn/uN+VHlP8A
 3G/KtCijlC5n+U/9xvyo8p/7jflWhRRyhcz/ACn/ALjflR5T/wBxvyrQoo5QuZ/lP/cb8qPKf+43
 5VoUUcoXI7cFYVBGD71JRRVklvSf+QVZf9cU/wDQRRRpP/IKsv8Arin/AKCKKCT/2Q==
-------=_Part_58315_1312044197.1543346488726
+------=_Part_59200_894274369.1543415837366
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/c1aee35a4ed47f7033fd358418a8411c
@@ -3560,7 +3574,7 @@ ABo/tiw/5/rb/v8AL/jRdAW6Kqf2xYf8/wBbf9/l/wAaP7YsP+f62/7/AC/40XQFuiqn9sWH/P8A
 W3/f5f8AGj+2LD/n+tv+/wAv+NF0Bboqp/bFh/z/AFt/3+X/ABo/tiw/5/rb/v8AL/jRdAW6Kqf2
 xYf8/wBbf9/l/wAaP7YsP+f62/7/AC/40XQFuiqn9sWH/P8AW3/f5f8AGpIL+1uW2w3MUreiOGP6
 UXAnooopiCiiigAooooAKs6V/wAguz/64p/6CKrVZ0r/AJBdn/1xT/0EU47iZ//Z
-------=_Part_58315_1312044197.1543346488726
+------=_Part_59200_894274369.1543415837366
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/22b0816e0d2f39b641068398703c1344
@@ -3901,7 +3915,7 @@ eU/9xvyrQoo5QuZ/lP8A3G/Kjyn/ALjflWhRRyhcz/Kf+435UeU/9xvyrQoo5QuZ/lP/AHG/Kjyn
 cb8q0KKOULmf5T/3G/Kjyn/uN+VaFFHKFzP8p/7jflR5T/3G/KtCijlC5n+U/wDcb8qPKf8AuN+V
 aFFHKFzP8p/7jflR5T/3G/KtCijlC5n+U/8Acb8qPKf+435VoUUcoXM/yn/uN+VHlP8A3G/KtCij
 lC5HbgrCoIwfepKKKskt6T/yCrL/AK4p/wCgiijSf+QVZf8AXFP/AEEUUEn/2Q==
-------=_Part_58315_1312044197.1543346488726
+------=_Part_59200_894274369.1543415837366
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/2acd3cdc3158653d7b95a05d2d573c5c
@@ -4385,7 +4399,7 @@ ABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUA
 FFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAU
 UUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRR
 RQAUUUUAFFFFABRRRQAUUUUAFFFFAH//2Q==
-------=_Part_58315_1312044197.1543346488726
+------=_Part_59200_894274369.1543415837366
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/0513e8047ffbac22242eb4f042c76a3b
@@ -5195,7 +5209,7 @@ QAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQBR1LTf7Q8v955ezP8Oc5x7+1SJp
 AD/41doosBS/se1/uyf9/n/xo/se1/uyfjM/+NXaKLANjjWJFRFCqowAO1OoopgFFFFABRRRQAUU
 UUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRR
 QAUUUUAFFFFABRRRQAUUUUAWbP8Aj/CrNVrP+P8ACrNaLYlhRRRVCP/Z
-------=_Part_58315_1312044197.1543346488726
+------=_Part_59200_894274369.1543415837366
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/cb4d9c6ab7fc068518daaeeae838e29f
@@ -5997,7 +6011,7 @@ f9/n/wAaP7Htf7sn/f5/8au0UWApf2Pa/wB2T/v8/wDjR/Y9r/dk/wC/z/41doosBS/se1/uyf8A
 f5/8aP7Htf7sn/f5/wDGrtFFgKX9j2v92T/v8/8AjR/Y9r/dk/GZ/wDGrtFFgGxxrEioihVUYAHa
 nUUUwCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAo
 oooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKALNn/H+FWarWf8f4VZrRbEsKKKKoR//Z
-------=_Part_58315_1312044197.1543346488726
+------=_Part_59200_894274369.1543415837366
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/4aa17f6a774c5462e9aee51a0e86c338
@@ -6168,7 +6182,7 @@ RQAfY4P+eEf/AHwKQ20UYLJGqMBkMowR+NFFMD0DTJGm020kclneFGYnuSoqzRRXYtjnCiiimAUU
 UUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRR
 QAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFA
 BRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAf/9k=
-------=_Part_58315_1312044197.1543346488726
+------=_Part_59200_894274369.1543415837366
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/731aca7ecf760da3cc985e3d71277b22
@@ -6581,7 +6595,7 @@ RRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFF
 FFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUU
 UAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQ
 AUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFAH/9k=
-------=_Part_58315_1312044197.1543346488726
+------=_Part_59200_894274369.1543415837366
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/dfeb52555a308fe5632aaa9f7b90001e
@@ -7366,7 +7380,7 @@ XEP/AEMK3/g2f/yR4F8GfgyPBCxRRReVFHnauS2MnJ5PPUmvoO2j8uJV9BRHbRx/dUCpa6kkkoxV
 kj5yrVqV6kq1aTlKTbbbu23q229W292FFFFBkFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABR
 RRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQBZs/4/wAK
 s1Ws/wCP8Ks1otiWFFFFUI//2Q==
-------=_Part_58315_1312044197.1543346488726
+------=_Part_59200_894274369.1543415837366
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/05601ee367472035eb9027f267a68116
@@ -7792,7 +7806,7 @@ oooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACii
 igAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKK
 ACiiigAooooAR0WVGR1DowwVYZBHoa49/hH4YM2+G2vbGMkk21hqt3a25J65hilWM/8AfNdjRVRl
 JfC7CaT3KWj6LYeH7BLLTbOGxtEyVigQKuT1PHc+tXaKKlvm1Yz/2Q==
-------=_Part_58315_1312044197.1543346488726
+------=_Part_59200_894274369.1543415837366
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/a6a717730abf66e336cdafc2400a8ab2
@@ -8599,7 +8613,7 @@ au0UWApf2Pa/3ZP+/wA/+NH9j2v92T/v8/8AjV2iiwFL+x7X+7J/3+f/ABo/se1/uyfjM/8AjV2i
 iwDY41iRURQqqMADtTqKKYBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQA
 UUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFAFmz/j/AAqzVaz/AI/w
 qzWi2JYUUUVQj//Z
-------=_Part_58315_1312044197.1543346488726
+------=_Part_59200_894274369.1543415837366
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/065ad0f5a75d7101a77f9e1de51bdf2a
@@ -9038,7 +9052,7 @@ RQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFF
 ABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFACOiyoyOodGGCrDII9DXHv8ACPww
 Zt8Nte2MZJJtrDVbu1tyT1zDFKsZ/wC+a7GiqjKS+F2E0nuUtH0Ww8P2CWWm2cNjaJkrFAgVcnqe
 O59au0UVLfNqxn//2Q==
-------=_Part_58315_1312044197.1543346488726
+------=_Part_59200_894274369.1543415837366
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/e0ffbc500b85d620ff091f7558beef9e
@@ -9726,7 +9740,7 @@ D/v4KP7Qtf8An5g/7+Ciii4WD+0LX/n5g/7+Cj+0LX/n5g/7+Ciii4WD+0LX/n5g/wC/go/tC1/5
 Fg/tC1/5+YP+/go/tC1/5+YP+/gooouFg/tC1/5+YP8Av4KP7Qtf+fmD/v4KKKLhYP7Qtf8An5g/
 7+Cj+0LX/n5g/wC/gooouFg/tC1/5+YP+/go/tC1/wCfmD/v4KKKLhYP7Qtf+fmD/v4KP7Qtf+fm
 D/v4KKKLhY0dI/5Bdn/1xT/0EUUUVoZn/9k=
-------=_Part_58315_1312044197.1543346488726
+------=_Part_59200_894274369.1543415837366
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/60f083ad3fa68bc3fcebfa6e929e5b71
@@ -10536,7 +10550,7 @@ Uv7Htf7sn/f5/wDGj+x7X+7J/wB/n/xq7RRYCl/Y9r/dk/7/AD/40f2Pa/3ZP+/z/wCNXaKLAUv7
 Htf7sn/f5/8AGj+x7X+7J+Mz/wCNXaKLANjjWJFRFCqowAO1OoopgFFFFABRRRQAUUUUAFFFFABR
 RRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFF
 FABRRRQAUUUUAWbP+P8ACrNVrP8Aj/CrNaLYlhRRRVCP/9k=
-------=_Part_58315_1312044197.1543346488726
+------=_Part_59200_894274369.1543415837366
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/46d489e2ba4127a7e4eaf5c4c530d283
@@ -11348,7 +11362,7 @@ AHZP+/z/AONH9j2v92T/AL/P/jV2iiwFL+x7X+7J/wB/n/xo/se1/uyf9/n/AMau0UWApf2Pa/3Z
 P+/z/wCNH9j2v92T8Zn/AMau0UWAbHGsSKiKFVRgAdqdRRTAKKKKACiiigAooooAKKKKACiiigAo
 oooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACii
 igAooooAs2f8f4VZqtZ/x/hVmtFsSwoooqhH/9k=
-------=_Part_58315_1312044197.1543346488726
+------=_Part_59200_894274369.1543415837366
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/50a543d2b03d677618c1be2825ef0636
@@ -11473,7 +11487,7 @@ KACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAoooo
 AKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigA
 ooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAW1/5CsX/XGT/wBCSii1/wCQ
 rF/1xk/9CSigD//Z
-------=_Part_58315_1312044197.1543346488726
+------=_Part_59200_894274369.1543415837366
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/6ed97ab629f04925641013ad31191ce5
@@ -11860,4 +11874,4 @@ AB5Sf3F/Kjyk/uL+VFFAB5Sf3F/Kjyk/uL+VFFAB5Sf3F/Kjyk/uL+VFFAB5Sf3F/Kjyk/uL+VFF
 AB5Sf3F/Kjyk/uL+VFFAB5Sf3F/Kjyk/uL+VFFAB5Sf3F/Kjyk/uL+VFFAB5Sf3F/Kjyk/uL+VFF
 AB5Sf3F/Kjyk/uL+VFFAB5Sf3F/Kjyk/uL+VFFADgAowBge1FFFMRZ0r/kF2f/XFP/QRRRRWi2JP
 /9k=
-------=_Part_58315_1312044197.1543346488726--
+------=_Part_59200_894274369.1543415837366--
