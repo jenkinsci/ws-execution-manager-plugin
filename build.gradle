@@ -9,11 +9,6 @@ buildscript {
             url 'https://plugins.gradle.org/m2/'
         }
     }
-    // These are Gradle Plugins this build uses.  See also the plugins block below
-    dependencies {
-//        classpath 'gradle.plugin.de.fuerstenau:BuildConfigPlugin:1.1.8'
-//        classpath 'net.saliman:gradle-properties-plugin:1.4.5'
-    }
 }
 
 plugins {
@@ -23,7 +18,6 @@ plugins {
 }
 
 apply plugin: 'idea'
-//apply plugin: 'gradle-one-jar'
 
 // Where to resolve external dependencies.
 repositories {
@@ -33,14 +27,17 @@ repositories {
     }
 }
 
-group = 'com.worksoft.plugins'
-description = 'Worksoft Execution Manager Plugin'
+group = 'org.jenkins-ci.plugins'
+description = 'Adds build step for interacting with a Worksoft Execution Manager.'
 
 jenkinsPlugin {
     coreVersion = jenkinsVersion
     displayName = "Worksoft Execution Manager Plugin"
     shortName = "ws-execution-manager"
-
+    
+    // URL for plugin on Jenkins wiki or elsewhere
+    url = 'http://wiki.jenkins-ci.org/display/JENKINS/Worksoft+Execution+Manager+Plugin'
+    
     developers {
         developer {
             id "rrinehart"
