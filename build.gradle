@@ -28,11 +28,10 @@ repositories {
 }
 
 group = 'org.jenkins-ci.plugins'
-version = '0.0.2.12345-beta'
 description = 'Adds build step for interacting with a Worksoft Execution Manager.'
 
 jenkinsPlugin {
-    coreVersion = '2.73.3'
+    coreVersion = jenkinsVersion
     displayName = "Worksoft Execution Manager Plugin"
     shortName = "ws-execution-manager"
     

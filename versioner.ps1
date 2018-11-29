@@ -12,10 +12,9 @@ if (![string]::IsNullOrEmpty($type))
 {
     $type = "-" + $type
 }
-$buildGradle = [IO.File]::ReadAllText(".\build.gradle");
-#$pattern = '${1}' + $buildNum + '${2}' + "'"
-$pattern = '${1}' + $buildNum + $type + "'"
-$buildGradle = $buildGradle -replace "(version = '[0-9][.][0-9][.][0-9][.])[0-9]*([^']*)'", $pattern
-[IO.File]::WriteAllText(".\build.gradle", $buildGradle)
+$buildGradle = [IO.File]::ReadAllText(".\gradle.properties");
 $pattern = '${1}' + $buildNum + $type
-$buildGradle.replace("`n", ", ").replace("`r", ", ") -replace ".*version = '([0-9][.][0-9][.][0-9][.])[0-9]*([^']*).*", $pattern
+$buildGradle = $buildGradle -replace "(version\s*=\s*[0-9][.][0-9][.][0-9][.])[0-9]*(\S*)", $pattern
+[IO.File]::WriteAllText(".\gradle.properties", $buildGradle)
+$pattern = '${1}' + $buildNum + $type
+$buildGradle.replace("`n", ", ").replace("`r", ", ") -replace ".*version\s*=\s*([0-9][.][0-9][.][0-9][.])[0-9]*(\S*).*", $pattern
