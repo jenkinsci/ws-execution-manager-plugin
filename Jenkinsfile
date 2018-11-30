@@ -36,7 +36,7 @@ if (branch == 'master') {
 
 // Adjust the following for the desired build node and where to clone the repo
 def workspacePath = "D:\\hudson\\Builds\\JenkinsEMPlugin\\${branch}"
-def buildNode = 'master'
+def buildNode = 'colobuild02'
 
 pipeline {
     agent {
