@@ -8,6 +8,10 @@ buildscript {
         maven {
             url 'https://plugins.gradle.org/m2/'
         }
+        // These are Gradle Plugins this build uses.  See also the plugins block below
+        dependencies {
+            classpath 'net.saliman:gradle-properties-plugin:1.4.6'
+        }
     }
 }
 
@@ -29,6 +33,15 @@ repositories {
 
 group = 'org.jenkins-ci.plugins'
 description = 'Adds build step for interacting with a Worksoft Execution Manager.'
+
+project.ext {
+    buildUser = { ->
+        return System.env.USERNAME
+    }
+}
+
+
+apply plugin: 'net.saliman.properties'
 
 jenkinsPlugin {
     coreVersion = jenkinsVersion

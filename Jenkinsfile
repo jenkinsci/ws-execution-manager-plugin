@@ -86,6 +86,7 @@ pipeline {
                 echo "powershell -noprofile -command \".\\versioner.ps1 -b ${BUILD_NUMBER} -t ${buildType}\" > version.txt"
                 bat returnStatus: true, script: "powershell -noprofile -command \".\\versioner.ps1 -b ${BUILD_NUMBER} -t ${buildType}\" > version.txt"
                 script {
+                    dev versionTxt = readFile 'version.txt'
                     currentBuild.displayName = readFile 'version.txt'
                 }
             }
@@ -96,7 +97,13 @@ pipeline {
                 equals expected: true, actual: params.shouldBuild
             }
             steps {
-                bat returnStatus: true, script: "buildit.cmd"
+                script {
+                    def gradleProps = readProperties 'gradle-wsbuilduser.properties'
+                    env.JAVA_HOME=gradleProps['java.1.8.JDK']
+                    def verProp = readProperties 'gradle.properties'
+                    currentBuild.displayName = verProp.version //readFile 'version.txt'
+                }
+                bat returnStatus: true, script: "buildit.cmd wsbuilduser"
                 bat script: "deliverit.cmd \"${ArtifactBaseDir}\\${branch}\\${currentBuild.displayName}\""
             }
         }
