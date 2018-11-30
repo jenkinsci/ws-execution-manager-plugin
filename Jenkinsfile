@@ -86,7 +86,7 @@ pipeline {
                 echo "powershell -noprofile -command \".\\versioner.ps1 -b ${BUILD_NUMBER} -t ${buildType}\" > version.txt"
                 bat returnStatus: true, script: "powershell -noprofile -command \".\\versioner.ps1 -b ${BUILD_NUMBER} -t ${buildType}\" > version.txt"
                 script {
-                    def verProp = readProperties 'gradle.properties'
+                    def verProp = readProperties file: 'gradle.properties'
                     currentBuild.displayName = verProp.version //readFile 'version.txt'
 //                    def versionTxt = readFile 'version.txt'
 //                    currentBuild.displayName = readFile 'version.txt'
@@ -100,7 +100,7 @@ pipeline {
             }
             steps {
                 script {
-                    def gradleProps = readProperties 'gradle-wsbuilduser.properties'
+                    def gradleProps = readProperties file: 'gradle-wsbuilduser.properties'
                     env.JAVA_HOME=gradleProps['java.1.8.JDK']
                 }
                 bat returnStatus: true, script: "buildit.cmd wsbuilduser"
