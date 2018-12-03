@@ -38,10 +38,6 @@ if (branch == 'master') {
 def workspacePath = "D:\\hudson\\Builds\\JenkinsEMPlugin\\${branch}"
 def buildNode = 'master'
 
-def lib = library('automation')
-def vm = lib.com.worksoft.automation.VM.new(this)
-def em = lib.com.worksoft.automation.EM.new(this, 'http://homer02')
-
 pipeline {
     agent {
         node {
