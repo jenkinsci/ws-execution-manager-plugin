@@ -1,4 +1,3 @@
-git rm Jenkinsfile
 git rm Worksoft+Execution+Manager+Plugin.doc
 git rm git_tips.md
 git rm gradle-wsbuilduser.properties
