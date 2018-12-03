@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?jelly escape-by-default='true'?>
+<!--
+  ~ Copyright (c) 2018 Worksoft, Inc.
+  ~
+  ~ config.jelly
+  ~
+  ~ @author dtheobald on Tue, 23 Oct 2018
+  -->
+
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
+    <f:block>
+        <table width="100%">
+            <f:entry title="Polling Interval (secs):" field="pollInterval">
+                <f:textbox/>
+            </f:entry>
+            <f:entry title="Maximum Run Time (secs):" field="maxRunTime">
+                <f:textbox/>
+            </f:entry>
+        </table>
+    </f:block>
+</j:jelly>

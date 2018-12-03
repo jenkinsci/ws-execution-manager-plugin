@@ -69,6 +69,8 @@ gradle-app.setting
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
+.idea/misc.xml
+.idea/vcs.xml
 
 # Generated files
 .idea/**/contentModel.xml
@@ -303,3 +305,7 @@ cscope.files
 cscope.out
 cscope.in.out
 cscope.po.out
+
+# other and misc files
+# 
+*.orig
