@@ -16,6 +16,7 @@ import net.sf.json.JSONSerializer;
 public class EmResult {
 
   private static final char OPEN_CURLY = '{';
+  private static final char CLOSE_CURLY = '}';
   private static final char OPEN_BRACKET = '[';
   private final HttpResponse response;
   private JSONObject jsonData = null;
@@ -32,12 +33,19 @@ public class EmResult {
 
       this.response = response;
       if (isJson(response.bodyText())) {
-
-        jsonData = (JSONObject) JSONSerializer.toJSON(response.bodyText());
+        String jsonText=response.bodyText();
+        if (jsonText.startsWith("[")) {
+          jsonText = OPEN_CURLY + "\"objects\": " + jsonText + CLOSE_CURLY;
+        }
+        jsonData = (JSONObject) JSONSerializer.toJSON(jsonText);
       }
     } else {
       this.response = nullResponse;
     }
+  }
+
+  public HttpResponse getResponse() {
+    return response;
   }
 
   public JSONObject getJsonData () {

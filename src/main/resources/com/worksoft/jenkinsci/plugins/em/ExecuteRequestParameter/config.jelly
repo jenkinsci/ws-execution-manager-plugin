@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?jelly escape-by-default='true'?>
+<!--
+  ~ Copyright (c) 2018 Worksoft, Inc.
+  ~
+  ~ config.jelly
+  -->
+
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
+
+    <j:set var="doSideBySideKeysAndValues" value="false"/>
+    <!--j:invoke method="getSideBySideKeysAndValues" on="com.worksoft.jenkinsci.plugins.em.ExecuteRequestParameter"/-->
+
+    <style>
+        input.alignprops {
+        margin-right:5px;
+        width: calc(50% - 5px);
+        float: left;
+        }
+    </style>
+    <f:block>
+        <table width="100%">
+            <j:if test="${doSideBySideKeysAndValues}">
+                <f:entry>
+                    <f:textbox clazz="alignprops" field="key"/>
+                    <f:textbox clazz="alignprops" field="value"/>
+                </f:entry>
+            </j:if>
+            <j:if test="${!doSideBySideKeysAndValues}">
+                <f:entry title="Key:" field="key">
+                    <f:textbox/>
+                </f:entry>
+                <f:entry title="Value:" field="value">
+                    <f:textbox/>
+                </f:entry>
+            </j:if>
+            <div align="right">
+                <f:repeatableDeleteButton/>
+            </div>
+        </table>
+    </f:block>
+</j:jelly>
