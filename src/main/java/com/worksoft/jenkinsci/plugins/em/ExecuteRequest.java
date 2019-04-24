@@ -28,12 +28,14 @@ import jenkins.tasks.SimpleBuildStep;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
 import javax.annotation.Nonnull;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -359,6 +361,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
     String elapsedTime = elapsedFmt.format(new Date(currentTime - startTime));
 
     JSONArray prevTasks = null;
+    JSONObject response = null;
 
     // loop until complete/aborted
     consoleOut.println("Waiting for execution to complete...");
@@ -371,7 +374,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
         break;
       }
 
-      JSONObject response = statusResult.getJsonData();
+      response = statusResult.getJsonData();
       try {
         String jobStatus = response.getString("Status");
         String jobExecutionStatus = response.getString("ExecutionStatus");
@@ -404,6 +407,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
             }
           }
         }
+
         // Check for completion
         if (jobStatus.toUpperCase().equals("COMPLETED")) {
           if (!aborted && jobExecutionStatus.toUpperCase().equals("FAILED")) {
@@ -482,6 +486,22 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
       }
     }
 
+    // Write the response JSON to a file so that it can be processed further by the Jenkins job
+    try {
+      File resFile = new File(workspace + "/execMan-result.json");
+      if (response != null) {
+        FileUtils.writeStringToFile(resFile, response.toString());
+        consoleOut.println("\nResults written to " + resFile);
+      }
+    } catch (Exception e) {
+      consoleOut.println("\n*** ERROR: unexpected error while writing results");
+      consoleOut.println("*** ERROR: exception: " + e);
+      consoleOut.println("*** ERROR: exception: " + e.getMessage());
+      consoleOut.println("*** ERROR: stack trace:  ");
+      consoleOut.printlnIndented("*** ERROR:    ", e.getStackTrace());
+    }
+
+
     consoleOut.println("\n\nExecution " + run.getResult().toString() + " after - " + elapsedTime + abortReason);
   }
 
@@ -496,6 +516,9 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
     this.launcher = launcher;
     this.listener = listener;
     this.consoleOut = new ConsoleStream(listener.getLogger());
+
+    // Delete the result file
+    FileUtils.deleteQuietly(new File(workspace + "/execMan-result.json"));
 
     ExecutionManagerConfig globalConfig = GlobalConfiguration.all().get(ExecutionManagerConfig.class);
 

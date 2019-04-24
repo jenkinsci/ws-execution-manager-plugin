@@ -79,8 +79,8 @@ public final class ExecuteRequestBookmark extends AbstractDescribableImpl<Execut
 
     // Called whenever emRequestType or alternative EM config changes
     public ListBoxModel doFillNameItems (@RelativePath("..") @QueryParameter String requestType,
-                                             @RelativePath("../_.altEMConfig") @QueryParameter String url,
-                                             @RelativePath("../_.altEMConfig") @QueryParameter String credentials) {
+                                             @RelativePath("../altEMConfig") @QueryParameter String url,
+                                             @RelativePath("../altEMConfig") @QueryParameter String credentials) {
       return ExecuteRequest.fillItems("bookmark", url, credentials);
     }
   }
