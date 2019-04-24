@@ -1,10 +1,10 @@
-Message-ID: <1360368785.59201.1543415837366.JavaMail.wiki@22457b040dbe>
+Message-ID: <380705664.6673.1556119320004.JavaMail.wiki@71ba6813ddf3>
 Subject: Exported From Confluence
 MIME-Version: 1.0
 Content-Type: multipart/related; 
-	boundary="----=_Part_59200_894274369.1543415837366"
+	boundary="----=_Part_6672_939926981.1556119320002"
 
-------=_Part_59200_894274369.1543415837366
+------=_Part_6672_939926981.1556119320002
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 Content-Location: file:///C:/exported.html
@@ -238,20 +238,48 @@ d of the content */
 <th class=3D"confluenceTh"><p> Plugin Information </p></th>=20
 </tr>=20
 <tr>=20
-<td class=3D"confluenceTd"><p> No information for the plugin 'ws-execution-=
-manager' is available. It may have been removed from distribution. </p></td=
->=20
+<td class=3D"confluenceTd"><p> View Worksoft Execution Manager <a href=3D"h=
+ttps://plugins.jenkins.io/ws-execution-manager">on the plugin site</a> for =
+more information. </p></td>=20
 </tr>=20
 </tbody>
 </table>=20
 <br>
 <p></p>
 <h1 id=3D"WorksoftExecutionManagerPlugin-Description">Description</h1>
-<p>Adds build step for interacting with a Worksoft's Execution Manager..</p=
->
-<h1 id=3D"WorksoftExecutionManagerPlugin-Installation(manual)">Installation=
- (manual)</h1>
+<p>This is the official Worksoft Supported Plugin.&nbsp; The plugin adds bu=
+ild steps for interacting with a Worksoft's Execution Manager to run your C=
+ertify processes or ALM labs.</p>
+<h1 id=3D"WorksoftExecutionManagerPlugin-Installation">Installation</h1>
+<p><strong>Note</strong>: This plugin requires Worksoft's Execution Manager=
+ version 10.0.20 or later.&nbsp; If you use an earlier version of Execution=
+ Manager you will see a runtime error 405 Method Not Allowed.</p>
+<h5 id=3D"WorksoftExecutionManagerPlugin-UpdateCenter">Update Center</h5>
 <ol>
+<li>Open Jenkins in a browser (e.g. http://&lt;<em>jenkins-host</em>&gt;:80=
+80)</li>
+<li>Navigate to <strong>Manage Jenkins =E2=86=92&nbsp;Manage Plugins</stron=
+g> view</li>
+<li>Under the <strong>Available</strong> tab find the <em>Worksoft Executio=
+n Manager</em> plugin and check the box adjacent to the plugin and click&nb=
+sp;<strong>Install without restart</strong>:</li>
+</ol>
+<p><br></p>
+<p style=3D"margin-left: 30.0px;"><span class=3D"confluence-embedded-file-w=
+rapper"><img class=3D"confluence-embedded-image" src=3D"764d525162ff9c73dd9=
+5bf51981f94ee" data-image-src=3D"/download/attachments/165579425/image2018-=
+12-12_9-6-57.png?version=3D1&amp;modificationDate=3D1544627218000&amp;api=
+=3Dv2" data-unresolved-comment-count=3D"0" data-linked-resource-id=3D"16558=
+0857" data-linked-resource-version=3D"1" data-linked-resource-type=3D"attac=
+hment" data-linked-resource-default-alias=3D"image2018-12-12_9-6-57.png" da=
+ta-base-url=3D"https://wiki.jenkins.io" data-linked-resource-content-type=
+=3D"image/png" data-linked-resource-container-id=3D"165579425" data-linked-=
+resource-container-version=3D"25" width=3D"468" height=3D"137"></span></p>
+<h5 id=3D"WorksoftExecutionManagerPlugin-Manual">Manual</h5>
+<ol>
+<li>Download <strong>ws-execution-manager.hpi</strong> from&nbsp;<a href=3D=
+"https://plugins.jenkins.io/ws-execution-manager" class=3D"external-link" r=
+el=3D"nofollow">https://plugins.jenkins.io/ws-execution-manager</a></li>
 <li>Open Jenkins in a browser (e.g. http://&lt;<em>jenkins-host</em>&gt;:80=
 80)</li>
 <li>Navigate to <strong>Manage Jenkins</strong>&nbsp;=E2=86=92 <strong>Mana=
@@ -282,7 +310,7 @@ ta-linked-resource-id=3D"165579875" data-linked-resource-version=3D"1" data=
 -linked-resource-type=3D"attachment" data-linked-resource-default-alias=3D"=
 GlobCfg.jpg" data-base-url=3D"https://wiki.jenkins.io" data-linked-resource=
 -content-type=3D"image/jpeg" data-linked-resource-container-id=3D"165579425=
-" data-linked-resource-container-version=3D"18" width=3D"468"></span></p>
+" data-linked-resource-container-version=3D"25" width=3D"468"></span></p>
 <p>Configure the URL of the Execution Manager (typically http://&lt;em-host=
 &gt;/executionmanager):</p>
 <p style=3D"margin-left: 30.0px;"><span class=3D"confluence-embedded-file-w=
@@ -294,7 +322,7 @@ ata-linked-resource-id=3D"165579876" data-linked-resource-version=3D"1" dat=
 a-linked-resource-type=3D"attachment" data-linked-resource-default-alias=3D=
 "GlobCfg1.jpg" data-base-url=3D"https://wiki.jenkins.io" data-linked-resour=
 ce-content-type=3D"image/jpeg" data-linked-resource-container-id=3D"1655794=
-25" data-linked-resource-container-version=3D"18" width=3D"468"></span></p>
+25" data-linked-resource-container-version=3D"25" width=3D"468"></span></p>
 <p>And credentials:</p>
 <p style=3D"margin-left: 30.0px;"><span class=3D"confluence-embedded-file-w=
 rapper confluence-embedded-manual-size"><img class=3D"confluence-embedded-i=
@@ -305,7 +333,7 @@ ata-linked-resource-id=3D"165579877" data-linked-resource-version=3D"1" dat=
 a-linked-resource-type=3D"attachment" data-linked-resource-default-alias=3D=
 "GlobCfg2.jpg" data-base-url=3D"https://wiki.jenkins.io" data-linked-resour=
 ce-content-type=3D"image/jpeg" data-linked-resource-container-id=3D"1655794=
-25" data-linked-resource-container-version=3D"18" width=3D"468"></span></p>
+25" data-linked-resource-container-version=3D"25" width=3D"468"></span></p>
 <p>Save these configuration settings after which they can be used by Execut=
 ion Manager build steps (Freestyle and Pipeline).</p>
 <h2 id=3D"WorksoftExecutionManagerPlugin-FreestyleProject">Freestyle Projec=
@@ -321,7 +349,7 @@ odificationDate=3D1543329476000&amp;api=3Dv2" data-unresolved-comment-count=
 =3D"2" data-linked-resource-type=3D"attachment" data-linked-resource-defaul=
 t-alias=3D"BuildStepSelect1.jpg" data-base-url=3D"https://wiki.jenkins.io" =
 data-linked-resource-content-type=3D"image/jpeg" data-linked-resource-conta=
-iner-id=3D"165579425" data-linked-resource-container-version=3D"18" width=
+iner-id=3D"165579425" data-linked-resource-container-version=3D"25" width=
 =3D"426"></span></p>
 <p>Select the type of request to execute:</p>
 <p style=3D"margin-left: 30.0px;"><span class=3D"confluence-embedded-file-w=
@@ -333,7 +361,7 @@ ficationDate=3D1543329604000&amp;api=3Dv2" data-unresolved-comment-count=3D=
 " data-linked-resource-type=3D"attachment" data-linked-resource-default-ali=
 as=3D"BuildStepCfg1.jpg" data-base-url=3D"https://wiki.jenkins.io" data-lin=
 ked-resource-content-type=3D"image/jpeg" data-linked-resource-container-id=
-=3D"165579425" data-linked-resource-container-version=3D"18" width=3D"468">=
+=3D"165579425" data-linked-resource-container-version=3D"25" width=3D"468">=
 </span></p>
 <h3 id=3D"WorksoftExecutionManagerPlugin-ExecutionManagerRequest">Execution=
  Manager Request</h3>
@@ -350,7 +378,7 @@ ficationDate=3D1543329686000&amp;api=3Dv2" data-unresolved-comment-count=3D=
 " data-linked-resource-type=3D"attachment" data-linked-resource-default-ali=
 as=3D"BuildStepCfg2.jpg" data-base-url=3D"https://wiki.jenkins.io" data-lin=
 ked-resource-content-type=3D"image/jpeg" data-linked-resource-container-id=
-=3D"165579425" data-linked-resource-container-version=3D"18" width=3D"468">=
+=3D"165579425" data-linked-resource-container-version=3D"25" width=3D"468">=
 </span></p>
 <h3 id=3D"WorksoftExecutionManagerPlugin-ExecutionManagerBookmark">Executio=
 n Manager Bookmark</h3>
@@ -367,7 +395,7 @@ ficationDate=3D1543329770000&amp;api=3Dv2" data-unresolved-comment-count=3D=
 " data-linked-resource-type=3D"attachment" data-linked-resource-default-ali=
 as=3D"BuildStepCfg4.jpg" data-base-url=3D"https://wiki.jenkins.io" data-lin=
 ked-resource-content-type=3D"image/jpeg" data-linked-resource-container-id=
-=3D"165579425" data-linked-resource-container-version=3D"18" width=3D"468">=
+=3D"165579425" data-linked-resource-container-version=3D"25" width=3D"468">=
 </span></p>
 <p>Optionally, a result folder can be specified by filling in the <strong>R=
 esults folder</strong> text box:</p>
@@ -380,7 +408,7 @@ ficationDate=3D1543329786000&amp;api=3Dv2" data-unresolved-comment-count=3D=
 " data-linked-resource-type=3D"attachment" data-linked-resource-default-ali=
 as=3D"BuildStepCfg5.jpg" data-base-url=3D"https://wiki.jenkins.io" data-lin=
 ked-resource-content-type=3D"image/jpeg" data-linked-resource-container-id=
-=3D"165579425" data-linked-resource-container-version=3D"18" width=3D"468">=
+=3D"165579425" data-linked-resource-container-version=3D"25" width=3D"468">=
 </span></p>
 <h3 id=3D"WorksoftExecutionManagerPlugin-CertifyProcesses">Certify Processe=
 s</h3>
@@ -396,7 +424,7 @@ i=3Dv2" data-unresolved-comment-count=3D"0" data-linked-resource-id=3D"1655=
 chment" data-linked-resource-default-alias=3D"BuildStepCfg6.jpg" data-base-=
 url=3D"https://wiki.jenkins.io" data-linked-resource-content-type=3D"image/=
 jpeg" data-linked-resource-container-id=3D"165579425" data-linked-resource-=
-container-version=3D"18" width=3D"468"></span></h2>
+container-version=3D"25" width=3D"468"></span></h2>
 <p>Provide an database alias name of the Certify connection saved in Manage=
 ment Studio -&gt; Configuration -&gt; Certify Configuration:</p>
 <p style=3D"margin-left: 30.0px;"><span class=3D"confluence-embedded-file-w=
@@ -408,7 +436,7 @@ ficationDate=3D1543331139000&amp;api=3Dv2" data-unresolved-comment-count=3D=
 " data-linked-resource-type=3D"attachment" data-linked-resource-default-ali=
 as=3D"BuildStepCfg7.jpg" data-base-url=3D"https://wiki.jenkins.io" data-lin=
 ked-resource-content-type=3D"image/jpeg" data-linked-resource-container-id=
-=3D"165579425" data-linked-resource-container-version=3D"18" width=3D"468">=
+=3D"165579425" data-linked-resource-container-version=3D"25" width=3D"468">=
 </span></p>
 <p>Specify the Certify project where processes reside:</p>
 <p style=3D"margin-left: 30.0px;"><span class=3D"confluence-embedded-file-w=
@@ -420,7 +448,7 @@ ficationDate=3D1543331200000&amp;api=3Dv2" data-unresolved-comment-count=3D=
 " data-linked-resource-type=3D"attachment" data-linked-resource-default-ali=
 as=3D"BuildStepCfg8.jpg" data-base-url=3D"https://wiki.jenkins.io" data-lin=
 ked-resource-content-type=3D"image/jpeg" data-linked-resource-container-id=
-=3D"165579425" data-linked-resource-container-version=3D"18" width=3D"468">=
+=3D"165579425" data-linked-resource-container-version=3D"25" width=3D"468">=
 </span></p>
 <p>Optionally, specify a folder where Certify Results will be saved. If not=
  specified, results go to the root results folder:</p>
@@ -433,7 +461,7 @@ ficationDate=3D1543331288000&amp;api=3Dv2" data-unresolved-comment-count=3D=
 " data-linked-resource-type=3D"attachment" data-linked-resource-default-ali=
 as=3D"BuildStepCfg9.jpg" data-base-url=3D"https://wiki.jenkins.io" data-lin=
 ked-resource-content-type=3D"image/jpeg" data-linked-resource-container-id=
-=3D"165579425" data-linked-resource-container-version=3D"18" width=3D"468">=
+=3D"165579425" data-linked-resource-container-version=3D"25" width=3D"468">=
 </span></p>
 <p>Specify a name to be given to the request execution:</p>
 <p style=3D"margin-left: 30.0px;"><span class=3D"confluence-embedded-file-w=
@@ -445,7 +473,7 @@ ificationDate=3D1543331354000&amp;api=3Dv2" data-unresolved-comment-count=
 =3D"1" data-linked-resource-type=3D"attachment" data-linked-resource-defaul=
 t-alias=3D"BuildStepCfg10.jpg" data-base-url=3D"https://wiki.jenkins.io" da=
 ta-linked-resource-content-type=3D"image/jpeg" data-linked-resource-contain=
-er-id=3D"165579425" data-linked-resource-container-version=3D"18" width=3D"=
+er-id=3D"165579425" data-linked-resource-container-version=3D"25" width=3D"=
 468"></span></p>
 <p>Provide a fully qualified path to each process to execute:</p>
 <p style=3D"margin-left: 30.0px;"><span class=3D"confluence-embedded-file-w=
@@ -457,7 +485,7 @@ ificationDate=3D1543331408000&amp;api=3Dv2" data-unresolved-comment-count=
 =3D"1" data-linked-resource-type=3D"attachment" data-linked-resource-defaul=
 t-alias=3D"BuildStepCfg11.jpg" data-base-url=3D"https://wiki.jenkins.io" da=
 ta-linked-resource-content-type=3D"image/jpeg" data-linked-resource-contain=
-er-id=3D"165579425" data-linked-resource-container-version=3D"18" width=3D"=
+er-id=3D"165579425" data-linked-resource-container-version=3D"25" width=3D"=
 468"></span></p>
 <p>Add additional processes by clicking the Add Certify Process button:</p>
 <p style=3D"margin-left: 30.0px;"><span class=3D"confluence-embedded-file-w=
@@ -469,7 +497,7 @@ ificationDate=3D1543331493000&amp;api=3Dv2" data-unresolved-comment-count=
 =3D"1" data-linked-resource-type=3D"attachment" data-linked-resource-defaul=
 t-alias=3D"BuildStepCfg12.jpg" data-base-url=3D"https://wiki.jenkins.io" da=
 ta-linked-resource-content-type=3D"image/jpeg" data-linked-resource-contain=
-er-id=3D"165579425" data-linked-resource-container-version=3D"18" width=3D"=
+er-id=3D"165579425" data-linked-resource-container-version=3D"25" width=3D"=
 468"></span></p>
 <h3 id=3D"WorksoftExecutionManagerPlugin-ConfigureAlternativeExecutionManag=
 er">Configure Alternative Execution Manager</h3>
@@ -484,7 +512,7 @@ Date=3D1543331908000&amp;api=3Dv2" data-unresolved-comment-count=3D"0" data=
 inked-resource-type=3D"attachment" data-linked-resource-default-alias=3D"Al=
 tCfg.jpg" data-base-url=3D"https://wiki.jenkins.io" data-linked-resource-co=
 ntent-type=3D"image/jpeg" data-linked-resource-container-id=3D"165579425" d=
-ata-linked-resource-container-version=3D"18" width=3D"468"></span></p>
+ata-linked-resource-container-version=3D"25" width=3D"468"></span></p>
 <p>Configure the URL of the Execution Manager (typically http://&lt;em-host=
 &gt;/executionmanager):</p>
 <p style=3D"margin-left: 30.0px;"><span class=3D"confluence-embedded-file-w=
@@ -496,7 +524,7 @@ ta-linked-resource-id=3D"165579906" data-linked-resource-version=3D"1" data=
 -linked-resource-type=3D"attachment" data-linked-resource-default-alias=3D"=
 AltCfg2.jpg" data-base-url=3D"https://wiki.jenkins.io" data-linked-resource=
 -content-type=3D"image/jpeg" data-linked-resource-container-id=3D"165579425=
-" data-linked-resource-container-version=3D"18" width=3D"468"></span></p>
+" data-linked-resource-container-version=3D"25" width=3D"468"></span></p>
 <p>And credentials:</p>
 <p style=3D"margin-left: 30.0px;"><span class=3D"confluence-embedded-file-w=
 rapper confluence-embedded-manual-size"><img class=3D"confluence-embedded-i=
@@ -507,7 +535,7 @@ ta-linked-resource-id=3D"165579907" data-linked-resource-version=3D"1" data=
 -linked-resource-type=3D"attachment" data-linked-resource-default-alias=3D"=
 AltCfg3.jpg" data-base-url=3D"https://wiki.jenkins.io" data-linked-resource=
 -content-type=3D"image/jpeg" data-linked-resource-container-id=3D"165579425=
-" data-linked-resource-container-version=3D"18" width=3D"468"></span></p>
+" data-linked-resource-container-version=3D"25" width=3D"468"></span></p>
 <h3 id=3D"WorksoftExecutionManagerPlugin-AdditionalOptions">Additional Opti=
 ons</h3>
 <p>Each request type (request, bookmark and processes) can be configured to=
@@ -521,7 +549,7 @@ linked-resource-id=3D"165579908" data-linked-resource-version=3D"1" data-li=
 nked-resource-type=3D"attachment" data-linked-resource-default-alias=3D"Opt=
 s..jpg" data-base-url=3D"https://wiki.jenkins.io" data-linked-resource-cont=
 ent-type=3D"image/jpeg" data-linked-resource-container-id=3D"165579425" dat=
-a-linked-resource-container-version=3D"18" width=3D"468"></span></p>
+a-linked-resource-container-version=3D"25" width=3D"468"></span></p>
 <h4 id=3D"WorksoftExecutionManagerPlugin-CertifyParameters">Certify Paramet=
 ers</h4>
 <p>Optionally, Certify parameters can be specified. Both a key and value mu=
@@ -537,7 +565,7 @@ a-linked-resource-id=3D"165579909" data-linked-resource-version=3D"1" data-=
 linked-resource-type=3D"attachment" data-linked-resource-default-alias=3D"O=
 pts1..jpg" data-base-url=3D"https://wiki.jenkins.io" data-linked-resource-c=
 ontent-type=3D"image/jpeg" data-linked-resource-container-id=3D"165579425" =
-data-linked-resource-container-version=3D"18" width=3D"468"></span></p>
+data-linked-resource-container-version=3D"25" width=3D"468"></span></p>
 <p>Optionally, execution wait configuration can be specified. Both the poll=
 ing interval and maximum run time must be specified in seconds:</p>
 <p style=3D"margin-left: 30.0px;"><span class=3D"confluence-embedded-file-w=
@@ -549,7 +577,145 @@ a-linked-resource-id=3D"165579910" data-linked-resource-version=3D"1" data-=
 linked-resource-type=3D"attachment" data-linked-resource-default-alias=3D"O=
 pts2..jpg" data-base-url=3D"https://wiki.jenkins.io" data-linked-resource-c=
 ontent-type=3D"image/jpeg" data-linked-resource-container-id=3D"165579425" =
-data-linked-resource-container-version=3D"18" width=3D"468"></span></p>
+data-linked-resource-container-version=3D"25" width=3D"468"></span></p>
+<pre><br></pre>
+<h2 id=3D"WorksoftExecutionManagerPlugin-Output">Output</h2>
+<p>Plugin version 10.0.1 and later outputs the Worksoft Execution Manager r=
+esult set in JSON format to a file named - <strong>execMan-result.json</str=
+ong> - in the associated Jenkins job's workspace directory. For example:</p=
+>
+<pre><code>&nbsp;   {
+        "Status": "Completed",
+        "Description": "FAILED",
+        "ExecutionStatus": "FAILED",
+        "Tasks": [
+            {
+                "Name": "test login",
+                "ExecutionStatus": "Failed",
+                "ResourceName": "CKAgentBox1",
+                "LastReportedError": "",
+                "Status": "Completed",
+                "CertifyDatabaseAliasName": "CK_Certify",
+                "CertifyResultID": 20075
+            }
+        ]
+    }<br></code></pre>
+<p style=3D"margin-left: 30.0px;"><strong>Note:&nbsp;</strong>See Certify E=
+xecution Manager's API specification for a complete description of the resu=
+lt set.</p>
+<p>This file can be read/processed in either a freestyle or pipeline job. F=
+or example, in a freestyle job, to retrieve from Certify the failed test st=
+eps, add a Groovy build step with Groovy code like:</p>
+<pre><code>&nbsp;   // Requires Groovy plugin - http://wiki.jenkins-ci.org/=
+display/JENKINS/Groovy+plugin
+    import groovy.json.JsonSlurper
+    import groovy.json.JsonOutput
+    import hudson.*
+    import hudson.model.*
+    import java.lang.*
+     =20
+    def build =3D Thread.currentThread().executable
+    def resolver =3D build.buildVariableResolver
+    def workspace =3D build.getModuleRoot().absolutize().toString()
+   =20
+    // Retrieve job paramaters
+    def API_TOKEN =3D resolver.resolve("API_TOKEN")
+    def API_URL =3D resolver.resolve("API_URL")
+   =20
+    def execManResult =3D new File(workspace + "/execMan-result.json")
+    if (execManResult.exists()) {
+        def result =3D new JsonSlurper().parse(execManResult)
+        println "result=3D" + JsonOutput.prettyPrint(JsonOutput.toJson(resu=
+lt))
+   =20
+        // Loop through all tasks looking for failed tasks and their result=
+ ID
+        for(int i=3D0; i &lt; result['Tasks'].size(); i++) {
+            def logHeaderID =3D result['Tasks'][i]['CertifyResultID']
+            def executionStatus =3D result['Tasks'][i]['ExecutionStatus']
+            if (logHeaderID !=3D null &amp;&amp; executionStatus.toUpperCas=
+e().equals("FAILED")) {
+                // Retrieve failed test steps from Certify and display them
+                def url =3D API_URL + "?logHeaderID=3D" + logHeaderID
+                def api =3D url.toURL().openConnection()
+                api.addRequestProperty("Accept", "application/json")
+                api.addRequestProperty("token", API_TOKEN)
+                api.setRequestMethod("GET")
+                api.connect()
+   =20
+               println "Tasks[" + i +"] logHeaderID=3D" + logHeaderID + ":"=
+ +  JsonOutput.prettyPrint(api.content.text)
+            }
+        }=20
+    }</code></pre>
+<p>Similarly, a pipeline job could process the output file as follows:</p>
+<pre><code>&nbsp;   // Requires the following In-Process script approvals:
+    //    method java.net.HttpURLConnection setRequestMethod java.lang.Stri=
+ng
+    //    method java.net.URL openConnection
+    //    method java.net.URLConnection addRequestProperty java.lang.String=
+ java.lang.String
+    //    method java.net.URLConnection connect
+    //    method java.net.URLConnection getContent
+    //    staticMethod org.codehaus.groovy.runtime.DefaultGroovyMethods get=
+Text java.io.InputStream
+    //    staticMethod org.codehaus.groovy.runtime.DefaultGroovyMethods has=
+Property java.lang.Object java.lang.String
+    //    staticMethod org.codehaus.groovy.runtime.DefaultGroovyMethods toU=
+RL java.lang.String
+   =20
+    import groovy.json.JsonOutput
+   =20
+    pipeline {
+        agent {
+            node {
+                label "master"
+            }
+        }
+        stages {
+            stage('build') {
+                steps {
+                    // Execute an Execution Manager request
+                    execMan request: [name: '&lt;an-execution-manager-reque=
+st-name&gt;'], requestType: 'request'
+                    script {
+                        if (fileExists('execMan-result.json')) {
+                            def result =3D readJSON file: 'execMan-result.j=
+son'
+                            echo "result=3D" + JsonOutput.prettyPrint(JsonO=
+utput.toJson(result))
+   =20
+                            for(int i=3D0; i &lt; result['Tasks'].size(); i=
+++) {
+                                def logHeaderID =3D result['Tasks'][i]['Cer=
+tifyResultID']
+                                def executionStatus =3D result['Tasks'][i][=
+'ExecutionStatus']
+                                if (logHeaderID !=3D null &amp;&amp; execut=
+ionStatus.toUpperCase().equals("FAILED")) {
+                                    // Retrieve failed test steps from Cert=
+ify and display them
+                                    def url =3D API_URL + "?logHeaderID=3D"=
+ + logHeaderID
+                                    def api =3D url.toURL().openConnection(=
+)
+                                    api.addRequestProperty("Accept", "appli=
+cation/json")
+                                    api.addRequestProperty("token", API_TOK=
+EN)
+                                    api.setRequestMethod("GET")
+                                    api.connect()
+   =20
+                                    echo "Tasks[" + i +"] logHeaderID=3D" +=
+ logHeaderID + ":" + JsonOutput.prettyPrint(api.content.text)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }</code></pre>
 <h2 id=3D"WorksoftExecutionManagerPlugin-Pipeline">Pipeline</h2>
 <h3 id=3D"WorksoftExecutionManagerPlugin-DSLReference-execMan:RunExecutionM=
 anagerRequest">DSL Reference - <strong><em>execMan: Run Execution Manager R=
@@ -686,15 +852,23 @@ ue1</span></em>'], [key: '<em><span style=3D"color: rgb(255,0,0);">key2-nam=
 e</span></em>', value: '<em><span style=3D"color: rgb(255,0,0);">value2</sp=
 an></em>']]]</p>
 <h1 id=3D"WorksoftExecutionManagerPlugin-Changelog">Changelog</h1>
-<h3 id=3D"WorksoftExecutionManagerPlugin-Version0.0.0.0(mmddyyyy)">Version =
-0.0.0.0 (mm dd yyyy)</h3>
+<h3 id=3D"WorksoftExecutionManagerPlugin-Version10.0.0.7(Dec112018)">Versio=
+n 10.0.0.7 (Dec 11 2018)</h3>
 <ul>
 <li>Initial version</li>
 </ul>
+<h3 id=3D"WorksoftExecutionManagerPlugin-Version10.0.1.19(April242019)">Ver=
+sion 10.0.1.19 (April 24 2019)</h3>
+<ul>
+<li>Output Certify Execution Manager result set to <em>&lt;<span style=3D"c=
+olor: rgb(255,0,0);">workspace-path</span></em><em>&gt;</em><strong><em>/ex=
+ecMan-result.json</em></strong></li>
+</ul>
+<p><br></p>
     </div>
 </body>
 </html>
-------=_Part_59200_894274369.1543415837366
+------=_Part_6672_939926981.1556119320002
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/171fbda11835b48092f37dfae042f3a3
@@ -1106,7 +1280,7 @@ ooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACi
 iigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKK
 KACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAoooo
 AKKKKACiiigAooooAKKKKAP/2Q==
-------=_Part_59200_894274369.1543415837366
+------=_Part_6672_939926981.1556119320002
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/58bc3a9c3d08523ff3208d58f39ecb77
@@ -1615,7 +1789,7 @@ f+Ajf/HaKKLILsP7M1L/AJ/bT/wEb/47R/Zmpf8AP7af+Ajf/HaKKLILsP7M1L/n9tP/AAEb/wCO
 0f2ZqX/P7af+Ajf/AB2iiiyC7D+zNS/5/bT/AMBG/wDjtH9mal/z+2n/AICN/wDHaKKLILsP7M1L
 /n9tP/ARv/jtH9mal/z+2n/gI3/x2iiiyC7D+zNS/wCf20/8BG/+O0f2ZqX/AD+2n/gI3/x2iiiy
 C7P/2Q==
-------=_Part_59200_894274369.1543415837366
+------=_Part_6672_939926981.1556119320002
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/1e4fdd160156fc266ae2a4c310b05383
@@ -1979,7 +2153,7 @@ xqRzRRzIFkRZFDdGGRToY0RNqKEVeiqMAUUUAOooooAKKKKACiiigAooooAKKKKACiiigAooooAK
 KKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAoo
 ooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiii
 gAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAP//Z
-------=_Part_59200_894274369.1543415837366
+------=_Part_6672_939926981.1556119320002
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/c4f996a443c94ef8d99f1616c6448ce0
@@ -2418,7 +2592,285 @@ RQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFF
 ABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUA
 FFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQB/
 /9k=
-------=_Part_59200_894274369.1543415837366
+------=_Part_6672_939926981.1556119320002
+Content-Type: application/octet-stream
+Content-Transfer-Encoding: base64
+Content-Location: file:///C:/764d525162ff9c73dd95bf51981f94ee
+
+iVBORw0KGgoAAAANSUhEUgAAA8gAAAEdCAYAAADQPk63AAAgAElEQVR4Ae3dTawsWX0Y8LrvY5iZ
+95gvbDBYtiUkg8GwIAFpHHBkeePIyziSszF2FAGLWHKiSESRvHaUSIjIMosxiiMnG6+yspyFV0g4
+QspsIkxskG0SE4ZhZJj3hplh3nf69L3/+/6vbnV1VVd1d1X3r+BOnTrf53equuq86nffyYPFVtkI
+ECBAgAABAgQIECBAgMCRC1w68vEbPgECBAgQIECAAAECBAgQWApYIDsRCBAgQIAAAQIECBAgQIDA
+QsAC2WlAgAABAgQIECBAgAABAgQWAhbITgMCBAgQIECAAAECBAgQILAQsEB2GhAgQIAAAQIECBAg
+QIAAgYWABbLTgAABAgQIECBAgAABAgQILAQskJ0GBAgQIECAAAECBAgQIEBgIWCB7DQgQIAAAQIE
+CBAgQIAAAQILAQtkpwEBAgQIECBAgAABAgQIEFgIWCA7DQgQIECAAAECBAgQIECAwELAAtlpQIAA
+AQIECBAgQIAAAQIEFgIWyE4DAgQIECBAgAABAgQIECCwELhCgQABAgQIECBAgACBwxP44he/eHiD
+MiICPQU++MEPVh//+Mc7l/IGuTOVjAQIECBAgAABAgQIECAwF4GyOC4/fTZvkPtoyUuAAAECBAgQ
+IEBgZgKf+tSnZtZj3SUwjsCrr77auyJvkHuTKUCAAAECBAgQIECAAAEChyhggXyIs2pMBAgQIECA
+AAECBDoIfO9736u+/e1vV7dv3+6QWxYChy/gK9aHP8dGSIAAAQIECBAgQOARga9+9avV5cuXq/uX
+Hqtu36uq11//ZvXaa69VH/jAB6rr168/ktcBgWMSsEA+ptk2VgIECBAgQIAAgaMXePHFF6sf3LtW
+feWvblTveedz1RNvu1p95+9+UL3z2pXq2t/+bfXud7+7evbZZ4/eCcBxClggH+e8GzUBAgQIECBA
+gMDIAh/96EcbaywL0rKV9KZwY6EtRX7961+vHjz2dPW//89b1T/5xQ9VTz95tbp993514/V3VP/z
+G69U/+tbry/eJH+9ev7557fUg+ZqT05OqgcPHjQnDogt9ZZtG3UP6JaiExawQJ7w5OgaAQIECBAg
+QIDAvARiAdzU61VpeeHcVG7MuB/84AfVl75xq3r+772/evzq5fOqn3zb5er6k2+r/upvb1bPv+9d
+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
+WsSizfKVqfJzupWDFK79udjDlPNMyheyc45y8FAp/rw5YmLP/xzJ+VNOmXOOcvDwLHH+PPq9locy
+50jOn3LKnHOUg4dKzh/nT5wNee/+c36R+PwoHxnnHOUgzpQScP2ERt67fs5PEtdPuWTOOcpBnCkl
+4PoJjbwf8/rpv0A+n5PTvy9VZu90As8mbzmBp5lKR0toeVTiy/foT5OWsctyyvNbnjPOn+WHn+sn
+PjEWHD4/fH66f7h/lmcHzw+enzw/en5efA4sN+sP66fFibDt9ePi3zRePpKfnXXddqVI+vtz3Qql
+XMrzc/6kC6Jn0PXj+nH99LxoUnbXj+vH9ZMuiJ5B14/rx/XT86JJ2V0/s7l++r9Bjskt+9rWELXM
+EfHLV9/Kn54cgZIMG6L4LQTCxfmzuOZcP66f8nASF4XPj3OBBhKfnz4/zy8V9w/3D/fPs5dbDR+W
+DVE+P31+HvXnZ/8F8uI7HuVGs/zyY9MVVT6DF/87vbJOw6VECS2ebJc/yvNz/jQvcspl4vrx+eHz
+8/SWcfpJ6f7h/un5wfOT58dyDnh+9vzs+Xk3z8/9f4t1eYAvv3Z/8feJH/krxcsnuvyfuKHluLOH
+HuX5OX9cP4vPuPLI07z5/GjU8fnr/uP+6f7p/un+6f7p+aH54WkR6/lpjOen3m+Ql4vjclqeXZxl
+Gs7feC0nq8SU7ezRt/aWWfnyZz/8nD+nV4jrx+eHz8+4Z5T7RoTdP4rG+ffblgeLw+W/Cev+4f7h
+/lE+Idw/i0F8Zi4/MM4+KXx+LiGsP87Oh9Od+0e/9VfvBfJycbc46cp5d3pZlsDiYlxGlJjT8PKi
+XSadXagl9+L/yp/5nHIsvJZI/Jw/p+eA62fp4PPj9APiwfkvQzk99vnp87Pca91/l3dO90/PD4sT
+4fQzYXlRuH+6f5bPx+V1UU4N64+zpfHyA9PzQ7/nh/5fsS4n3vJD6HS3xD+LKuFlsJygixNzeWqW
+O/n5SXqe4yzjsvQjYeUXXPycP64fnx/Lj0ufn+4f8ZDn/nn+sLB8UPD8sBRIFp6fPD95frT+sP4a
+Z/25wQL57Ka02C3XvmVJfL4ATp/UD7OtDCm/oOPn/HH9nH1G+PwonwhdN5+fPj/dPzx/eP6Kz0z3
+D/ePOBfW30XdP90/190/r6w/jVbkWJxdJ2cP9vlEK+HzZ7xy71q+Uz6rY3nunp3AyvNz/iwvDNfP
+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
+5VQZAQIECBAgQIAAAQIECMxVwAJ5rjOn3wQIECBAgAABAgQIECAwqoAF8qicKiNAgAABAgQIECBA
+gACBuQpYIM915vSbAAECBAgQIECAAAECBEYVsEAelVNlBAgQIECAAAECBAgQIDBXAQvkuc6cfhMg
+QIAAAQIECBAgQIDAqAIWyKNyqowAAQIECBAgQIAAAQIE5ipggTzXmdNvAgQIECBAgAABAgQIEBhV
+wAJ5VE6VESBAgAABAgQIECBAgMBcBSyQ5zpz+k2AAAECBAgQIECAAAECowpYII/KqTICBAgQIECA
+AAECBAgQmKuABfJcZ06/CRAgQIAAAQIECBAgQGBUAQvkUTlVRoAAAQIECBAgQIAAAQJzFbBAnuvM
+6TcBAgQIECBAgAABAgQIjCpggTwqp8oIECBAgAABAgQIECBAYK4CFshznTn9JkCAAAECBAgQIECA
+AIFRBSyQR+VUGQECBAgQIECAAAECBAjMVcACea4zp98ECBAgQIAAAQIECBAgMKqABfKonCojQIAA
+AQIECBAgQIAAgbkKWCDPdeb0mwABAgQIECBAgAABAgRGFbBAHpVTZQQIECBAgAABAgQIECAwVwEL
+5LnOnH4TIECAAAECBAgQIECAwKgCFsijcqqMAAECBAgQIECAAAECBOYqYIE815nTbwIECBAgQIAA
+AQIECBAYVcACeVROlREgQIAAAQIECBAgQIDAXAUskOc6c/pNgAABAgQIECBAgAABAqMKWCCPyqky
+AgQIECBAgAABAgQIEJirgAXyXGdOvwkQIECAAAECBAgQIEBgVAEL5FE5VUaAAAECBAgQIECAAAEC
+cxWwQJ7rzOk3AQIECBAgQIAAAQIECIwqYIE8KqfKCBAgQIAAAQIECBAgQGCuAhbIc505/SZAgAAB
+AgQIECBAgACBUQUskEflVBkBAgQIECBAgAABAgQIzFXAAnmuM6ffBAgQIECAAAECBAgQIDCqgAXy
+qJwqI0CAAAECBAgQIECAAIG5Clggz3Xm9JsAAQIECBAgQIAAAQIERhWwQB6VU2UECBAgQIAAAQIE
+CBAgMFcBC+S5zpx+EyBAgAABAgQIECBAgMCoAhbIo3KqjAABAgQIECBAgAABAgTmKmCBPNeZ028C
+BAgQIECAAAECBAgQGFXAAnlUTpURIECAAAECBAgQIECAwFwFLJDnOnP6TYAAAQIECBAgQIAAAQKj
+Cvx/GzTz+g1CowoAAAAASUVORK5CYII=
+------=_Part_6672_939926981.1556119320002
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/078c8697a8d0323580c944680f09284c
@@ -2768,7 +3220,7 @@ AHG/Kjyn/uN+VaFFHKFzP8p/7jflR5T/ANxvyrQoo5QuZ/lP/cb8qPKf+435VoUUcoXM/wAp/wC4
 Kf8AuN+VaFFHKFzP8p/7jflR5T/3G/KtCijlC5n+U/8Acb8qPKf+435VoUUcoXM/yn/uN+VHlP8A
 3G/KtCijlC5n+U/9xvyo8p/7jflWhRRyhcz/ACn/ALjflR5T/wBxvyrQoo5QuZ/lP/cb8qPKf+43
 5VoUUcoXI7cFYVBGD71JRRVklvSf+QVZf9cU/wDQRRRpP/IKsv8Arin/AKCKKCT/2Q==
-------=_Part_59200_894274369.1543415837366
+------=_Part_6672_939926981.1556119320002
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/c1aee35a4ed47f7033fd358418a8411c
@@ -3574,7 +4026,7 @@ ABo/tiw/5/rb/v8AL/jRdAW6Kqf2xYf8/wBbf9/l/wAaP7YsP+f62/7/AC/40XQFuiqn9sWH/P8A
 W3/f5f8AGj+2LD/n+tv+/wAv+NF0Bboqp/bFh/z/AFt/3+X/ABo/tiw/5/rb/v8AL/jRdAW6Kqf2
 xYf8/wBbf9/l/wAaP7YsP+f62/7/AC/40XQFuiqn9sWH/P8AW3/f5f8AGpIL+1uW2w3MUreiOGP6
 UXAnooopiCiiigAooooAKs6V/wAguz/64p/6CKrVZ0r/AJBdn/1xT/0EU47iZ//Z
-------=_Part_59200_894274369.1543415837366
+------=_Part_6672_939926981.1556119320002
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/22b0816e0d2f39b641068398703c1344
@@ -3915,7 +4367,7 @@ eU/9xvyrQoo5QuZ/lP8A3G/Kjyn/ALjflWhRRyhcz/Kf+435UeU/9xvyrQoo5QuZ/lP/AHG/Kjyn
 cb8q0KKOULmf5T/3G/Kjyn/uN+VaFFHKFzP8p/7jflR5T/3G/KtCijlC5n+U/wDcb8qPKf8AuN+V
 aFFHKFzP8p/7jflR5T/3G/KtCijlC5n+U/8Acb8qPKf+435VoUUcoXM/yn/uN+VHlP8A3G/KtCij
 lC5HbgrCoIwfepKKKskt6T/yCrL/AK4p/wCgiijSf+QVZf8AXFP/AEEUUEn/2Q==
-------=_Part_59200_894274369.1543415837366
+------=_Part_6672_939926981.1556119320002
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/2acd3cdc3158653d7b95a05d2d573c5c
@@ -4399,7 +4851,7 @@ ABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUA
 FFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAU
 UUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRR
 RQAUUUUAFFFFABRRRQAUUUUAFFFFAH//2Q==
-------=_Part_59200_894274369.1543415837366
+------=_Part_6672_939926981.1556119320002
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/0513e8047ffbac22242eb4f042c76a3b
@@ -5209,7 +5661,7 @@ QAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQBR1LTf7Q8v955ezP8Oc5x7+1SJp
 AD/41doosBS/se1/uyf9/n/xo/se1/uyfjM/+NXaKLANjjWJFRFCqowAO1OoopgFFFFABRRRQAUU
 UUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRR
 QAUUUUAFFFFABRRRQAUUUUAWbP8Aj/CrNVrP+P8ACrNaLYlhRRRVCP/Z
-------=_Part_59200_894274369.1543415837366
+------=_Part_6672_939926981.1556119320002
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/cb4d9c6ab7fc068518daaeeae838e29f
@@ -6011,7 +6463,7 @@ f9/n/wAaP7Htf7sn/f5/8au0UWApf2Pa/wB2T/v8/wDjR/Y9r/dk/wC/z/41doosBS/se1/uyf8A
 f5/8aP7Htf7sn/f5/wDGrtFFgKX9j2v92T/v8/8AjR/Y9r/dk/GZ/wDGrtFFgGxxrEioihVUYAHa
 nUUUwCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAo
 oooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKALNn/H+FWarWf8f4VZrRbEsKKKKoR//Z
-------=_Part_59200_894274369.1543415837366
+------=_Part_6672_939926981.1556119320002
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/4aa17f6a774c5462e9aee51a0e86c338
@@ -6182,7 +6634,7 @@ RQAfY4P+eEf/AHwKQ20UYLJGqMBkMowR+NFFMD0DTJGm020kclneFGYnuSoqzRRXYtjnCiiimAUU
 UUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRR
 QAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFA
 BRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAf/9k=
-------=_Part_59200_894274369.1543415837366
+------=_Part_6672_939926981.1556119320002
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/731aca7ecf760da3cc985e3d71277b22
@@ -6595,7 +7047,7 @@ RRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFF
 FFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUU
 UAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQ
 AUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFAH/9k=
-------=_Part_59200_894274369.1543415837366
+------=_Part_6672_939926981.1556119320002
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/dfeb52555a308fe5632aaa9f7b90001e
@@ -7380,7 +7832,7 @@ XEP/AEMK3/g2f/yR4F8GfgyPBCxRRReVFHnauS2MnJ5PPUmvoO2j8uJV9BRHbRx/dUCpa6kkkoxV
 kj5yrVqV6kq1aTlKTbbbu23q229W292FFFFBkFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABR
 RRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQBZs/4/wAK
 s1Ws/wCP8Ks1otiWFFFFUI//2Q==
-------=_Part_59200_894274369.1543415837366
+------=_Part_6672_939926981.1556119320002
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/05601ee367472035eb9027f267a68116
@@ -7806,7 +8258,7 @@ oooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACii
 igAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKK
 ACiiigAooooAR0WVGR1DowwVYZBHoa49/hH4YM2+G2vbGMkk21hqt3a25J65hilWM/8AfNdjRVRl
 JfC7CaT3KWj6LYeH7BLLTbOGxtEyVigQKuT1PHc+tXaKKlvm1Yz/2Q==
-------=_Part_59200_894274369.1543415837366
+------=_Part_6672_939926981.1556119320002
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/a6a717730abf66e336cdafc2400a8ab2
@@ -8613,7 +9065,7 @@ au0UWApf2Pa/3ZP+/wA/+NH9j2v92T/v8/8AjV2iiwFL+x7X+7J/3+f/ABo/se1/uyfjM/8AjV2i
 iwDY41iRURQqqMADtTqKKYBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQA
 UUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFAFmz/j/AAqzVaz/AI/w
 qzWi2JYUUUVQj//Z
-------=_Part_59200_894274369.1543415837366
+------=_Part_6672_939926981.1556119320002
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/065ad0f5a75d7101a77f9e1de51bdf2a
@@ -9052,7 +9504,7 @@ RQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFF
 ABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFACOiyoyOodGGCrDII9DXHv8ACPww
 Zt8Nte2MZJJtrDVbu1tyT1zDFKsZ/wC+a7GiqjKS+F2E0nuUtH0Ww8P2CWWm2cNjaJkrFAgVcnqe
 O59au0UVLfNqxn//2Q==
-------=_Part_59200_894274369.1543415837366
+------=_Part_6672_939926981.1556119320002
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/e0ffbc500b85d620ff091f7558beef9e
@@ -9740,7 +10192,7 @@ D/v4KP7Qtf8An5g/7+Ciii4WD+0LX/n5g/7+Cj+0LX/n5g/7+Ciii4WD+0LX/n5g/wC/go/tC1/5
 Fg/tC1/5+YP+/go/tC1/5+YP+/gooouFg/tC1/5+YP8Av4KP7Qtf+fmD/v4KKKLhYP7Qtf8An5g/
 7+Cj+0LX/n5g/wC/gooouFg/tC1/5+YP+/go/tC1/wCfmD/v4KKKLhYP7Qtf+fmD/v4KP7Qtf+fm
 D/v4KKKLhY0dI/5Bdn/1xT/0EUUUVoZn/9k=
-------=_Part_59200_894274369.1543415837366
+------=_Part_6672_939926981.1556119320002
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/60f083ad3fa68bc3fcebfa6e929e5b71
@@ -10550,7 +11002,7 @@ Uv7Htf7sn/f5/wDGj+x7X+7J/wB/n/xq7RRYCl/Y9r/dk/7/AD/40f2Pa/3ZP+/z/wCNXaKLAUv7
 Htf7sn/f5/8AGj+x7X+7J+Mz/wCNXaKLANjjWJFRFCqowAO1OoopgFFFFABRRRQAUUUUAFFFFABR
 RRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFF
 FABRRRQAUUUUAWbP+P8ACrNVrP8Aj/CrNaLYlhRRRVCP/9k=
-------=_Part_59200_894274369.1543415837366
+------=_Part_6672_939926981.1556119320002
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/46d489e2ba4127a7e4eaf5c4c530d283
@@ -11362,7 +11814,7 @@ AHZP+/z/AONH9j2v92T/AL/P/jV2iiwFL+x7X+7J/wB/n/xo/se1/uyf9/n/AMau0UWApf2Pa/3Z
 P+/z/wCNH9j2v92T8Zn/AMau0UWAbHGsSKiKFVRgAdqdRRTAKKKKACiiigAooooAKKKKACiiigAo
 oooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACii
 igAooooAs2f8f4VZqtZ/x/hVmtFsSwoooqhH/9k=
-------=_Part_59200_894274369.1543415837366
+------=_Part_6672_939926981.1556119320002
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/50a543d2b03d677618c1be2825ef0636
@@ -11487,7 +11939,7 @@ KACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAoooo
 AKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigA
 ooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAW1/5CsX/XGT/wBCSii1/wCQ
 rF/1xk/9CSigD//Z
-------=_Part_59200_894274369.1543415837366
+------=_Part_6672_939926981.1556119320002
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Location: file:///C:/6ed97ab629f04925641013ad31191ce5
@@ -11874,4 +12326,4 @@ AB5Sf3F/Kjyk/uL+VFFAB5Sf3F/Kjyk/uL+VFFAB5Sf3F/Kjyk/uL+VFFAB5Sf3F/Kjyk/uL+VFF
 AB5Sf3F/Kjyk/uL+VFFAB5Sf3F/Kjyk/uL+VFFAB5Sf3F/Kjyk/uL+VFFAB5Sf3F/Kjyk/uL+VFF
 AB5Sf3F/Kjyk/uL+VFFAB5Sf3F/Kjyk/uL+VFFADgAowBge1FFFMRZ0r/kF2f/XFP/QRRRRWi2JP
 /9k=
-------=_Part_59200_894274369.1543415837366--
+------=_Part_6672_939926981.1556119320002--
