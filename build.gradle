@@ -53,19 +53,9 @@ jenkinsPlugin {
     
     developers {
         developer {
-            id "rrinehart"
-            name "Raleigh Rinehart"
-            email "rrinehart@worksoft.com"
-        }
-        developer {
-            id "dtheobald"
-            name "Doug Theobald"
-            email "dtheobald@worksoft.com"
-        }
-        developer {
-            id "oullah"
-            name "Obaid Ullah"
-            email "oullah@worksoft.com"
+            id "worksoft"
+            name "Worksoft, Inc."
+            email "jenkins-maintainers@worksoft.com"
         }
     }
 }
