@@ -2,7 +2,7 @@ Param (
     [Parameter(HelpMessage = "The Build Number to set in the Version attribute of the files")]
     [Parameter(ParameterSetName = 'bNumber')]
     [Alias("b")]
-    [int]$buildNum = -1,
+    [string]$buildNum = "0001",
 
     [Alias("t")]
     [string]$type = ""

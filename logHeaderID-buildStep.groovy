@@ -9,21 +9,21 @@ def build = Thread.currentThread().executable
 def resolver = build.buildVariableResolver
 def workspace = build.getModuleRoot().absolutize().toString()
 
-// Retrieve job paramaters
 def API_TOKEN = resolver.resolve("API_TOKEN")
 def API_URL = resolver.resolve("API_URL")
 
-def execManResult = new File(workspace + "/execMan-result.json")
+def execManResult = new FilePath(build.getModuleRoot().getChannel(), workspace + "/execMan-result.json")
+//def execManResult = new File(workspace + "/execMan-result.json")
 if (execManResult.exists()) {
-    def result = new JsonSlurper().parse(execManResult)
+    def result = new JsonSlurper().parse(execManResult.read())
+    //def result = new JsonSlurper().parse(execManResult)
     println "result=" + JsonOutput.prettyPrint(JsonOutput.toJson(result))
 
-    // Loop through all tasks looking for failed tasks and their result ID
+    // Loop through the tasks looking for result IDs
     for(int i=0; i < result['Tasks'].size(); i++) {
         def logHeaderID = result['Tasks'][i]['CertifyResultID']
         def executionStatus = result['Tasks'][i]['ExecutionStatus']
         if (logHeaderID != null && executionStatus.toUpperCase().equals("FAILED")) {
-            // Retrieve failed test steps from Certify and display them
             def url = API_URL + "?logHeaderID=" + logHeaderID
             def api = url.toURL().openConnection()
             api.addRequestProperty("Accept", "application/json")
@@ -35,3 +35,4 @@ if (execManResult.exists()) {
         }
     } 
 }
+
