@@ -488,9 +488,11 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
 
     // Write the response JSON to a file so that it can be processed further by the Jenkins job
     try {
-      File resFile = new File(workspace + "/execMan-result.json");
+      FilePath resFile = new FilePath(workspace.getChannel(), workspace + "/execMan-result.json");
+      //File resFile = new File(workspace + "/execMan-result.json");
       if (response != null) {
-        FileUtils.writeStringToFile(resFile, response.toString());
+        resFile.write(response.toString(), null);
+        //FileUtils.writeStringToFile(resFile, response.toString());
         consoleOut.println("\nResults written to " + resFile);
       }
     } catch (Exception e) {
