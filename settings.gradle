@@ -1,2 +1,9 @@
 
+/*
+ * Copyright (c)  Worksoft, Inc.
+ *
+ * settings
+ *
+ */
+
 rootProject.name = 'worksoft-executionmanager-plugin'

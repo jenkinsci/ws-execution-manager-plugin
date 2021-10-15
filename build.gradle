@@ -77,6 +77,10 @@ idea{
     }
 }
 
+//compileJava {
+//    options.compilerArgs << '-Xlint:deprecation'
+//}
+
 task listSrc(group: 'debugging', description: 'list project source') {
     doLast { task ->
         println "Project $task.project.name Source Sets:"
@@ -101,3 +105,12 @@ task listCompile(group: 'debugging', description: 'show compile configuration') 
 }
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+
+tasks.named('server').configure {
+    execSpec {
+        debugOptions {
+            port.set(5005)
+            suspend.set(false)
+        }
+    }
+}

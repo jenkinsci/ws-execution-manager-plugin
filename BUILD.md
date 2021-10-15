@@ -7,8 +7,7 @@ Worksoft EM plugin for Jenkins
 
 example Pipeline DSL script:
 
-```groovy
-
+```
 pipeline {
     environment {
         emUser = credentials("executionManager")
@@ -27,7 +26,6 @@ pipeline {
 Prerequisites:
 
 * JDK 8 (or above)
-
 
 ### Build and Test
 To build the plugin from source:

@@ -2,7 +2,7 @@
  *
  * Copyright (c) 2018 - 2018 Worksoft, Inc.
  *
- * ${CLASS_NAME}
+ * ExecuteRequest
  *
  * @author rrinehart on 9/14/2018
  */
@@ -209,7 +209,13 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
 
   @DataBoundSetter
   public void setExecParams (ExecuteRequestParameters execParams) {
-    this.execParams = execParams;
+
+    try {
+      this.execParams = execParams;
+    } catch (Exception e) {
+      e.printStackTrace();
+      log.severe("Unable to set exec parameters " + e);
+    }
   }
 
   // Call from the jelly to determine whether radio block is checked
@@ -227,6 +233,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
     }
 
     @Override
+    @Nonnull
     public String getDisplayName () {
       return "Run Execution Manager Request";
     }
@@ -311,7 +318,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
 
           // Dereference/expand ALL Jenkins vars within the value string
           Matcher m = Pattern.compile("([^$]*)[$][{]([^}]*)[}]([^$]*)").matcher(value);
-          String expandedValue = "";
+          StringBuilder expandedValue = new StringBuilder();
           boolean found = false;
           while (m.find()) {
             found = true;
@@ -319,17 +326,17 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
               if (i == 2) {
                 String envVar = envVars.get(m.group(i));
                 if (envVar != null) {
-                  expandedValue += envVar;
+                  expandedValue.append(envVar);
                 }
               } else {
-                expandedValue += m.group(i);
+                expandedValue.append(m.group(i));
               }
             }
           }
           if (!found) {
-            expandedValue = value;
+            expandedValue = new StringBuilder(value);
           }
-          ret.put(param.getKey(), expandedValue);
+          ret.put(param.getKey(), expandedValue.toString());
         }
       }
     }
@@ -401,7 +408,7 @@ public class ExecuteRequest extends Builder implements SimpleBuildStep {
               consoleOut.println(String.format("      %-26.26s %-15.15s %s",
                       StringUtils.abbreviate(status, 26),
                       StringUtils.abbreviate(resourceName, 15),
-                      lastReportedError, 15));
+                      lastReportedError));
 
               prevTasks = tasks;
             }
