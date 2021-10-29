@@ -1,10 +1,15 @@
+/*
+ * Copyright (c)  Worksoft, Inc.
+ *
+ * logHeaderID-buildStep
+ *
+ */
+
 // Requires Groovy plugin - http://wiki.jenkins-ci.org/display/JENKINS/Groovy+plugin
-import groovy.json.JsonSlurper
+
 import groovy.json.JsonOutput
-import hudson.*
-import hudson.model.*
-import java.lang.*
-  
+import groovy.json.JsonSlurper
+
 def build = Thread.currentThread().executable
 def resolver = build.buildVariableResolver
 def workspace = build.getModuleRoot().absolutize().toString()

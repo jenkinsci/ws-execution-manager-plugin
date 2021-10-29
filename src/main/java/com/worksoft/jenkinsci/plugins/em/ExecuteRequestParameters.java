@@ -16,15 +16,24 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.export.Exported;
 
+import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.logging.Logger;
 
 public final class ExecuteRequestParameters extends AbstractDescribableImpl<ExecuteRequestParameters> {
+  private static final Logger log = Logger.getLogger("jenkins.ExecuteRequest");
+  
   @Exported
   private List<ExecuteRequestParameter> list;
 
   @DataBoundConstructor
   public ExecuteRequestParameters (List<ExecuteRequestParameter> list) {
-    this.list = list;
+    try {
+      this.list = list;
+    } catch (Exception e)
+    {
+      log.info("ExecuteRequestParameters: error " + e);
+    }
   }
 
   public List<ExecuteRequestParameter> getList () {
@@ -39,6 +48,7 @@ public final class ExecuteRequestParameters extends AbstractDescribableImpl<Exec
   @Symbol("execParams")
   @Extension
   public static class DescriptorImpl extends Descriptor<ExecuteRequestParameters> {
+    @Nonnull
     public String getDisplayName () {
       return "Execution Parameters";
     }

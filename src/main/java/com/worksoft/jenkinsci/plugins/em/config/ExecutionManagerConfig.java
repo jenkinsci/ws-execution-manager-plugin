@@ -35,9 +35,13 @@ public class ExecutionManagerConfig extends GlobalConfiguration {
 
   /**
    * Checks if the provided values are valid.
+   *
+   * @param altConfig The alternate EM server config to validate
+   *
+   * @return true if config is valid, false otherwise
    */
   public FormValidation doValidate (@QueryParameter ExecuteRequestEMConfig altConfig) {
-    return FormValidation.ok("Success");
+      return FormValidation.ok("Success");
   }
 
   @Override
