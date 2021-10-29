@@ -400,6 +400,7 @@ execMan request: [name: 'name-of-request'], requestType: 'request', execParams: 
 === Version 10.0.1.19 (April 24 2019)
 * Output Certify Execution Manager result set to `_<workspace-path>**/execMan-result.json**_`
 
-=== Version X.Y.Z.nn (Sometime in 2021)
-* Fix issue with build step in freestyle jobs not rendering correctly
-* Convert doc to .adoc and move to Git repo
+=== Version 10.0.3.3 (October 29 2021)
+* Fix issue with build steps in freestyle jobs not rendering correctly
+* Convert documentation to .adoc and move from wiki to Git repo
+
