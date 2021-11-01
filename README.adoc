@@ -403,4 +403,6 @@ execMan request: [name: 'name-of-request'], requestType: 'request', execParams: 
 === Version 10.0.3.3 (October 29 2021)
 * Fix issue with build steps in freestyle jobs not rendering correctly
 * Convert documentation to .adoc and move from wiki to Git repo
+* fix build  
+
 
