@@ -33,7 +33,6 @@ public class ExecutionManagerConfig extends GlobalConfiguration {
     this.emConfig = emConfig;
   }
 
-
   /**
    * Checks if the provided values are valid.
    *

@@ -23,7 +23,7 @@ public class EMItemCache extends HttpSessionListener {
   // Kludge alert - In order to fill the request/bookmark list box with values from
   // the EM and to provide the user with appropriate feedback, we need to cache
   // the list box items. We wouldn't need to do this if the 'doCheck' methods were
-  // provided with the EM configuration variables to be able to validate them.
+  // provided with the EM configuration variables so as to be able to validate them.
   // Unfortunately, does not provide their values in a consistent manner, so we
   // use this cache to remember the items from the 'doFill' methods; which we can then
   // access in the 'doCheck' methods for proper field validation and error display.
